@@ -53,7 +53,7 @@ const CoreValues = [
   },
 ];
 
-// Team members data
+// Team members 
 
 const teamMembers = [
   {
