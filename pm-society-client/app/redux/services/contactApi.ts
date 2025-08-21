@@ -15,12 +15,12 @@ export const contactApi = createApi({
         method: 'POST',
         body: formData,
       }),
-      transformResponse: (response: any) => response?.data || response,
+      transformResponse: (response) => response?.data || response,
     }),
     // Get all contact submissions
     getContactForm: builder.query({
       query: () => '/contact',
-      transformResponse: (response: any) => response?.data || response,
+      transformResponse: (response) => response?.data || response,
     }),
   }),
 });

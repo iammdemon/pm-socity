@@ -4,6 +4,7 @@ import { useGetContactFormQuery } from "@/app/redux/services/contactApi";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
+import { ContactData } from "@/app/connect/page";
 
 export default function ContactMessagesPage() {
   const { data, isLoading, isError } = useGetContactFormQuery({});
@@ -42,8 +43,8 @@ export default function ContactMessagesPage() {
             </TableHeader>
 
             <TableBody>
-              {data.map((msg: any) => (
-                <TableRow key={msg.id} className="hover:bg-gray-100 align-top">
+              {data.map((msg:ContactData, index:number) => (
+                <TableRow key={index} className="hover:bg-gray-100 align-top">
                   <TableCell className="text-black font-medium">{msg.name}</TableCell>
                   <TableCell className="text-black break-words">{msg.email}</TableCell>
                   <TableCell className="text-black">{msg.phone || "-"}</TableCell>

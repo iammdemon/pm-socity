@@ -321,7 +321,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   options={{
                     style: {
                       base: {
-                        fontSize: window?.innerWidth < 640 ? "14px" : "16px",
+              
                         color: "#111827",
                         fontFamily: "system-ui, sans-serif",
                         "::placeholder": {

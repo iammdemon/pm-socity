@@ -10,14 +10,7 @@ const bonVivant = localFont({
 export default function Hero() {
   const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
- 
-  const handlePlayBackgroundAudio = () => {
-    const audio = audioRef.current as HTMLAudioElement | null;
-    if (audio) {
-      audio.play();
-      setIsAudioEnabled(true);
-    }
-  };
+
 
   useEffect(() => {
     const handleFirstInteraction = () => {

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  MapPin,
+
   Mail,
   Phone,
   Send,
@@ -11,9 +11,7 @@ import {
   User,
   MessageCircle,
   Sparkles,
-  Instagram,
-  Facebook,
-  Linkedin,
+ 
 } from "lucide-react";
 
 // shadcn/ui components
@@ -30,7 +28,7 @@ import { useSubmitContactFormMutation } from "../redux/services/contactApi";
 import { ContactSection } from "../components/connect/ContactSection";
 import { useForm } from "react-hook-form";
 
-interface FormData {
+export interface ContactData {
   name: string;
   email: string;
   phone: string;
@@ -102,10 +100,10 @@ const [submitContactForm] = useSubmitContactFormMutation();
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormData>();
+  } = useForm<ContactData>();
 
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: ContactData) => {
     setIsLoading(true);
     console.log("Submitting contact form:", data);
     try {

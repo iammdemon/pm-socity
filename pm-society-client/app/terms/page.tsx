@@ -34,11 +34,11 @@ export default function TermsOfService() {
 
             <div className="p-6 sm:p-8">
               <p className="text-gray-700 text-base leading-relaxed">
-                Welcome to <strong>The PM Society, Inc.</strong> ("Company,"
-                "we," "our," "us"). These Terms of Service ("Terms") govern your
+                Welcome to <strong>The PM Society, Inc.</strong> (&quot;Company,&quot;
+                &quot;we,&quot; &quot;our,&quot; &quot;us&quot;). These Terms of Service (&quot;Terms&quot;) govern your
                 access to and use of our website, services, training programs,
                 memberships, coaching, and any other offerings provided by The
-                PM Society (collectively, the "Services"). By using our
+                PM Society (collectively, the &quot;Services&quot;). By using our
                 Services, you agree to be bound by these Terms.
               </p>
             </div>
@@ -178,7 +178,7 @@ export default function TermsOfService() {
                       6. Disclaimers & Limitation of Liability
                     </h2>
                     <p className="text-gray-700 leading-relaxed">
-                      Our Services are provided "as is" without warranties of
+                      Our Services are provided &quot;as is&quot; without warranties of
                       any kind. To the fullest extent permitted by law, The PM
                       Society is not liable for any damages arising out of your
                       use or inability to use our Services.
