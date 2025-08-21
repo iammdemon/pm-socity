@@ -25,8 +25,8 @@ export default function Home() {
         <WhoWeHelp />
         <OurApproach />
 
+        <SocietyStandard />
         <VideoSection />
-        <SocietyStandard/>
 
         <CTA />
 

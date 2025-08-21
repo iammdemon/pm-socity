@@ -62,7 +62,7 @@ const teamMembers = [
     role: "Founder & CEO",
     bio: "Blending hands-on leadership in ERP, agile transformation, and education, Olivia has built a community designed to support project professionals.",
     image:
-      "/image/olivia.jpeg",
+      "/image/olivia.webp",
     achievements: "Strategic Leadership & Delivery",
   },
   {
@@ -71,7 +71,7 @@ const teamMembers = [
     role: "Senior IT Project Manager & PMI ATP Instructor",
     bio: "With a background as a senior IT project manager, PMI ATP instructor, and entrepreneur, Angela leads Agile initiatives in the public sector while developing future project leaders.",
     image:
-      "/image/angela.jpeg",
+      "/image/angela.webp",
     achievements: "Agile Delivery & Instruction",
   },
   {
@@ -80,7 +80,7 @@ const teamMembers = [
     role: "Certified Executive Coach & Change Management Practitioner",
     bio: "With a foundation in HR leadership and executive coaching and change management, Toni supports individuals in navigating transformation with authenticity.",
     image:
-      "/image/tony.jpg",
+      "/image/tony.webp",
     achievements: "Executive Coaching & Change Leadership",
   },
 ];
@@ -148,7 +148,7 @@ const certifications = [
     ),
 
     image:
-      "https://res.cloudinary.com/dggotjc19/image/upload/v1752432219/Picture2_dend0y.png", // Placeholder image URL
+      "https://res.cloudinary.com/dggotjc19/image/upload/v1752432219/Picture2_dend0y.png",
   },
   {
     name: "Certified Change Practitioner",
@@ -203,59 +203,64 @@ export default function AboutPage() {
       <Header />
       <div className="min-h-screen  ">
         {/* Hero Section with Office Background */}
-        <section className=" md:min-h-[100vh] relative pt-28 pb-10 md:pt-40 md:pb-20 overflow-hidden">
-          {/* Office Background Image */}
-          <div className="absolute inset-0">
-            <Image
-              src="/image/about.jpeg"
-              alt="Modern office workspace"
-              fill
-              className="object-cover"
-              sizes="100vw"
-              priority
-              style={{ objectFit: "cover" }}
-            />
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-[#0a192f]/50 z-10" />
-          </div>
+        <section className="relative min-h-[80vh] md:min-h-[100vh] pt-24 md:pt-80 pb-12 md:pb-20 overflow-hidden">
+  {/* Office Background Image */}
+  <div className="absolute inset-0">
+    <Image
+      src="/image/about.jpg"
+      alt="Modern office workspace"
+      fill
+      priority
+      className="object-cover"
+      sizes="100vw"
+    />
+    {/* Overlay gradient */}
+    <div className="absolute inset-0 bg-[#0a192f]/40 z-10" />
+  </div>
 
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div
-              className={`max-w-4xl mx-auto text-center transition-all duration-1000 ${
-                isVisible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
-            >
-              <div className="inline-flex items-center px-4 py-2  backdrop-blur-sm rounded-full mb-6 border border-white/20">
-                <span className="text-sm font-medium text-white">
-                  Transforming Project Management Excellence
-                </span>
-              </div>
+  <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+    <div
+      className={`max-w-5xl mx-auto text-center transition-all duration-1000 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+      }`}
+    >
+      {/* Tagline */}
+      <div className="inline-flex items-center px-4 py-2 backdrop-blur-md rounded-full mb-6 border border-white/20">
+        <span className="text-sm sm:text-base font-medium text-gray-200">
+          Transforming Project Management Excellence
+        </span>
+      </div>
 
-              <h1
-                className={`text-3xl md:text-7xl font-bold text-white mb-6  drop-shadow-lg ${bonVivant.className}`}
-              >
-                About The PM Society
-              </h1>
+      {/* Title */}
+      <h1
+        className={`text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-xl leading-tight ${bonVivant.className}`}
+      >
+        About The PM Society
+      </h1>
 
-              {/* Stats Row */}
-              <div className="grid grid-cols-3  gap-6 mt-12">
-                {stats.map((stat, index) => (
-                  <div key={index} className="text-center group">
-                    <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl text-white mb-3 group-hover:scale-110 group-hover:bg-white/30 transition-all duration-300 border border-white/20">
-                      {stat.icon}
-                    </div>
-                    <div className="text-2xl md:text-3xl font-bold text-white">
-                      {stat.number}
-                    </div>
-                    <div className="text-sm text-slate-200">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
+      {/* Stats Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 mt-12">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className="text-center group flex flex-col items-center"
+          >
+            <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md rounded-xl text-white mb-3 group-hover:scale-110 group-hover:bg-white/30 transition-transform duration-300 border border-white/20">
+              {stat.icon}
+            </div>
+            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+              {stat.number}
+            </div>
+            <div className="text-sm sm:text-base text-slate-200">
+              {stat.label}
             </div>
           </div>
-        </section>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
 
         {/* Mission & Vision Section */}
         <section className="py-20 relative ">
@@ -304,19 +309,44 @@ export default function AboutPage() {
               </div>
 
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl blur-2xl"></div>
-                <div className="relative h-96 md:h-[500px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/50">
-                  <Image
-                    src="https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                    alt="Team collaboration"
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-700"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
-                    style={{ objectFit: "cover" }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                </div>
+              
+                 <motion.div
+            className="relative h-96 lg:h-[500px] max-w-4xl mx-auto mt-16 rounded-xl overflow-hidden shadow-xl"
+            variants={videoVariants}
+            whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+          >
+            {/* Custom Play Button Overlay - Only shown before video starts */}
+            {!hasStarted && (
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center z-10 bg-black/30 cursor-pointer"
+                onClick={() => setHasStarted(true)}
+                whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+              >
+                <motion.div
+                  className="flex items-center justify-center w-20 h-20 bg-white/90 rounded-full shadow-2xl hover:bg-white transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <FaPlay className="w-8 h-8 text-black-600 ml-1" />
+                </motion.div>
+              </motion.div>
+            )}
+
+            {/* YouTube Video Iframe */}
+            <iframe
+              src={`https://www.youtube.com/embed/8WTlff0TT_w?${hasStarted ? 'autoplay=1&mute=0' : 'mute=1'}&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
+              allow="autoplay; encrypted-media; picture-in-picture"
+              className="w-full h-full rounded-xl"
+              frameBorder="0"
+              allowFullScreen
+              title="TPMS Training Video"
+            />
+
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+          </motion.div>
               </div>
             </div>
           </div>
@@ -362,43 +392,7 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
-          <motion.div
-            className="relative h-96 lg:h-[500px] max-w-4xl mx-auto mt-16 rounded-xl overflow-hidden shadow-xl"
-            variants={videoVariants}
-            whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
-          >
-            {/* Custom Play Button Overlay - Only shown before video starts */}
-            {!hasStarted && (
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center z-10 bg-black/40 cursor-pointer"
-                onClick={() => setHasStarted(true)}
-                whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-              >
-                <motion.div
-                  className="flex items-center justify-center w-20 h-20 bg-white/90 rounded-full shadow-2xl hover:bg-white transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <FaPlay className="w-8 h-8 text-blue-600 ml-1" />
-                </motion.div>
-              </motion.div>
-            )}
-
-            {/* YouTube Video Iframe */}
-            <iframe
-              src={`https://www.youtube.com/embed/8WTlff0TT_w?${hasStarted ? 'autoplay=1&mute=0' : 'mute=1'}&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
-              allow="autoplay; encrypted-media; picture-in-picture"
-              className="w-full h-full rounded-xl"
-              frameBorder="0"
-              allowFullScreen
-              title="TPMS Training Video"
-            />
-
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
-          </motion.div>
+         
         </section>
 
         {/* Team Section */}

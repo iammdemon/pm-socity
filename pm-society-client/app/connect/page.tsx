@@ -26,6 +26,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
+import { useSubmitContactFormMutation } from "../redux/services/contactApi";
+import { ContactSection } from "../components/connect/ContactSection";
+import { useForm } from "react-hook-form";
 
 interface FormData {
   name: string;
@@ -34,9 +37,7 @@ interface FormData {
   message: string;
 }
 
-interface FormErrors {
-  [key: string]: string;
-}
+
 
 // Animation variants
 const fadeInUp = {
@@ -66,12 +67,20 @@ const FloatingParticles = () => (
         key={i}
         className="absolute w-2 h-2 bg-white/20 rounded-full"
         initial={{
-          x: Math.random() * (typeof window !== "undefined" ? window.innerWidth : 1200),
-          y: Math.random() * (typeof window !== "undefined" ? window.innerHeight : 800),
+          x:
+            Math.random() *
+            (typeof window !== "undefined" ? window.innerWidth : 1200),
+          y:
+            Math.random() *
+            (typeof window !== "undefined" ? window.innerHeight : 800),
         }}
         animate={{
-          x: Math.random() * (typeof window !== "undefined" ? window.innerWidth : 1200),
-          y: Math.random() * (typeof window !== "undefined" ? window.innerHeight : 800),
+          x:
+            Math.random() *
+            (typeof window !== "undefined" ? window.innerWidth : 1200),
+          y:
+            Math.random() *
+            (typeof window !== "undefined" ? window.innerHeight : 800),
         }}
         transition={{
           duration: 20 + Math.random() * 10,
@@ -84,76 +93,32 @@ const FloatingParticles = () => (
 );
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
+const [submitContactForm] = useSubmitContactFormMutation();
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
 
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "Message is required";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (
-    e?: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    if (e) e.preventDefault();
-
-    if (!validateForm()) return;
-
+  const onSubmit = async (data: FormData) => {
     setIsLoading(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    setIsSubmitted(true);
-    setIsLoading(false);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-    });
+    console.log("Submitting contact form:", data);
+    try {
+      await submitContactForm(data).unwrap();
+      setIsSubmitted(true);
+      reset();
+    } catch (error) {
+      console.error("Failed to submit contact form:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
   return (
     <>
@@ -175,7 +140,7 @@ export default function ContactPage() {
           <div
             className="absolute inset-0 bg-cover bg-center opacity-50 "
             style={{
-              backgroundImage: `url('/image/connect.jpeg')`,
+              backgroundImage: `url('/image/connect.webp')`,
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
@@ -201,7 +166,7 @@ export default function ContactPage() {
               </motion.div>
 
               <motion.h1
-                className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-4 sm:mb-6 leading-tight"
+                className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-300 mb-4 sm:mb-6 leading-tight"
                 variants={fadeInUp}
               >
                 Let&apos;s Create Something Amazing Together
@@ -218,8 +183,7 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section className="relative py-12 sm:py-16 z-10">
+       <section className="relative py-5 z-10">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 max-w-7xl mx-auto"
@@ -230,18 +194,18 @@ export default function ContactPage() {
               {/* Contact Form */}
               <motion.div variants={fadeInUp}>
                 <Card className="bg-white/70 backdrop-blur-xl border-white/30 shadow-2xl w-full">
-                  <CardContent className="p-6 sm:p-8">
+                  <CardContent className="p-6">
                     <AnimatePresence mode="wait">
                       {isSubmitted ? (
                         <motion.div
-                          className="text-center py-12 sm:py-16"
+                          className="text-center py-12"
                           variants={scaleIn}
                           initial="initial"
                           animate="animate"
                           exit={{ opacity: 0, scale: 0.8 }}
                         >
                           <motion.div
-                            className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-green-500 mb-6 sm:mb-8"
+                            className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black mb-6 sm:mb-8"
                             animate={{
                               scale: [1, 1.2, 1],
                               rotate: [0, 360],
@@ -270,234 +234,149 @@ export default function ContactPage() {
                           </Button>
                         </motion.div>
                       ) : (
-                        <motion.div
+                        <motion.form
+                          onSubmit={handleSubmit(onSubmit)}
                           variants={fadeInUp}
                           initial="initial"
                           animate="animate"
                           exit={{ opacity: 0, y: -20 }}
+                          className="space-y-1"
                         >
                           <CardHeader className="px-0 pt-0">
-                            <CardTitle className="text-2xl sm:text-3xl font-bold text-black flex items-center py-4 sm:py-5">
+                            <CardTitle className="text-xl sm:text-3xl font-bold text-black flex items-center py-3.5">
                               <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-black mr-2 sm:mr-3" />
-                              Drop Us a Line
+                              Step into the Society
                             </CardTitle>
                           </CardHeader>
 
-                          <div className="space-y-4 sm:space-y-6">
-                            <div className="space-y-2">
-                              <Label className="text-black flex items-center font-medium text-sm sm:text-base">
-                                <User className="h-4 w-4 mr-2" />
-                                Full Name *
-                              </Label>
-                              <Input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                className={`bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base ${
-                                  errors.name ? "border-red-500" : ""
-                                }`}
-                                placeholder="John Doe"
-                              />
-                              {errors.name && (
-                                <Alert variant="destructive" className="py-2">
-                                  <AlertDescription className="text-xs sm:text-sm">
-                                    {errors.name}
-                                  </AlertDescription>
-                                </Alert>
-                              )}
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label className="text-black flex items-center font-medium text-sm sm:text-base">
-                                <Mail className="h-4 w-4 mr-2" />
-                                Email Address *
-                              </Label>
-                              <Input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className={`bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base ${
-                                  errors.email ? "border-red-500" : ""
-                                }`}
-                                placeholder="john@example.com"
-                              />
-                              {errors.email && (
-                                <Alert variant="destructive" className="py-2">
-                                  <AlertDescription className="text-xs sm:text-sm">
-                                    {errors.email}
-                                  </AlertDescription>
-                                </Alert>
-                              )}
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label className="text-black flex items-center font-medium text-sm sm:text-base">
-                                <Phone className="h-4 w-4 mr-2" />
-                                Phone Number
-                              </Label>
-                              <Input
-                                type="tel"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                className="bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base"
-                                placeholder="+1 (555) 123-4567"
-                              />
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label className="text-black flex items-center font-medium text-sm sm:text-base">
-                                <MessageCircle className="h-4 w-4 mr-2" />
-                                Message *
-                              </Label>
-                              <Textarea
-                                name="message"
-                                rows={4}
-                                value={formData.message}
-                                onChange={handleChange}
-                                className={`resize-none bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base ${
-                                  errors.message ? "border-red-500" : ""
-                                }`}
-                                placeholder="Tell us about your project or how we can help you..."
-                              />
-                              {errors.message && (
-                                <Alert variant="destructive" className="py-2">
-                                  <AlertDescription className="text-xs sm:text-sm">
-                                    {errors.message}
-                                  </AlertDescription>
-                                </Alert>
-                              )}
-                            </div>
-
-                            <Button
-                              onClick={() => handleSubmit()}
-                              disabled={isLoading}
-                              className="w-full bg-black hover:bg-gray-800 text-white text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
-                              size="lg"
-                            >
-                              {isLoading ? (
-                                <>
-                                  <motion.div
-                                    className="h-4 w-4 sm:h-5 sm:w-5 border-2 border-white border-t-transparent rounded-full mr-2"
-                                    animate={{ rotate: 360 }}
-                                    transition={{
-                                      duration: 1,
-                                      repeat: Infinity,
-                                      ease: "linear",
-                                    }}
-                                  />
-                                  Sending...
-                                </>
-                              ) : (
-                                <>
-                                  <Send className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                                  Send Message
-                                </>
-                              )}
-                            </Button>
+                          {/* Name */}
+                          <div>
+                            <Label className="text-black flex items-center font-medium text-sm sm:text-base">
+                              <User className="h-4 w-4 mr-2" />
+                              Full Name *
+                            </Label>
+                            <Input
+                              type="text"
+                              {...register("name", {
+                                required: "Name is required",
+                              })}
+                              className={`bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base ${
+                                errors.name ? "border-red-500" : ""
+                              }`}
+                              placeholder="John Doe"
+                            />
+                            {errors.name && (
+                              <Alert variant="destructive" className="py-2">
+                                <AlertDescription className="text-xs sm:text-sm">
+                                  {errors.name.message}
+                                </AlertDescription>
+                              </Alert>
+                            )}
                           </div>
-                        </motion.div>
+
+                          {/* Email */}
+                          <div>
+                            <Label className="text-black flex items-center font-medium text-sm sm:text-base">
+                              <Mail className="h-4 w-4 mr-2" />
+                              Email Address *
+                            </Label>
+                            <Input
+                              type="email"
+                              {...register("email", {
+                                required: "Email is required",
+                                pattern: {
+                                  value: /^\S+@\S+\.\S+$/,
+                                  message: "Invalid email address",
+                                },
+                              })}
+                              className={`bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base ${
+                                errors.email ? "border-red-500" : ""
+                              }`}
+                              placeholder="john@example.com"
+                            />
+                            {errors.email && (
+                              <Alert variant="destructive" className="py-2">
+                                <AlertDescription className="text-xs sm:text-sm">
+                                  {errors.email.message}
+                                </AlertDescription>
+                              </Alert>
+                            )}
+                          </div>
+
+                          {/* Phone (optional) */}
+                          <div>
+                            <Label className="text-black flex items-center font-medium text-sm sm:text-base">
+                              <Phone className="h-4 w-4 mr-2" />
+                              Phone Number
+                            </Label>
+                            <Input
+                              type="tel"
+                              {...register("phone")}
+                              className="bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base"
+                              placeholder="+1 (555) 123-4567"
+                            />
+                          </div>
+
+                          {/* Message */}
+                          <div>
+                            <Label className="text-black flex items-center font-medium text-sm sm:text-base">
+                              <MessageCircle className="h-4 w-4 mr-2" />
+                              Message *
+                            </Label>
+                            <Textarea
+                              rows={4}
+                              {...register("message", {
+                                required: "Message is required",
+                              })}
+                              className={`resize-none bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base ${
+                                errors.message ? "border-red-500" : ""
+                              }`}
+                              placeholder="Tell us about your project or how we can help you..."
+                            />
+                            {errors.message && (
+                              <Alert variant="destructive" className="py-2">
+                                <AlertDescription className="text-xs sm:text-sm">
+                                  {errors.message.message}
+                                </AlertDescription>
+                              </Alert>
+                            )}
+                          </div>
+
+                          {/* Submit Button */}
+                          <Button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full bg-black hover:bg-gray-800 text-white text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
+                            size="lg"
+                          >
+                            {isLoading ? (
+                              <>
+                                <motion.div
+                                  className="h-4 w-4 sm:h-5 sm:w-5 border-2 border-white border-t-transparent rounded-full mr-2"
+                                  animate={{ rotate: 360 }}
+                                  transition={{
+                                    duration: 1,
+                                    repeat: Infinity,
+                                    ease: "linear",
+                                  }}
+                                />
+                                Sending...
+                              </>
+                            ) : (
+                              <>
+                                <Send className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                                Send Message
+                              </>
+                            )}
+                          </Button>
+                        </motion.form>
                       )}
                     </AnimatePresence>
                   </CardContent>
                 </Card>
               </motion.div>
 
-              {/* Contact Information */}
-              <motion.div variants={fadeInUp}>
-                <Card className="bg-white/70 backdrop-blur-xl border-white/30 shadow-2xl w-full">
-                  <CardContent className="p-6 sm:p-8">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-black mb-4 sm:mb-6">
-                      Get in Touch
-                    </h2>
-                    <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-lg leading-relaxed">
-                      Ready to elevate your project management skills?
-                      Let&apos;s connect and discuss how we can help you achieve
-                      your goals.
-                    </p>
-
-                    <div className="space-y-4 sm:space-y-6">
-                      {[
-                        {
-                          icon: Mail,
-                          title: "Email Us",
-                          content: "contact@thepmsociety.com",
-                          href: "mailto:contact@thepmsociety.com",
-                          hover: "hover:bg-blue-600",
-                        },
-                        {
-                          icon: Phone,
-                          title: "Call Us",
-                          content: "832-535-5064",
-                          href: "tel:8325355064",
-                          hover: "hover:bg-green-600",
-                        },
-                        {
-                          icon: Instagram,
-                          title: "Instagram",
-                          content: "@thepmsociety",
-                          href: "https://www.instagram.com/thepmsociety",
-                          hover: "hover:bg-purple-600",
-                        },
-                        {
-                          icon: Facebook,
-                          title: "Facebook",
-                          content: "@thepmsociety",
-                          href: "https://www.facebook.com/thepmsociety",
-                          hover: "hover:bg-blue-600",
-                        },
-                        {
-                          icon: Linkedin,
-                          title: "LinkedIn",
-                          content: "@thepmsociety",
-                          href: "https://www.linkedin.com/company/thepmsociety",
-                          hover: "hover:bg-blue-800",
-                        },
-                      ].map((item, index) => (
-                        <motion.div
-                          key={index}
-                          className="flex items-start group cursor-pointer"
-                          whileHover={{ x: 10 }}
-                          transition={{
-                            type: "spring",
-                            stiffness: 400,
-                            damping: 10,
-                          }}
-                        >
-                          <div className="flex-shrink-0 mt-1">
-                            <motion.div
-                              className={`w-10 h-10 sm:w-12 sm:h-12 bg-black ${item.hover} rounded-xl flex items-center justify-center transition-colors`}
-                              whileHover={{ scale: 1.1, rotate: 5 }}
-                              transition={{
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 10,
-                              }}
-                            >
-                              <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                            </motion.div>
-                          </div>
-                          <div className="ml-4 sm:ml-6">
-                            <h3 className="text-lg sm:text-xl font-semibold text-black mb-1 sm:mb-2">
-                              {item.title}
-                            </h3>
-                            <a
-                              href={item.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-gray-600 hover:text-black transition-colors whitespace-pre-line text-sm sm:text-base"
-                            >
-                              {item.content}
-                            </a>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+              <ContactSection />
             </motion.div>
           </div>
         </section>

@@ -37,7 +37,7 @@ const CallToAction = () => {
       {/* Background Image */}
       <div className="absolute inset-0 opacity-10">
         <Image
-          src="https://images.pexels.com/photos/3184298/pexels-photo-3184298.jpeg?auto=compress&cs=tinysrgb&w=1600"
+          src="https://images.pexels.com/photos/3184298/pexels-photo-3184298.webp?auto=compress&cs=tinysrgb&w=1600"
           width={100}
           height={100}
           alt="Cool professional workspace background"

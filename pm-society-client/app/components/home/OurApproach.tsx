@@ -21,35 +21,35 @@ const steps = [
     description: 'Join our live virtual PMP course to kickstart your journey.',
     icon: <FaSignInAlt className="h-6 w-6  dark:text-blue-400" />,
     image:
-      '/image/enroll.jpeg',
+      '/image/enroll.webp',
   },
   {
     title: 'Learn',
     description: 'Engage in interactive sessions with comprehensive resources.',
     icon: <FaChalkboardTeacher className="h-6 w-6  dark:text-blue-400" />,
     image:
-      '/image/learn.jpeg',
+      '/image/learn.webp',
   },
   {
     title: 'Coach',
     description: 'Receive customized 1:1 guidance tailored to your needs.',
     icon: <FaUserCheck className="h-6 w-6  dark:text-blue-400" />,
     image:
-      '/image/coach-2.jpeg',
+      '/image/coach-2.webp',
   },
   {
     title: 'Mentor',
     description: 'Get career strategy support post-certification.',
     icon: <FaHandsHelping className="h-6 w-6  dark:text-blue-400" />,
     image:
-      '/image/mentor-2.jpeg',
+      '/image/mentor-2.webp',
   },
   {
     title: 'Thrive',
     description: 'Excel in your new project leadership role.',
     icon: <FaTrophy className="h-6 w-6  dark:text-blue-400" />,
     image:
-      '/image/thrive.jpeg',
+      '/image/thrive.webp',
   },
 ];
 

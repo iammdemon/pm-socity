@@ -52,12 +52,14 @@ export default function Footer() {
           {/* Column 2 - Quick Links */}
           <div>
             <h4 className="text-white font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 font-medium text-white">
+            <ul className="space-y-1 font-medium text-white">
               <FooterLink href="/">Home</FooterLink>
               <FooterLink href="/about">About Us</FooterLink>
               <FooterLink href="/services">Services</FooterLink>
-
               <FooterLink href="/contact">Contact</FooterLink>
+              <FooterLink href="/privacy-policy">Privacy Policy</FooterLink>
+              <FooterLink href="/terms">Terms of Service</FooterLink>
+            
             </ul>
           </div>
 

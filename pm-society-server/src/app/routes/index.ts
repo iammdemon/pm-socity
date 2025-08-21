@@ -7,6 +7,7 @@ import { EventRoutes } from "../modules/events/route.events";
 import { ResourceRoutes } from "../modules/resources/route.resources";
 import { chatRoutes } from "../modules/chat/route.chat";
 import { AuthRoutes } from "../modules/auth/route.auth";
+import { ContactRoutes } from "../modules/contact/route.contact";
 
 const router: Router = Router();
 
@@ -37,6 +38,9 @@ const moduleRoutes = [{
 {
     path: "/chat",
     route: chatRoutes
+},{
+    path: "/contact",
+    route: ContactRoutes
 }]
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

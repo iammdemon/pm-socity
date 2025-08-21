@@ -35,7 +35,7 @@ export default function ParallaxSection() {
   return (
     <section 
       ref={sectionRef}
-      className="h-[600px] bg-[url(/image/elevate.jpeg)] bg-cover bg-center relative"
+      className="h-[600px] bg-[url(/image/elevate.webp)] bg-cover bg-center relative"
     >
       <div className="absolute inset-0 bg-[#0a192f]/70 "></div>
       <div className="relative z-10 h-full flex items-center justify-center">

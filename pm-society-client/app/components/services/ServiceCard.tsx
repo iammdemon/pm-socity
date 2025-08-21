@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { FiCheck, FiStar } from "react-icons/fi";
-
 import Link from "next/link";
 
 interface ServiceCardProps {
@@ -30,15 +29,23 @@ function ServiceCard({
 
   return (
     <div
-      className="h-[450px] w-full max-w-md mx-auto"
+      className="relative w-full max-w-xl sm:max-w-md mx-auto h-[450px] md:h-[500px] "
       style={{ perspective: "1000px" }}
       onMouseEnter={() => {
-        setIsFlipped(true);
-        setIsHovered(true);
+        if (window.innerWidth >= 768) {
+          setIsFlipped(true);
+          setIsHovered(true);
+        }
       }}
       onMouseLeave={() => {
         setIsFlipped(false);
         setIsHovered(false);
+      }}
+      onClick={() => {
+        if (window.innerWidth < 768) {
+          setIsFlipped(!isFlipped);
+          setIsHovered(!isHovered);
+        }
       }}
     >
       <div
@@ -54,47 +61,42 @@ function ServiceCard({
           } transition-all duration-300`}
           style={{ backfaceVisibility: "hidden" }}
         >
-          {/* Featured badge */}
           {featured && (
-            <div className="absolute top-4 right-4 bg-gray-900 text-white rounded-full px-3 py-1 flex items-center gap-1">
-              <FiStar className="h-3 w-3 fill-current" />
+            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-gray-900 text-white rounded-full px-2 sm:px-3 py-1 flex items-center gap-1">
+              <FiStar className="h-2.5 w-2.5 sm:h-3 sm:w-3 fill-current" />
               <span className="text-xs font-medium">Popular</span>
             </div>
           )}
           
-          <div className="p-8 h-full flex flex-col">
-            {/* Icon */}
-            <div className={`mb-6 transform transition-transform duration-300 ${isHovered ? "scale-110" : ""}`}>
-              <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center">
-                <div className="text-2xl text-gray-700">
+          <div className="p-4 sm:p-6 md:p-8 h-full flex flex-col">
+            <div className={`mb-4 sm:mb-6 transform transition-transform duration-300 ${isHovered ? "scale-110" : ""}`}>
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl bg-gray-50 flex items-center justify-center">
+                <div className="text-xl sm:text-2xl text-gray-700">
                   {icon}
                 </div>
               </div>
             </div>
 
-            {/* Content */}
             <div className="flex-1">
-              <h3 className="text-2xl font-bold mb-4 leading-tight text-gray-900">{title}</h3>
-              <p className="mb-6 leading-relaxed text-gray-600">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-3 sm:mb-4 leading-tight text-gray-900">{title}</h3>
+              <p className="mb-4 sm:mb-6 text-sm sm:text-base leading-relaxed text-gray-600">
                 {description}
               </p>
               
               {price && (
-                <div className="mb-6">
-                  <div className="text-2xl font-bold text-gray-900">
+                <div className="mb-4 sm:mb-6">
+                  <div className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
                     {price}
                   </div>
                 </div>
               )}
             </div>
 
-            {/* CTA Button */}
             <button
               onClick={() => setIsFlipped(true)}
-              className="group flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-medium transition-all duration-200 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-md"
+              className="group flex items-center justify-center gap-2 py-2 sm:py-3 px-4 sm:px-6 rounded-xl font-medium transition-all duration-200 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-md text-sm sm:text-base"
             >
-              Learn More 
-             
+              Learn More
             </button>
           </div>
         </div>
@@ -107,21 +109,19 @@ function ServiceCard({
             transform: "rotateY(180deg)"
           }}
         >
-          <div className="p-8 h-full flex flex-col">
-            {/* Header */}
-            <div className="mb-4">
-              <h3 className="text-2xl font-bold mb-2">{title}</h3>
-              <div className="w-12 h-1 bg-white/30 rounded"></div>
+          <div className="p-4 sm:p-6 md:p-8 h-full flex flex-col">
+            <div className="mb-3 sm:mb-4">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2">{title}</h3>
+              <div className="w-10 sm:w-12 h-1 bg-white/30 rounded"></div>
             </div>
 
-            {/* Features */}
-            <div className="flex-1">
-              <h4 className="text-lg font-semibold mb-4 text-gray-300">What&#39;s Included:</h4>
-              <ul className="space-y-2">
+            <div className="flex-1 overflow-y-auto">
+              <h4 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-300">What&#39;s Included:</h4>
+              <ul className="space-y-2 text-sm sm:text-base">
                 {features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-3 group">
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-white/20 flex items-center justify-center mt-0.5">
-                      <FiCheck className="h-3 w-3" />
+                  <li key={index} className="flex items-start gap-2 sm:gap-3 group">
+                    <div className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-white/20 flex items-center justify-center mt-0.5">
+                      <FiCheck className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                     </div>
                     <span className="text-gray-200 leading-relaxed group-hover:text-white transition-colors">
                       {feature}
@@ -131,19 +131,19 @@ function ServiceCard({
               </ul>
             </div>
 
-            {/* CTA */}
             <div className="mt-3">
               <Link
                 href={ctaLink}
-                className="group w-full bg-white text-gray-900 py-4 px-6 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-lg"
+                className="group w-full bg-white text-gray-900 py-2 sm:py-3 px-4 sm:px-6 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-lg text-sm sm:text-base"
               >
                 {cta}
-                
               </Link>
             </div>
           </div>
         </div>
       </div>
+
+    
     </div>
   );
 }

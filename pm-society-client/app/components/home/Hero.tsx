@@ -1,13 +1,44 @@
 "use client";
-
 import Link from "next/link";
 import localFont from "next/font/local";
+import { useState, useRef, useEffect } from "react";
 
 const bonVivant = localFont({
   src: "../../../public/fonts/BonVivantSerifBold.ttf",
 });
 
 export default function Hero() {
+  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+ 
+  const handlePlayBackgroundAudio = () => {
+    const audio = audioRef.current as HTMLAudioElement | null;
+    if (audio) {
+      audio.play();
+      setIsAudioEnabled(true);
+    }
+  };
+
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (audioRef.current && !isAudioEnabled) {
+        audioRef.current.play();
+        setIsAudioEnabled(true);
+      }
+      // Remove listeners after first interaction
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('keydown', handleFirstInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, [isAudioEnabled]);
+
   return (
     <section className="relative h-screen w-full overflow-hidden">
       {/* Video Background */}
@@ -16,7 +47,7 @@ export default function Hero() {
         <video
           className="absolute inset-0 w-full h-full object-cover"
           autoPlay
-          muted
+          muted={!isAudioEnabled}
           loop
           playsInline
           preload="auto"
@@ -25,6 +56,20 @@ export default function Hero() {
         </video>
         <div className="absolute inset-0 bg-[#0a192f]/10 z-10" />
       </div>
+
+      {/* Separate Background Audio */}
+      <audio
+        ref={audioRef}
+        loop
+        preload="auto"
+        style={{ display: 'none' }}
+      >
+        <source src="/audio/background-music.mp3" type="audio/mpeg" />
+        <source src="/audio/background-music.ogg" type="audio/ogg" />
+      </audio>
+
+
+  
 
       {/* Content */}
       <div className="relative z-20 flex h-full items-start justify-center text-center px-4">

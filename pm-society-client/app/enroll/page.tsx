@@ -4,10 +4,11 @@ import React, { useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { SuccessCard } from "../components/payment/SuccessCard";
-import { packages, RegistrationForm } from "../components/payment/RegistrationForm";
+import {  RegistrationForm } from "../components/payment/RegistrationForm";
 import { PackageCard } from "../components/payment/PackageCard";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import { packages } from "../components/payment/Packages";
 
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);

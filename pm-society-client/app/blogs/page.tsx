@@ -69,7 +69,7 @@ const blogs: BlogPost[] = (blogsResponse && Array.isArray((blogsResponse as unkn
         {/* Hero */}
         <section className="relative overflow-hidden min-h-screen">
           <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-            backgroundImage: 'url(/image/blog.jpeg)'
+            backgroundImage: 'url(/image/blog.webp)'
           }} />
           <div className="absolute inset-0 bg-[#0a192f]/40 z-10" />
           <div className="relative z-20 max-w-7xl mx-auto px-4 py-24 flex items-center min-h-screen">

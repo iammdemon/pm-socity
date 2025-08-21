@@ -8,6 +8,7 @@ const route_events_1 = require("../modules/events/route.events");
 const route_resources_1 = require("../modules/resources/route.resources");
 const route_chat_1 = require("../modules/chat/route.chat");
 const route_auth_1 = require("../modules/auth/route.auth");
+const route_contact_1 = require("../modules/contact/route.contact");
 const router = (0, express_1.Router)();
 const moduleRoutes = [{
         path: "/users",
@@ -35,6 +36,9 @@ const moduleRoutes = [{
     {
         path: "/chat",
         route: route_chat_1.chatRoutes
+    }, {
+        path: "/contact",
+        route: route_contact_1.ContactRoutes
     }];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
 exports.default = router;

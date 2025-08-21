@@ -14,6 +14,7 @@ import {
   LayoutDashboardIcon,
   UploadCloud,
   CalendarDays,
+  MessageCircleQuestion,
 } from "lucide-react";
 import { useGetMeQuery, useLogoutMutation } from "@/app/redux/services/authApi";
 
@@ -36,8 +37,6 @@ export default function AdminSidebar() {
     skip: !accessToken,
   });
 
-
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsMobileOpen(false);
@@ -53,21 +52,25 @@ export default function AdminSidebar() {
     };
   }, [isMobileOpen]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!isLoading && userData && userData.data?.role !== "admin") {
       router.push("/");
     }
   }, [userData, isLoading, router]);
 
-   const handleLogout = async () => {
+  const handleLogout = async () => {
     await logout({});
     localStorage.clear();
     router.push("/");
   };
-  
 
   const adminMenu = [
     { icon: Home, label: "Dashboard", href: "/admin" },
+    {
+      icon: MessageCircleQuestion,
+      label: "Contact Submissions",
+      href: "/admin/contact",
+    },
     { icon: Users, label: "User Management", href: "/admin/users-management" },
     {
       icon: LayoutDashboardIcon,
@@ -90,10 +93,10 @@ export default function AdminSidebar() {
       href: "/admin/resources-management",
     },
     {
-      icon: CgPassword ,
+      icon: CgPassword,
       label: "Change Password",
       href: "/admin/change-password",
-    }
+    },
   ];
 
   const isActive = (href: string) => pathname === href;

@@ -11,7 +11,7 @@ const notFound_1 = __importDefault(require("./app/middlewares/notFound"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: ["https://www.thepmsociety.com", "http://localhost:3000", "https://pm-society.vercel.app"],
+    origin: ["https://www.thepmsociety.com", "http://localhost:3000", "https://pm-society.vercel.app", "https://pm-socity.vercel.app"],
     credentials: true,
 }));
 app.use((0, cookie_parser_1.default)());

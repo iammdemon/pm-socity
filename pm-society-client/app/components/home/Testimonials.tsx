@@ -14,7 +14,7 @@ const testimonials = [
     role: 'Senior Project Manager',
     company: 'TechCorp Inc.',
     imageUrl:
-      'https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=300',
+      'https://images.pexels.com/photos/762020/pexels-photo-762020.webp?auto=compress&cs=tinysrgb&w=300',
     quote:
       'The PMP training from TPMS was instrumental in my career growth. I passed my exam on the first attempt and have since been promoted twice. Their mentorship program continues to guide my professional development.',
   },
@@ -24,7 +24,7 @@ const testimonials = [
     role: 'Program Director',
     company: 'Global Solutions',
     imageUrl:
-      'https://images.pexels.com/photos/846741/pexels-photo-846741.jpeg?auto=compress&cs=tinysrgb&w=300',
+      'https://images.pexels.com/photos/846741/pexels-photo-846741.webp?auto=compress&cs=tinysrgb&w=300',
     quote:
       'As someone who had been in project management for years, I was skeptical about what more I could learn. The executive coaching at TPMS transformed my leadership approach and helped me secure a director-level position.',
   },
@@ -34,7 +34,7 @@ const testimonials = [
     role: 'PMO Lead',
     company: 'FinTech Innovations',
     imageUrl:
-      'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=300',
+      'https://images.pexels.com/photos/1181686/pexels-photo-1181686.webp?auto=compress&cs=tinysrgb&w=300',
     quote:
       "The mentorship I received through TPMS gave me the confidence to lead our company's PMO transformation. Their practical, real-world approach to project management challenges is refreshing and effective.",
   },

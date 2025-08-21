@@ -194,7 +194,7 @@ export default function ServicesPage() {
                 guide every step of your journey.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 s">
               {services.map((service, index) => (
                 <ServiceCard key={index} {...service} />
               ))}
