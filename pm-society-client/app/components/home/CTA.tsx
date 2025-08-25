@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { motion, Variants, Easing } from 'framer-motion';
+import { motion, Variants} from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import localFont from 'next/font/local';
@@ -105,7 +105,8 @@ const CallToAction = () => {
                 size="lg"
                 className="border-2 border-black text-black hover:bg-gray-50 dark:border-cyan-400 dark:text-cyan-400 dark:hover:bg-cyan-400/10 font-semibold px-8 py-3"
               >
-                <Link href="/connect">Let's Connect</Link>
+                <Link href="/connect">Let&apos;s Connect</Link>
+
               </Button>
             </motion.div>
           </motion.div>
