@@ -16,7 +16,7 @@ const SocietyStandard = () => {
       whileHover={{ scale: 1.03 }}
       transition={{
         duration: 0.9,
-        ease: [0.42, 0, 0.58, 1], // cubic-bezier type-safe
+        ease: [0.42, 0, 0.58, 1] as [number, number, number, number], // cubic-bezier type-safe
         type: "spring",
         stiffness: 120,
       }}
