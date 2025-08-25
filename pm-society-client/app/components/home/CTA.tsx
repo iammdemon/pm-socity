@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants, Easing } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import localFont from 'next/font/local';
@@ -8,9 +8,10 @@ import Image from 'next/image';
 
 const bonVivant = localFont({
   src: '../../../public/fonts/BonVivantSerifBold.ttf',
-})
+});
 
-const containerVariants = {
+// Motion Variants
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -21,15 +22,19 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0,  transition: {
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
       duration: 0.5,
-      ease: [0.42, 0, 0.58, 1], 
-    },},
+      ease: 'easeInOut' as const, // ✅ Type-safe
+    },
+  },
 };
 
-const buttonVariants = {
+const buttonVariants: Variants = {
   hover: { scale: 1.05, transition: { duration: 0.2 } },
   tap: { scale: 0.95 },
 };
@@ -48,7 +53,7 @@ const CallToAction = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-200 to-cyan-200 dark:from-blue-900 dark:to-cyan-900" />
       </div>
-      
+
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
           className="text-center"
@@ -58,19 +63,19 @@ const CallToAction = () => {
           viewport={{ once: true }}
         >
           <motion.h2
-            className={`text-2xl ${bonVivant.className} font-bold text-gray-900 dark:text-white  md:text-4xl mb-6 leading-tight`}
+            className={`text-2xl ${bonVivant.className} font-bold text-gray-900 dark:text-white md:text-4xl mb-6 leading-tight`}
             variants={itemVariants}
           >
-           Ready to Become a Certified Project Leader with a Community to Support You?
+            Ready to Become a Certified Project Leader with a Community to Support You?
           </motion.h2>
-          
+
           <motion.p
             className="text-lg text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto"
             variants={itemVariants}
           >
-          Join our next training cohort and grow with expert guidance, accountability, and real connection.
+            Join our next training cohort and grow with expert guidance, accountability, and real connection.
           </motion.p>
-          
+
           <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center"
             variants={itemVariants}
@@ -85,12 +90,10 @@ const CallToAction = () => {
                 size="lg"
                 className="bg-black text-white hover:bg-gray-800 font-semibold px-8 py-3 shadow-lg"
               >
-                <Link href="enroll">
-                  Enroll Now
-                </Link>
+                <Link href="/enroll">Enroll Now</Link>
               </Button>
             </motion.div>
-            
+
             <motion.div
               variants={buttonVariants}
               whileHover="hover"
@@ -102,9 +105,7 @@ const CallToAction = () => {
                 size="lg"
                 className="border-2 border-black text-black hover:bg-gray-50 dark:border-cyan-400 dark:text-cyan-400 dark:hover:bg-cyan-400/10 font-semibold px-8 py-3"
               >
-                <Link href="connect">
-                  Let&apos;s Connect
-                </Link>
+                <Link href="/connect">Let's Connect</Link>
               </Button>
             </motion.div>
           </motion.div>
