@@ -19,6 +19,9 @@ app.use(cookieParser());
 app.set("trust proxy", 1)
 
 app.use("/api/", router);
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
 
 // app.use(globalErrorHandler);
 
