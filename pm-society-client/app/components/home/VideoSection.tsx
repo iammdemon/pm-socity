@@ -11,7 +11,7 @@ const bonVivant = localFont({
 
 export default function VideoSection() {
   return (
-    <section className="py-16  relative overflow-hidden">
+    <section className="py-16 relative overflow-hidden">
       {/* Subtle Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_70%)]" />
@@ -22,43 +22,44 @@ export default function VideoSection() {
           className="max-w-3xl mx-auto text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, ease: [0.42, 0, 0.58, 1] }}
           viewport={{ once: true }}
         >
           <motion.h2
             className={`${bonVivant.className} text-3xl md:text-5xl font-bold text-gray-900 mb-4`}
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.42, 0, 0.58, 1] }}
             viewport={{ once: true }}
           >
-           See How TPMS Supports the 
+            See How TPMS Supports the
           </motion.h2>
           <motion.h2
             className={`${bonVivant.className} text-3xl md:text-5xl font-bold text-gray-900 mb-4`}
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.42, 0, 0.58, 1] }}
             viewport={{ once: true }}
           >
-          Journey — Not Just the Exam
+            Journey — Not Just the Exam
           </motion.h2>
 
           <motion.p
             className="text-base text-gray-600 leading-relaxed"
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.42, 0, 0.58, 1] }}
             viewport={{ once: true }}
           >
-           We help you build real skills, lasting confidence, and a career in project leadership that goes beyond the credential.
+            We help you build real skills, lasting confidence, and a career in
+            project leadership that goes beyond the credential.
           </motion.p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.42, 0, 0.58, 1] }}
           viewport={{ once: true }}
         >
           <VideoCard
@@ -82,7 +83,6 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-
   return (
     <motion.div
       className="relative max-w-2xl mx-auto group"
@@ -103,7 +103,7 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.4, ease: [0.42, 0, 0.58, 1] }}
             >
               <iframe
                 src={videoUrl}
@@ -120,7 +120,7 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.4, ease: [0.42, 0, 0.58, 1] }}
             >
               <Image
                 src={thumbnailUrl}
@@ -151,7 +151,7 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
                   transition={{
                     duration: 1.5,
                     repeat: isHovered ? Infinity : 0,
-                    ease: "easeInOut",
+                    ease: [0.42, 0, 0.58, 1],
                   }}
                 />
 
@@ -169,12 +169,9 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
                     className="text-blue-600 ml-0.5"
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ delay: 0.5, duration: 0.3 }}
+                    transition={{ delay: 0.5, duration: 0.3, ease: [0.42, 0, 0.58, 1] }}
                   >
-                    <path
-                      d="M8 5.14v14.72l11-7.36L8 5.14z"
-                      fill="currentColor"
-                    />
+                    <path d="M8 5.14v14.72l11-7.36L8 5.14z" fill="currentColor" />
                   </motion.svg>
                 </motion.div>
               </motion.button>
@@ -184,13 +181,13 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
                 className="absolute bottom-0 left-0 right-0 p-6"
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
+                transition={{ delay: 0.4, duration: 0.5, ease: [0.42, 0, 0.58, 1] }}
               >
                 <motion.h3
                   className="text-2xl font-bold text-white mb-1"
                   initial={{ opacity: 0, x: -15 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5, duration: 0.4 }}
+                  transition={{ delay: 0.5, duration: 0.4, ease: [0.42, 0, 0.58, 1] }}
                 >
                   {title}
                 </motion.h3>
@@ -198,7 +195,7 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
                   className="text-white/90 text-sm"
                   initial={{ opacity: 0, x: -15 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6, duration: 0.4 }}
+                  transition={{ delay: 0.6, duration: 0.4, ease: [0.42, 0, 0.58, 1] }}
                 >
                   Watch how our program works
                 </motion.p>
@@ -208,7 +205,7 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
                   className="inline-flex items-center gap-2 mt-3 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-xs font-medium"
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.7, duration: 0.3 }}
+                  transition={{ delay: 0.7, duration: 0.3, ease: [0.42, 0, 0.58, 1] }}
                 >
                   <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
                   10:24 mins
@@ -218,8 +215,6 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
           )}
         </AnimatePresence>
       </div>
-
-
     </motion.div>
   );
 }

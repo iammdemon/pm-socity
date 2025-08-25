@@ -1,4 +1,3 @@
-
 "use client";
 
 import { motion } from "framer-motion";
@@ -15,7 +14,12 @@ const SocietyStandard = () => {
       initial={{ opacity: 0, y: 60, scale: 0.85 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       whileHover={{ scale: 1.03 }}
-      transition={{ duration: 0.9, ease: "easeOut", type: "spring", stiffness: 120 }}
+      transition={{
+        duration: 0.9,
+        ease: [0.42, 0, 0.58, 1], // cubic-bezier type-safe
+        type: "spring",
+        stiffness: 120,
+      }}
       className="w-full my-12 px-4 md:px-0 max-w-5xl mx-auto relative"
     >
       <Card className="bg-white text-gray-800 border-4 border-yellow-500 rounded-2xl shadow-2xl overflow-hidden relative animate-glow">
@@ -39,13 +43,13 @@ const SocietyStandard = () => {
             animation: gradient 8s ease infinite;
           }
         `}</style>
-      
+
         <CardContent className="p-8 md:p-12 text-center space-y-6 bg-gradient-animated">
           <motion.h2
             className={`${bonVivant.className} text-3xl md:text-4xl font-extrabold tracking-wide text-gray-900 drop-shadow-lg`}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: [0.42, 0, 0.58, 1] }}
           >
             The Society Standard
           </motion.h2>
@@ -53,7 +57,7 @@ const SocietyStandard = () => {
             className="text-lg md:text-xl leading-relaxed max-w-3xl mx-auto text-gray-800 font-medium"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.4, ease: [0.42, 0, 0.58, 1] }}
           >
             At <span className="text-yellow-600 font-bold">TPMS</span>, excellence isn’t optional;
             it is <span className="italic font-semibold underline decoration-yellow-600 decoration-2">the standard</span>. 

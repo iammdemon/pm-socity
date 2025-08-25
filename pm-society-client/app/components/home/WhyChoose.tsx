@@ -23,12 +23,12 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.42, 0, 0.58, 1] } }, // cubic-bezier
 };
 
 const videoVariants = {
   hidden: { opacity: 0, scale: 0.95 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: "easeOut" } },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: [0.42, 0, 0.58, 1] } },
 };
 
 const WhyChoose: React.FC = () => {
@@ -82,13 +82,12 @@ const WhyChoose: React.FC = () => {
             </div>
           </div>
 
-          {/* Right: Improved Video Player */}
+          {/* Right: Video */}
           <motion.div
             className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden shadow-xl"
             variants={videoVariants}
             whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
           >
-            {/* Custom Play Button Overlay - Only shown before video starts */}
             {!hasStarted && (
               <motion.div
                 className="absolute inset-0 flex items-center justify-center z-10 bg-black/40 cursor-pointer"
@@ -107,7 +106,6 @@ const WhyChoose: React.FC = () => {
               </motion.div>
             )}
 
-            {/* YouTube Video Iframe */}
             <iframe
               src={`https://www.youtube.com/embed/8WTlff0TT_w?${hasStarted ? 'autoplay=1&mute=0' : 'mute=1'}&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
               allow="autoplay; encrypted-media; picture-in-picture"
@@ -117,7 +115,6 @@ const WhyChoose: React.FC = () => {
               title="TPMS Training Video"
             />
 
-            {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
           </motion.div>
         </motion.div>

@@ -17,16 +17,14 @@ const services = [
     description:
       "Get personalized 1:1 support to help you plan, prepare, and succeed in your journey.",
     icon: <FaChalkboardTeacher className="h-8 w-8 dark:text-blue-400" />,
-    image:
-      "/image/coach.webp",
+    image: "/image/coach.webp",
   },
   {
     title: "Mentor",
     description:
       "Partner with a seasoned PM for career guidance, real-world insight, and post-certification growth.",
     icon: <FaHandsHelping className="h-8 w-8 dark:text-blue-400" />,
-    image:
-      "/image/mentor.webp",
+    image: "/image/mentor.webp",
   },
 ];
 
@@ -45,7 +43,11 @@ const containerVariants = {
 // Card animation
 const cardVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.42, 0, 0.58, 1] },
+  },
 };
 
 const WhoWeHelp: React.FC = () => {
@@ -68,8 +70,8 @@ const WhoWeHelp: React.FC = () => {
             Empowering Every Step of Your PM Journey
           </h2>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Whether you&apos;re just getting started or leading at a senior level,
-            TPMS offers personalized support, practical resources, and a
+            Whether you&apos;re just getting started or leading at a senior
+            level, TPMS offers personalized support, practical resources, and a
             community built for your growth.
           </p>
         </motion.div>
