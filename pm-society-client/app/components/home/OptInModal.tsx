@@ -1,26 +1,30 @@
 'use client';
-
-import React, { useState} from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { FaCheckCircle, FaSpinner, FaTimes } from 'react-icons/fa';
-
 
 interface OptInModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const modalVariants = {
+// ----------------- Motion Variants -----------------
+const modalVariants: Variants = {
   hidden: { opacity: 0, scale: 0.9 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: 'easeOut' } },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.3, ease: 'easeOut' as const }, // type-safe
+  },
   exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } },
 };
 
-const buttonVariants = {
+const buttonVariants: Variants = {
   hover: { scale: 1.05, transition: { duration: 0.2 } },
   tap: { scale: 0.95 },
 };
 
+// ----------------- Component -----------------
 export default function OptInModal({ isOpen, onClose }: OptInModalProps) {
   const [form, setForm] = useState({ name: '', email: '', interest: '' });
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
@@ -39,7 +43,7 @@ export default function OptInModal({ isOpen, onClose }: OptInModalProps) {
       setTimeout(() => {
         setForm({ name: '', email: '', interest: '' });
         setStatus('idle');
-        onClose(); // Close modal after success
+        onClose();
       }, 2000);
     }, 1500);
   };
@@ -62,9 +66,8 @@ export default function OptInModal({ isOpen, onClose }: OptInModalProps) {
             exit="exit"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
           >
-            {/* Subtle Background Image */}
+            {/* Gradient Background */}
             <div className="absolute inset-0 opacity-10">
-          
               <div className="absolute inset-0 bg-gradient-to-r from-blue-200 to-cyan-200 dark:from-blue-900 dark:to-cyan-900" />
             </div>
 
@@ -79,10 +82,10 @@ export default function OptInModal({ isOpen, onClose }: OptInModalProps) {
             {/* Content */}
             <div className="relative z-10">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
-                Elevate Your Career with The PM Society! 
+                Elevate Your Career with The PM Society!
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-                Join our community of project professionals and get exclusive access to resources, mentorship, and certification support. 
+                Join our community of project professionals and get exclusive access to resources, mentorship, and certification support.
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -117,10 +120,11 @@ export default function OptInModal({ isOpen, onClose }: OptInModalProps) {
                     />
                   </div>
                 </div>
-                
+
+                {/* Submit Button */}
                 <motion.button
                   type="submit"
-                  disabled={status === 'submitting' || status === 'success'}
+                  disabled={status !== 'idle'}
                   className="w-full flex items-center justify-center gap-2 bg-black text-white font-semibold py-3 rounded-md disabled:opacity-50"
                   variants={buttonVariants}
                   whileHover="hover"
@@ -140,6 +144,7 @@ export default function OptInModal({ isOpen, onClose }: OptInModalProps) {
                   )}
                   {status === 'idle' && 'Get Started Today'}
                 </motion.button>
+
                 <p className="text-xs text-center text-gray-600 dark:text-gray-300">
                   By submitting, you agree to our{' '}
                   <a href="#" className="font-medium dark:text-cyan-400 hover:underline">
@@ -158,4 +163,3 @@ export default function OptInModal({ isOpen, onClose }: OptInModalProps) {
     </AnimatePresence>
   );
 }
-
