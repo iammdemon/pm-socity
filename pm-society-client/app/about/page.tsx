@@ -194,7 +194,7 @@ export default function AboutPage() {
       scale: 1,
       transition: {
         duration: 0.5,
-        ease: "easeInOut",
+        ease: [0.42, 0, 0.58, 1], 
       },
     },
   };
