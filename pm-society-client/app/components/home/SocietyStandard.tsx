@@ -76,7 +76,7 @@ const SocietyStandard = () => {
               >
                 TPMS
               </motion.span>
-              , excellence isn't optional;
+              , excellence isn&apos;t optional;
             </p>
             
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-black">
@@ -129,7 +129,7 @@ const SocietyStandard = () => {
               transition={{ duration: 0.5, delay: 1.6 }}
             >
               <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed">
-                If you don't pass the PMP exam on your first attempt, you can rejoin any future cohort at{" "}
+                If you don&apos;t pass the PMP exam on your first attempt, you can rejoin any future cohort at{" "}
                 <br />
                 <motion.span 
                   className="bg-black text-white px-2 sm:px-3 py-1 rounded-md sm:rounded-lg font-bold text-sm sm:text-base md:text-lg"
@@ -139,7 +139,7 @@ const SocietyStandard = () => {
                   no additional cost
                 </motion.span>.
               </p>
-              <p className="text-sm sm:text-base text-gray-600 italic">We're committed to your success, every step of the way.</p>
+              <p className="text-sm sm:text-base text-gray-600 italic">We&apos;re committed to your success, every step of the way.</p>
             </motion.div>
           </motion.div>
 

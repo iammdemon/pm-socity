@@ -4,7 +4,7 @@ import { motion, Variants} from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import localFont from 'next/font/local';
-import Image from 'next/image';
+
 
 const bonVivant = localFont({
   src: '../../../public/fonts/BonVivantSerifBold.ttf',
