@@ -9,7 +9,7 @@ import { PackageCard } from "../components/payment/PackageCard";
 import { packages } from "../components/payment/Packages";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
-import ComingSoon from "../components/payment/ComingSoon";
+// import ComingSoon from "../components/payment/ComingSoon";
 
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
