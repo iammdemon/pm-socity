@@ -73,6 +73,7 @@ export default function Testimonials() {
                 alt={testimonials[index].name}
                 width={64}
                 height={64}
+                loading='lazy'
                 className="w-16 h-16 rounded-full object-cover shadow-lg border-2 border-[#161819] flex justify-center mx-auto mb-4 transition-transform duration-500 hover:scale-110"
               />
               <div className="text-center">

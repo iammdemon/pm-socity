@@ -136,7 +136,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
         >
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/30" />
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-50 "
+            className="absolute inset-0 bg-contain  md:bg-cover bg-center opacity-60 "
             style={{
               backgroundImage: `url('/image/connect.webp')`,
             }}

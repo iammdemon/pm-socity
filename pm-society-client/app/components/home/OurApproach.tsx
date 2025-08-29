@@ -96,7 +96,7 @@ const OurApproach: React.FC = () => {
         </motion.div>
 
         {/* Timeline row */}
-        <div className="relative flex flex-col md:flex-row items-center justify-between gap-12">
+        <div className="relative hidden md:flex flex-col md:flex-row items-center justify-between gap-12">
           {steps.map((_, index) => {
             const delay = index * 0.8;
             return (
@@ -149,6 +149,7 @@ const OurApproach: React.FC = () => {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 768px) 100vw, 20vw"
+                    loading='lazy'
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                 </div>

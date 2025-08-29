@@ -8,29 +8,40 @@ const bonVivant = localFont({
 });
 
 export default function Hero() {
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const handleFirstInteraction = () => {
-      if (audioRef.current && !isAudioEnabled) {
-        audioRef.current.play();
-        setIsAudioEnabled(true);
+      if (!hasInteracted) {
+        // Play video with sound (only once)
+        if (videoRef.current) {
+          videoRef.current.muted = false; // unmute
+          videoRef.current.play();
+        }
+
+        // Play background audio once
+        if (audioRef.current) {
+          audioRef.current.play();
+        }
+
+        setHasInteracted(true);
       }
+
       // Remove listeners after first interaction
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('keydown', handleFirstInteraction);
+      document.removeEventListener("click", handleFirstInteraction);
+      document.removeEventListener("keydown", handleFirstInteraction);
     };
 
-    document.addEventListener('click', handleFirstInteraction);
-    document.addEventListener('keydown', handleFirstInteraction);
+    document.addEventListener("click", handleFirstInteraction);
+    document.addEventListener("keydown", handleFirstInteraction);
 
     return () => {
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('keydown', handleFirstInteraction);
+      document.removeEventListener("click", handleFirstInteraction);
+      document.removeEventListener("keydown", handleFirstInteraction);
     };
-  }, [isAudioEnabled]);
+  }, [hasInteracted]);
 
   return (
     <section className="relative h-screen w-full overflow-hidden">
@@ -38,10 +49,9 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[#0a192f]" />
         <video
+          ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover"
-          autoPlay
-          muted={!isAudioEnabled}
-          loop
+          muted // starts muted
           playsInline
           preload="auto"
         >
@@ -49,18 +59,6 @@ export default function Hero() {
         </video>
         <div className="absolute inset-0 bg-[#0a192f]/10 z-10" />
       </div>
-
-      {/* Separate Background Audio */}
-      <audio
-        ref={audioRef}
-        loop
-        preload="auto"
-        style={{ display: 'none' }}
-      >
-        <source src="/audio/background-music.mp3" type="audio/mpeg" />
-        <source src="/audio/background-music.ogg" type="audio/ogg" />
-      </audio>
-
 
   
 

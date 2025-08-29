@@ -42,17 +42,8 @@ const buttonVariants: Variants = {
 const CallToAction = () => {
   return (
     <section id="call-to-action" className="py-20 bg-white dark:bg-gray-900 relative overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 opacity-10">
-        <Image
-          src="https://images.pexels.com/photos/3184298/pexels-photo-3184298.webp?auto=compress&cs=tinysrgb&w=1600"
-          width={100}
-          height={100}
-          alt="Cool professional workspace background"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-200 to-cyan-200 dark:from-blue-900 dark:to-cyan-900" />
-      </div>
+    
+   
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div

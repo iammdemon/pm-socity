@@ -194,7 +194,7 @@ export default function AboutPage() {
       scale: 1,
       transition: {
         duration: 0.5,
-        ease: [0.42, 0, 0.58, 1], 
+        ease: [0.42, 0, 0.58, 1],
       },
     },
   };
@@ -208,17 +208,21 @@ export default function AboutPage() {
       <Header />
       <div className="min-h-screen  ">
         {/* Hero Section with Office Background */}
-        <section className="relative min-h-[80vh] md:min-h-[100vh] pt-24 md:pt-80 pb-12 md:pb-20 overflow-hidden">
+        <section className="relative min-h-[60vh] md:min-h-screen flex items-center pt-24 md:pt-40 pb-12 md:pb-20 overflow-hidden">
           {/* Office Background Image */}
           <div className="absolute inset-0">
             <Image
               src="/image/about.jpg"
               alt="Modern office workspace"
               fill
-              priority
-              className="object-cover"
-              sizes="100vw"
+              quality={90}
+              priority={false} // keep true only if it's above the fold
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 100vw, 
+         (max-width: 1200px) 80vw, 
+         100vw"
             />
+
             {/* Overlay gradient */}
             <div className="absolute inset-0 bg-[#0a192f]/40 z-10" />
           </div>
@@ -240,7 +244,7 @@ export default function AboutPage() {
 
               {/* Title */}
               <h1
-                className={`text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-xl leading-tight ${bonVivant.className}`}
+                className={`text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 drop-shadow-xl leading-tight ${bonVivant.className}`}
               >
                 About The PM Society
               </h1>
@@ -250,7 +254,7 @@ export default function AboutPage() {
                 {stats.map((stat, index) => (
                   <div
                     key={index}
-                    className="text-center group flex flex-col items-center"
+                    className="text-center group flex flex-col items-center max-w-xs mx-auto"
                   >
                     <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md rounded-xl text-white mb-3 group-hover:scale-110 group-hover:bg-white/30 transition-transform duration-300 border border-white/20">
                       {stat.icon}
@@ -438,7 +442,7 @@ export default function AboutPage() {
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
                         sizes="(max-width: 768px) 100vw, 25vw"
                         style={{ objectFit: "cover" }}
-                        priority={index === 0}
+                        loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
                       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-semibold text-gray-700">
@@ -522,6 +526,7 @@ export default function AboutPage() {
                           height={64}
                           layout="responsive"
                           className="w-full h-full object-cover rounded-3xl"
+                          loading="lazy"
                         />
                       ) : (
                         cert.icon

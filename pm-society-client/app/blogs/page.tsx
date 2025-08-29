@@ -123,6 +123,7 @@ const blogs: BlogPost[] = (blogsResponse && Array.isArray((blogsResponse as unkn
                   width={800}
                   height={400}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  loading='lazy'
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                 <div className="absolute top-4 left-4">

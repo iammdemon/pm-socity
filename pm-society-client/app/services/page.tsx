@@ -140,11 +140,11 @@ export default function ServicesPage() {
 
       <div className="min-h-screen bg-white">
         {/* Hero Section - Responsive Height */}
-        <section className="h-screen md:min-h-[600px] max-h-[900px] relative overflow-hidden flex items-center justify-center">
+        <section className="min-h-[500px] md:min-h-[700px] max-h-[900px] relative overflow-hidden flex items-center justify-center">
           {/* Background image */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="/image/olivia-2.jpg"
+              src="/image/olivia-2.webp"
               alt="Team collaboration in modern workspace"
               fill
               className="object-cover object-center"
@@ -154,9 +154,9 @@ export default function ServicesPage() {
             <div className="absolute inset-0 bg-black/30 z-10" />
           </div>
 
-          <div className="relative z-20 container mx-auto sm:px-6 lg:px-8 p-4 sm:py-12">
+          <div className="relative z-10 container mx-auto sm:px-6 lg:px-8 p-4 sm:py-12">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-3 sm:px-5 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 shadow-lg">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-5 py-2 md:bg-white/10 md:backdrop-blur-sm border border-white/20 text-white rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 shadow-lg">
                 <FiStar className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400" />
                 <span className="tracking-wide">
                   Professional Development & Networking Platform
