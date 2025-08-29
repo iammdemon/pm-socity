@@ -6,40 +6,22 @@ import router from "./app/routes";
 import notFound from "./app/middlewares/notFound";
 
 const app: Application = express();
-const allowedOrigins = [
-  'https://thepmsociety.com',
-  'https://www.thepmsociety.com',
-  'http://localhost:3000',
-];
-
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET','POST','PUT','DELETE','OPTIONS']
-}));
-
-// Handle preflight
-app.options('*', cors());
-
 app.use(express.json());
-
-
-
+app.use(
+  cors({
+    origin: ["https://thepmsociety.com","https://pm-socity.vercel.app","http://localhost:3000", "https://pm-society.vercel.app", ],
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 
+app.set("trust proxy", 1)
 
-
-app.use("/api/", router);
 app.get("/", (req, res) => {
   res.send("Server is running");
 });
+app.use("/api", router);
 
 // app.use(globalErrorHandler);
 
