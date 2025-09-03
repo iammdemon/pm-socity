@@ -71,14 +71,14 @@ const lineVariant: Variants = {
 
 const OurApproach: React.FC = () => {
   return (
-    <section id="our-approach" className="py-20 md:px-12">
-      <div className="container mx-auto px-4">
+    <section id="our-approach" className="py-16 md:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <motion.div
           className="text-center mb-12"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.5 }}
           variants={fadeUpVariant}
         >
           <span className="text-sm font-semibold uppercase tracking-wider">
@@ -96,16 +96,16 @@ const OurApproach: React.FC = () => {
         </motion.div>
 
         {/* Timeline row */}
-        <div className="relative hidden md:flex flex-col md:flex-row items-center justify-between gap-12">
+        <div className="relative hidden md:flex items-center justify-between">
           {steps.map((_, index) => {
-            const delay = index * 0.8;
+            const delay = index * 0.2;
             return (
               <React.Fragment key={index}>
                 <motion.div
                   className="relative z-10 flex items-center justify-center w-10 h-10 rounded-full bg-black text-white text-sm font-semibold shadow-md"
                   initial="hidden"
                   whileInView="visible"
-                  viewport={{ once: true }}
+                  viewport={{ once: true, amount: 0.8 }}
                   variants={scaleVariant}
                   transition={{ delay }}
                 >
@@ -114,8 +114,7 @@ const OurApproach: React.FC = () => {
 
                 {index < steps.length - 1 && (
                   <motion.div
-                    className="hidden md:block h-1 bg-black dark:bg-blue-400"
-                    style={{ minWidth: '40px', maxWidth: '100px', flexGrow: 1 }}
+                    className="h-1 bg-black dark:bg-blue-400 flex-grow min-w-[40px] max-w-[100px]"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
@@ -131,14 +130,14 @@ const OurApproach: React.FC = () => {
         {/* Step cards */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-5 gap-8">
           {steps.map((step, index) => {
-            const delay = index * 0.8;
+            const delay = index * 0.2;
             return (
               <motion.div
                 key={index}
                 className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-lg group"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.3 }}
                 variants={fadeUpVariant}
                 transition={{ delay }}
               >

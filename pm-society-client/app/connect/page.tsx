@@ -128,21 +128,33 @@ const [submitContactForm] = useSubmitContactFormMutation();
         <FloatingParticles />
 
         {/* Animated Background */}
-        <motion.div
-          className="absolute inset-0 z-0"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 20, repeat: Infinity, repeatType: "reverse" }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-purple-50/20 to-pink-50/30" />
-          <div
-            className="absolute inset-0 bg-contain  md:bg-cover bg-center opacity-60 "
-            style={{
-              backgroundImage: `url('/image/connect.webp')`,
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
-        </motion.div>
+      <motion.div
+  className="absolute inset-0 z-0"
+  initial={{ scale: 1.15 }}
+  animate={{ scale: 1 }}
+  transition={{
+    duration: 25,
+    repeat: Infinity,
+    repeatType: "reverse",
+    ease: "easeInOut",
+  }}
+>
+  {/* Soft pastel gradient overlay for depth */}
+  <div className="absolute inset-0 bg-gradient-to-br from-blue-200/30 via-purple-200/20 to-pink-200/30" />
+
+  {/* Background Image with better scaling */}
+  <div
+    className="absolute inset-0 bg-contain md:bg-cover bg-center opacity-70"
+    style={{
+      backgroundImage: "url('/image/connect.webp')",
+    }}
+  />
+
+  {/* Top + Bottom Gradient Overlays for readability */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/30" />
+  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
+</motion.div>
+
 
         {/* Hero Section */}
         <section className="relative pt-16 pb-12 z-10">

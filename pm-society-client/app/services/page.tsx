@@ -140,41 +140,46 @@ export default function ServicesPage() {
 
       <div className="min-h-screen bg-white">
         {/* Hero Section - Responsive Height */}
-        <section className="min-h-[500px] md:min-h-[700px] max-h-[900px] relative overflow-hidden flex items-center justify-center">
-          {/* Background image */}
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="/image/olivia-2.webp"
-              alt="Team collaboration in modern workspace"
-              fill
-              className="object-cover object-center"
-              sizes="100vw"
-              priority
-            />
-            <div className="absolute inset-0 bg-black/30 z-10" />
+      <section className="relative w-full overflow-hidden min-h-[400px] md:min-h-screen flex items-center">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/image/olivia-2.webp"
+          alt="Team collaboration in modern workspace"
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-black/30" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center py-16 sm:py-20 md:py-28">
+        <div className="text-center w-full max-w-4xl">
+          {/* Tagline */}
+          <div className="inline-flex items-center gap-2 px-3 sm:px-5 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 shadow-lg">
+            
+            <span className="tracking-wide">
+              Professional Development & Networking Platform
+            </span>
           </div>
 
-          <div className="relative z-10 container mx-auto sm:px-6 lg:px-8 p-4 sm:py-12">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-3 sm:px-5 py-2 md:bg-white/10 md:backdrop-blur-sm border border-white/20 text-white rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 shadow-lg">
-                <FiStar className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400" />
-                <span className="tracking-wide">
-                  Professional Development & Networking Platform
-                </span>
-              </div>
+          {/* Title */}
+          <h1
+            className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight mb-4 sm:mb-6 ${bonVivant.className}`}
+          >
+            Elevate Your Career
+          </h1>
 
-              <h1
-                className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white font-bold leading-tight tracking-tight ${bonVivant.className} mb-4 sm:mb-6`}
-              >
-                Elevate Your Career
-              </h1>
-              <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-relaxed max-w-2xl mx-auto px-4">
-                Strategic training, mentorship, and community support designed
-                to grow confident project leaders and drive real impact.
-              </p>
-            </div>
-          </div>
-        </section>
+          {/* Subtitle */}
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed max-w-2xl mx-auto px-2 sm:px-4">
+            Strategic training, mentorship, and community support designed to
+            grow confident project leaders and drive real impact.
+          </p>
+        </div>
+      </div>
+    </section>
 
         {/* Services Cards Section */}
         <section id="services" className="py-8 lg:py-12 bg-[#ECE8E1]">

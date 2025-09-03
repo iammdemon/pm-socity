@@ -208,69 +208,68 @@ export default function AboutPage() {
       <Header />
       <div className="min-h-screen  ">
         {/* Hero Section with Office Background */}
-        <section className="relative min-h-[60vh] md:min-h-screen flex items-center pt-24 md:pt-40 pb-12 md:pb-20 overflow-hidden">
-          {/* Office Background Image */}
-          <div className="absolute inset-0">
-            <Image
-              src="/image/about.jpg"
-              alt="Modern office workspace"
-              fill
-              quality={90}
-              priority={false} // keep true only if it's above the fold
-              className="object-cover object-center"
-              sizes="(max-width: 768px) 100vw, 
-         (max-width: 1200px) 80vw, 
-         100vw"
-            />
+      <section className="relative min-h-[70vh] md:min-h-screen flex items-center py-24 md:pt-40 pb-12 md:pb-20 overflow-hidden">
+  {/* Background Image */}
+  <div className="absolute inset-0">
+    <Image
+      src="/image/about.jpg"
+      alt="Modern office workspace"
+      fill
+      quality={90}
+      priority={false} // keep true only if this is above the fold
+      className="object-cover md:object-center object-[center_top]" 
+      sizes="(max-width: 768px) 100vw, 
+             (max-width: 1200px) 80vw, 
+             100vw"
+    />
 
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-[#0a192f]/40 z-10" />
-          </div>
+    {/* Overlay gradient */}
+    <div className="absolute inset-0 bg-[#0a192f]/60 md:bg-[#0a192f]/40 z-10" />
+  </div>
 
-          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-            <div
-              className={`max-w-5xl mx-auto text-center transition-all duration-1000 ${
-                isVisible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }`}
-            >
-              {/* Tagline */}
-              <div className="inline-flex items-center px-4 py-2 backdrop-blur-md rounded-full mb-6 border border-white/20">
-                <span className="text-sm sm:text-base font-medium text-gray-200">
-                  Transforming Project Management Excellence
-                </span>
-              </div>
+  <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+    <div
+      className={`max-w-5xl mx-auto text-center transition-all duration-1000 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+      }`}
+    >
+      {/* Tagline */}
+      <div className="inline-flex items-center px-4 py-2 backdrop-blur-md rounded-full mb-6 border border-white/20">
+        <span className="text-sm sm:text-base font-medium text-gray-200">
+          Transforming Project Management Excellence
+        </span>
+      </div>
 
-              {/* Title */}
-              <h1
-                className={`text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 drop-shadow-xl leading-tight ${bonVivant.className}`}
-              >
-                About The PM Society
-              </h1>
+      {/* Title */}
+      <h1
+        className={`text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 drop-shadow-xl leading-tight ${bonVivant.className}`}
+      >
+        About The PM Society
+      </h1>
 
-              {/* Stats Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 mt-12">
-                {stats.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="text-center group flex flex-col items-center max-w-xs mx-auto"
-                  >
-                    <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md rounded-xl text-white mb-3 group-hover:scale-110 group-hover:bg-white/30 transition-transform duration-300 border border-white/20">
-                      {stat.icon}
-                    </div>
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
-                      {stat.number}
-                    </div>
-                    <div className="text-sm sm:text-base text-slate-200">
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
+      {/* Stats Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-10 mt-12">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className="text-center group flex flex-col items-center max-w-xs mx-auto"
+          >
+            <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md rounded-xl text-white mb-3 group-hover:scale-110 group-hover:bg-white/30 transition-transform duration-300 border border-white/20">
+              {stat.icon}
+            </div>
+            <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+              {stat.number}
+            </div>
+            <div className="text-sm sm:text-base text-slate-200">
+              {stat.label}
             </div>
           </div>
-        </section>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
 
         {/* Mission & Vision Section */}
         <section className="py-20 relative ">

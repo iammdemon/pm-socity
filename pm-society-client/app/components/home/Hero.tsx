@@ -1,92 +1,53 @@
 "use client";
 import Link from "next/link";
 import localFont from "next/font/local";
-import { useState, useRef, useEffect } from "react";
 
 const bonVivant = localFont({
   src: "../../../public/fonts/BonVivantSerifBold.ttf",
 });
 
 export default function Hero() {
-  const [hasInteracted, setHasInteracted] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      if (!hasInteracted) {
-        // Play video with sound (only once)
-        if (videoRef.current) {
-          videoRef.current.muted = false; // unmute
-          videoRef.current.play();
-        }
-
-        // Play background audio once
-        if (audioRef.current) {
-          audioRef.current.play();
-        }
-
-        setHasInteracted(true);
-      }
-
-      // Remove listeners after first interaction
-      document.removeEventListener("click", handleFirstInteraction);
-      document.removeEventListener("keydown", handleFirstInteraction);
-    };
-
-    document.addEventListener("click", handleFirstInteraction);
-    document.addEventListener("keydown", handleFirstInteraction);
-
-    return () => {
-      document.removeEventListener("click", handleFirstInteraction);
-      document.removeEventListener("keydown", handleFirstInteraction);
-    };
-  }, [hasInteracted]);
-
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section className="relative w-full overflow-hidden pt-[80px] md:pt-[0px]">
       {/* Video Background */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-[#0a192f]" />
         <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover"
-          muted // starts muted
+          className="w-full object-cover md:h-screen min-h-[400px]"
+          autoPlay
+          loop
+          muted
           playsInline
-          preload="auto"
+          preload="metadata"
+          poster="/video/hero-poster.jpg"
         >
-          <source src="/video/welcome.mp4" type="video/mp4" />
+          <source src="/video/hero.webm" type="video/webm" />
+          <source src="/video/hero.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
-        <div className="absolute inset-0 bg-[#0a192f]/10 z-10" />
+        <div className="absolute inset-0 bg-black/20" />
       </div>
 
-  
-
       {/* Content */}
-      <div className="relative z-20 flex h-full items-start justify-center text-center px-4">
-        <div
-          className={`transition-all duration-1000 transform translate-y-0 opacity-100 w-full pt-[35vh] sm:pt-[40vh]`}
-        >
+      <div className="relative z-10 flex items-center justify-center px-4 py-12 md:h-screen">
+        <div className="text-center w-full max-w-3xl">
           <h1
-            className={`text-3xl md:text-8xl font-bold text-white mb-6 leading-tight drop-shadow-lg ${bonVivant.className}`}
+            className={`text-3xl sm:text-5xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg ${bonVivant.className}`}
           >
             Welcome to The Society!
           </h1>
-          <p className="text-base md:text-xl text-white max-w-4xl mx-auto mb-10 drop-shadow-md">
+          <p className="text-sm sm:text-base md:text-xl text-white mb-6 drop-shadow">
             More Than a Certificate — Build a Career, Community, and Real Confidence.
           </p>
-
-          {/* Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/services"
-              className="border-2 border-white text-white hover:bg-[#38bdf8]/10 text-base font-semibold px-10 py-4 rounded-xl transition-all duration-300 w-full sm:w-auto inline-block text-center shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="w-full sm:w-auto border border-white text-white hover:bg-white/10 px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg transition duration-300"
             >
               Compare Programs
             </Link>
             <Link
               href="/enroll"
-              className="border-2 border-white text-white hover:bg-[#38bdf8]/10 text-base font-semibold px-10 py-4 rounded-xl transition-all duration-300 w-full sm:w-auto inline-block text-center shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="w-full sm:w-auto border border-white text-white hover:bg-white/10 px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg transition duration-300"
             >
               Join Society+
             </Link>
