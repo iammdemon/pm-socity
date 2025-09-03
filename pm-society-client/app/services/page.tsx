@@ -4,7 +4,7 @@ import {
   FiUsers,
   FiTrendingUp,
   FiCheck,
-  FiStar,
+ 
   FiClock,
   FiUser,
   FiTarget,

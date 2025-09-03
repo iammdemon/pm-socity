@@ -6,7 +6,6 @@ import {
   FiArrowRight,
   FiTag,
   FiTrendingUp,
-  FiBookmark,
   FiCalendar,
   FiSearch,
 } from "react-icons/fi";
