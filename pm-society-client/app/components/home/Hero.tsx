@@ -7,7 +7,15 @@ import { useEffect, useRef, useCallback, useState } from "react";
 declare global {
   interface Window {
     Vimeo?: {
-      Player: new (element: HTMLElement, options: any) => VimeoPlayer;
+      Player: new (element: HTMLElement, options: {
+        id: string;
+        background?: boolean;
+        autoplay?: boolean;
+        loop?: boolean;
+        muted?: boolean;
+        controls?: boolean;
+        responsive?: boolean;
+      }) => VimeoPlayer;
     };
   }
 }

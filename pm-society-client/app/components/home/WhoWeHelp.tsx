@@ -1,4 +1,4 @@
-
+"use client";
 import { motion } from "framer-motion";
 import { FaChalkboardTeacher, FaHandsHelping } from "react-icons/fa";
 import Image from "next/image";
