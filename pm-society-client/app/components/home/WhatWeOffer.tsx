@@ -1,4 +1,4 @@
-"use client";
+
 import { motion } from "framer-motion";
 import { BiBookOpen, BiCheckCircle, BiGroup } from "react-icons/bi";
 import { FaUsers } from "react-icons/fa6";
