@@ -212,7 +212,7 @@ export default function AboutPage() {
   {/* Background Image */}
   <div className="absolute inset-0">
     <Image
-      src="/image/about.jpg"
+      src="/image/about.webp"
       alt="Modern office workspace"
       fill
       quality={90}

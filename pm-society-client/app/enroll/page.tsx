@@ -1,35 +1,35 @@
-"use client";
+// "use client";
 
-import React, { useState } from "react";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { SuccessCard } from "../components/payment/SuccessCard";
-import {  RegistrationForm } from "../components/payment/RegistrationForm";
-import { PackageCard } from "../components/payment/PackageCard";
-import { packages } from "../components/payment/Packages";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
-// import ComingSoon from "../components/payment/ComingSoon";
+// import React, { useState } from "react";
+// import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
+// import { SuccessCard } from "../components/payment/SuccessCard";
+// import {  RegistrationForm } from "../components/payment/RegistrationForm";
+// import { PackageCard } from "../components/payment/PackageCard";
+// import { packages } from "../components/payment/Packages";
+// import Header from "../components/layout/Header";
+// import Footer from "../components/layout/Footer";
+import ComingSoon from "../components/payment/ComingSoon";
 
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
 export default function EnrollmentPage() {
-  const [selectedPackage, setSelectedPackage] = useState("");
-  const [selectedBilling, setSelectedBilling] = useState("monthly");
-  const [registrationComplete, setRegistrationComplete] = useState(false);
+  // const [selectedPackage, setSelectedPackage] = useState("");
+  // const [selectedBilling, setSelectedBilling] = useState("monthly");
+  // const [registrationComplete, setRegistrationComplete] = useState(false);
 
-  if (registrationComplete) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
-        <SuccessCard />
-      </div>
-    );
-  }
+  // if (registrationComplete) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
+  //       <SuccessCard />
+  //     </div>
+  //   );
+  // }
 
   return (
     <> 
-     <Header/>
+     {/* <Header/>
     <Elements stripe={stripePromise}>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -69,9 +69,9 @@ export default function EnrollmentPage() {
           </div>
         </div>
       </div> 
-    </Elements>
-    {/* <ComingSoon /> */}
-    <Footer/>
+    </Elements> */}
+    <ComingSoon />
+    {/* <Footer/> */}
     </>
   );
 }
