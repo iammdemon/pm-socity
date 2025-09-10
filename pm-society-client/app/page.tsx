@@ -30,7 +30,7 @@ export default function Home() {
 
         <CTA />
 
-        <AutoOptInModal />
+        <AutoOptInModal  />
       </div>
       <Footer />
     </>

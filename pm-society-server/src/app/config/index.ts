@@ -20,6 +20,8 @@ export default {
   EMAIL_USER: process.env.EMAIL_USER,
   EMAIL_PASS: process.env.EMAIL_PASS,
   EMAIL_FROM: process.env.EMAIL_FROM,
+  MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
+  MAILCHIMP_AUDIENCE_ID: process.env.MAILCHIMP_AUDIENCE_ID,
 
 
   

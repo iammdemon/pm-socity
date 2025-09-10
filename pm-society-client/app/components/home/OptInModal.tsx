@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { FaCheckCircle, FaSpinner, FaTimes } from 'react-icons/fa';
+import axios from 'axios';
+import Link from 'next/link';
 
 interface OptInModalProps {
   isOpen: boolean;
@@ -37,15 +39,15 @@ export default function OptInModal({ isOpen, onClose }: OptInModalProps) {
     e.preventDefault();
     setStatus('submitting');
 
-    setTimeout(() => {
+    try{
+      const res = axios.post(`${process.env.NEXT_PUBLIC_API_URL}/subscribe`, form)
+      console.log(res)
       setStatus('success');
-      alert('Thanks for signing up!');
-      setTimeout(() => {
-        setForm({ name: '', email: '', interest: '' });
-        setStatus('idle');
-        onClose();
-      }, 2000);
-    }, 1500);
+
+    }
+    catch(err){
+      console.log(err)
+    }
   };
 
   return (
@@ -147,13 +149,13 @@ export default function OptInModal({ isOpen, onClose }: OptInModalProps) {
 
                 <p className="text-xs text-center text-gray-600 dark:text-gray-300">
                   By submitting, you agree to our{' '}
-                  <a href="#" className="font-medium dark:text-cyan-400 hover:underline">
+                  <Link href="privacy-policy" className="font-medium dark:text-cyan-400 hover:underline">
                     Privacy Policy
-                  </a>{' '}
+                  </Link>{' '}
                   and{' '}
-                  <a href="#" className="font-medium dark:text-cyan-400 hover:underline">
+                  <Link href="terms" className="font-medium dark:text-cyan-400 hover:underline">
                     Terms of Service
-                  </a>.
+                  </Link>.
                 </p>
               </form>
             </div>
