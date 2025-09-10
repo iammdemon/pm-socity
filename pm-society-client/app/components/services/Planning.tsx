@@ -1,16 +1,41 @@
 import localFont from "next/font/local";
 
 const bonVivant = localFont({
-  src: '../../../public/fonts/BonVivantSerifBold.ttf',
+  src: "../../../public/fonts/BonVivantSerifBold.ttf",
 });
 
 const Planning = () => {
   const process = [
-    { step: '01', title: 'Enroll', description: 'Join our program and kickstart your project management journey.' },
-    { step: '02', title: 'Learn', description: 'Master key skills through interactive, expert-designed courses.' },
-    { step: '03', title: 'Coach', description: 'Receive personalized guidance from experienced PMP coaches.' },
-    { step: '04', title: 'Mentor', description: 'Build confidence with one-on-one mentorship for exam success.' },
-    { step: '05', title: 'Thrive', description: 'Earn your PMP certification and excel in your career.' },
+    {
+      step: "01",
+      title: "Initiate",
+      description:
+        "Enroll in a Society program, define your vision, and set the foundation for success.",
+    },
+    {
+      step: "02",
+      title: "Plan",
+      description:
+        "Strengthen skills through structured learning, resources, and peer engagement.",
+    },
+    {
+      step: "03",
+      title: "Execute",
+      description:
+        "Apply knowledge through coaching, practice, and real-world scenarios.",
+    },
+    {
+      step: "04",
+      title: "Monitor & Elevate",
+      description:
+        "Stay accountable and sharpen your edge with mentorship and growth strategies.",
+    },
+    {
+      step: "05",
+      title: "Close",
+      description:
+        "Transition into leadership, achieve career impact, and give back to the community.",
+    },
   ];
 
   return (
@@ -20,11 +45,15 @@ const Planning = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className={`${bonVivant.className} text-2xl md:text-4xl font-black text-black mb-4`}>
-                Our Proven Process
+              <h2
+                className={`${bonVivant.className} text-2xl md:text-4xl font-black text-black mb-4`}
+              >
+                The Society Lifecycle
               </h2>
               <p className="text-gray-600 text-lg">
-                A transformative journey to project management excellence
+                Our framework mirrors the PMI project lifecycle—so members not
+                only prepare for certification but also experience the
+                discipline in action.
               </p>
             </div>
 
@@ -37,9 +66,7 @@ const Planning = () => {
                   <h3 className="text-xl font-semibold text-slate-900 mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-gray-600">
-                    {item.description}
-                  </p>
+                  <p className="text-gray-600">{item.description}</p>
                   {index < process.length - 1 && (
                     <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-black transform -translate-x-20"></div>
                   )}

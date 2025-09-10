@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import localFont from "next/font/local";
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
@@ -15,14 +14,13 @@ declare global {
         muted?: boolean;
         controls?: boolean;
         responsive?: boolean;
+        playsinline?: boolean;
       }) => VimeoPlayer;
     };
   }
 }
 
 interface VimeoPlayer {
-  setVolume: (volume: number) => Promise<void>;
-  play: () => Promise<void>;
   on: (event: string, callback: () => void) => void;
   destroy: () => Promise<void>;
 }
@@ -35,23 +33,6 @@ export default function Hero() {
   const vimeoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<VimeoPlayer | null>(null);
   const [isVideoReady, setIsVideoReady] = useState(false);
-  const hasInteractedRef = useRef(false);
-
-  const handleUserInteraction = useCallback(() => {
-    if (!hasInteractedRef.current && playerRef.current) {
-      hasInteractedRef.current = true;
-      
-      playerRef.current.setVolume(1)
-        .then(() => playerRef.current?.play())
-        .catch(error => console.log("Vimeo play failed:", error));
-      
-      // Remove listeners after first interaction
-      const events = ['click', 'touchstart', 'keydown'];
-      events.forEach(event => 
-        document.removeEventListener(event, handleUserInteraction)
-      );
-    }
-  }, []);
 
   useEffect(() => {
     if (!vimeoRef.current) return;
@@ -65,20 +46,15 @@ export default function Hero() {
         id: '1115442895',
         background: true,
         autoplay: true,
-        loop: false, // No loop as requested
+        loop: true,
         muted: true,
         controls: false,
         responsive: true,
+        playsinline: true, // Essential for mobile autoplay
       });
 
       playerRef.current = player;
       player.on('loaded', () => setIsVideoReady(true));
-
-      // Add interaction listeners
-      const events = ['click', 'touchstart', 'keydown'];
-      events.forEach(event => 
-        document.addEventListener(event, handleUserInteraction, { passive: true })
-      );
     };
 
     // Check if Vimeo API is already loaded
@@ -94,12 +70,6 @@ export default function Hero() {
     }
 
     return () => {
-      // Cleanup
-      const events = ['click', 'touchstart', 'keydown'];
-      events.forEach(event => 
-        document.removeEventListener(event, handleUserInteraction)
-      );
-
       if (playerRef.current) {
         playerRef.current.destroy().catch(console.error);
         playerRef.current = null;
@@ -109,27 +79,12 @@ export default function Hero() {
         scriptElement.parentNode.removeChild(scriptElement);
       }
     };
-  }, [handleUserInteraction]);
+  }, []);
 
   return (
-    <section className="relative w-full overflow-hidden pt-[30px] md:pt-0">
+    <section className="relative w-full h-screen min-h-[350px] md:min-h-[500px] py-6 overflow-hidden">
       {/* Vimeo Video Background */}
       <div className="absolute inset-0 z-0">
-        {/* Poster Image */}
-        {!isVideoReady && (
-          <div>
-            <Image
-              src="/image/connect.webp"
-              alt="Loading video..."
-              className="w-full h-full object-cover"
-              fill
-             
-            />
-         
-          </div>
-        )}
-        
-        {/* Vimeo Player */}
         <div 
           ref={vimeoRef}
           className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
@@ -145,30 +100,34 @@ export default function Hero() {
             transform: 'translate(-50%, -50%)',
           }}
         />
-        <div className="absolute inset-0 bg-black/20 z-10" />
+        
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/30 z-10" />
       </div>
  
       {/* Content */}
-      <div className="relative z-20 flex items-center justify-center px-4 py-5 md:h-screen">
-        <div className="text-center w-full max-w-3xl">
+      <div className="relative z-20 flex items-center justify-center px-4 py-10 h-full">
+        <div className="text-center w-full max-w-4xl">
           <h1
-            className={`text-3xl sm:text-5xl md:text-7xl font-bold text-white mb-4 drop-shadow-lg ${bonVivant.className}`}
+            className={`text-2xl leading-tight sm:text-4xl sm:leading-tight md:text-6xl md:leading-tight lg:text-7xl lg:leading-tight font-bold text-white mb-3 sm:mb-4 md:mb-6 drop-shadow-2xl ${bonVivant.className}`}
           >
             Welcome to The Society!
           </h1>
-          <p className="text-sm sm:text-base md:text-xl text-white mb-6 drop-shadow">
+          
+          <p className="text-sm leading-relaxed sm:text-base sm:leading-relaxed md:text-lg md:leading-relaxed lg:text-xl lg:leading-relaxed text-white/90 mb-6 md:mb-8 drop-shadow-lg max-w-2xl mx-auto">
             More Than a Certificate — Build a Career, Community, and Real Confidence.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-4 max-w-md sm:max-w-none mx-auto">
             <Link
               href="/services"
-              className="w-full sm:w-auto border border-white text-white hover:bg-white/10 px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg transition-colors duration-300"
+              className="w-full sm:w-auto bg-white/10 backdrop-blur-sm border border-white/50 text-white hover:bg-white hover:text-black px-6 py-3 sm:px-8 sm:py-3 rounded-xl font-medium transition-all duration-300 ease-out hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             >
               Compare Programs
             </Link>
             <Link
               href="/enroll"
-              className="w-full sm:w-auto border border-white text-white hover:bg-white/10 px-6 py-2.5 sm:px-8 sm:py-3 rounded-lg transition-colors duration-300"
+              className="w-full sm:w-auto bg-white text-black hover:bg-white/90 px-6 py-3 sm:px-8 sm:py-3 rounded-xl font-semibold transition-all duration-300 ease-out hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             >
               Join Society+
             </Link>
