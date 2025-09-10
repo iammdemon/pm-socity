@@ -87,7 +87,7 @@ export default function ParallaxSection() {
           
           {/* Optional subtitle for better context */}
           <p className="text-white/90 text-sm sm:text-base md:text-lg lg:text-xl mt-4 md:mt-6 drop-shadow-lg max-w-2xl mx-auto leading-relaxed">
-            Join thousands of professionals who've transformed their careers with our comprehensive PMP certification program
+            Join thousands of professionals who&apos;ve transformed their careers with our comprehensive PMP certification program
           </p>
         </div>
       </div>
