@@ -27,7 +27,16 @@ export const PACKAGE_PRICES: Record<string, PackageConfig> = {
   THE_SOCIETY_PLUS: {
     monthly: { amount: 9900, type: "recurring", priceId: "price_1Rij32IAC5sTC0XPXDl2bqQu" },
     yearly: { amount: 99900, type: "recurring", priceId: "price_1Rij2gIAC5sTC0XPxdE2GGDc" }
-  }
+  },
+  BUILD_YOUR_OWN_PATH: {
+    amount: 40000, // $400
+    type: "one_time",
+  },
+
+  ELEVATE_PILOT: {
+    amount: 55800, // $558
+    type: "one_time",
+  },
 };
 
 const createPaymentIntent = async (packageType: string, subscriptionType?: string) => {

@@ -27,7 +27,7 @@ const SocietyStandard = () => {
             At <span className="text-yellow-600 font-semibold">TPMS</span>, excellence isn’t optional;
             it is <span className="italic font-medium">the standard</span>. If you don’t pass the PMP exam
             on your first attempt, you can rejoin any future cohort at{" "}
-            <strong>no additional cost</strong>. We’re committed to your success, every step of the way.
+            <strong> minimum to no additional cost</strong>. We’re committed to your success, every step of the way.
           </p>
         </CardContent>
       </Card>

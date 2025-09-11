@@ -115,7 +115,7 @@ export default function Hero() {
           </h1>
           
           <p className="text-sm leading-relaxed sm:text-base sm:leading-relaxed md:text-lg md:leading-relaxed lg:text-xl lg:leading-relaxed text-white/90 mb-6 md:mb-8 drop-shadow-lg max-w-2xl mx-auto">
-            More Than a Certificate — Build a Career, Community, and Real Confidence.
+            More Than a Certificate — A Society Built on Collaboration. Get Certified, Build Confidence, Community, & Your Career.
           </p>
           
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-4 max-w-md sm:max-w-none mx-auto">

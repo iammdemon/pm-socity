@@ -20,6 +20,7 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Link from "next/link";
 
+
 const bonVivant = localFont({
   src: "../../public/fonts/BonVivantSerifBold.ttf",
   weight: "700",
@@ -53,7 +54,7 @@ export default function ServicesPage() {
         "35 hours of virtual instructor-led PMP® training",
         "PMP application support",
         "3 executive coaching sessions",
-        "3 months access to PM learning materials",
+        "2 months access to PM learning materials",
         "2 mentorship sessions",
         "2 months access to Society+ portal",
       ],
@@ -72,6 +73,7 @@ export default function ServicesPage() {
         "Advanced project management workshops",
         "5 executive coaching sessions",
         "5 project management mentorship sessions",
+        "2 months access to PM learning materials",
         "Mastermind group access (peer accountability + strategy)",
         "6 months of Society+ portal access",
       ],
@@ -131,7 +133,23 @@ export default function ServicesPage() {
       cta: "Book Now",
       ctaLink: "enroll",
       featured: false,
-    },
+    },{
+      icon: <FiSettings className="h-8 w-8 sm:h-10 sm:w-10" />,
+      title: "ELEVATE (Pilot Cohort)",
+      description:"Guide professionals through PMP certification, mentoring & leadership roles. For experienced PMs ready for growth.",
+      features: [
+       "35 hours of virtual instructor-led PMP® training",
+        "PMP application support",
+        "3 executive coaching sessions",
+        "2 months access to PM learning materials",
+        "2 mentorship sessions",
+        "2 months access to Society+ portal",],
+        price: "$558",
+      cta: "Enroll Now",
+      ctaLink: "enroll",
+      featured: true,
+
+    }
   ];
 
   return (

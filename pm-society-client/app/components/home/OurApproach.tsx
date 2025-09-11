@@ -87,7 +87,7 @@ const OurApproach: React.FC = () => {
           <h2
             className={`mt-2 text-2xl md:text-5xl font-bold ${bonVivant.className} text-gray-900 dark:text-white`}
           >
-            The Society Lifecycle Framework
+            The Society Lifecycle 
           </h2>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
            Our framework mirrors the PMI project lifecycle—so members not only prepare for certification but also experience the discipline in action.
