@@ -162,7 +162,7 @@ export default function ServicesPage() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/image/olivia-2.webp"
+          src="/image/olivia.webp"
           alt="Team collaboration in modern workspace"
           fill
           priority
