@@ -7,7 +7,7 @@ import {
   BiCheckCircle,
   BiTrendingUp,
 } from "react-icons/bi";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { FaBookOpen, FaChartLine, FaUsers, FaPlay } from "react-icons/fa";
 import { GiSparkles } from "react-icons/gi";
