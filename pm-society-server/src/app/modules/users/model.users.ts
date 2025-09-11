@@ -13,7 +13,7 @@ const UserSchema: Schema<IUser> = new Schema(
     role: { type: String, enum: ["member", "admin"], default: "member" },
     packageType: {
       type: String,
-      enum: ["IGNITE", "ELEVATE", "ASCEND", "THE_SOCIETY", "THE_SOCIETY_PLUS"]
+      enum: ["IGNITE", "ELEVATE", "ASCEND", "THE_SOCIETY", "THE_SOCIETY_PLUS", "BUILD_YOUR_OWN_PATH", "ELEVATE_PILOT"]
     },
     subscriptionType: {
       type: String,
