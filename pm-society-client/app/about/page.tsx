@@ -318,51 +318,57 @@ export default function AboutPage() {
               </div>
 
               <div className="relative">
-                <motion.div
-                  className="relative h-96 lg:h-[500px] max-w-4xl mx-auto mt-16 rounded-xl overflow-hidden shadow-xl"
-                  variants={videoVariants}
-                  whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
-                >
-                  {/* Custom Play Button Overlay */}
-                  {!hasStarted && (
-                    <motion.div
-                      className="absolute inset-0 flex items-center justify-center z-10 bg-black/30 cursor-pointer"
-                      onClick={() => setHasStarted(true)}
-                      whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-                    >
-                      <motion.div
-                        className="flex items-center justify-center w-20 h-20 bg-white/90 rounded-full shadow-2xl hover:bg-white transition-colors"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        animate={{ scale: [1, 1.05, 1] }}
-                        transition={{
-                          duration: 2,
-                          ease: "easeInOut",
-                          repeat: Infinity,
-                        }}
-                      >
-                        <FaPlay className="w-8 h-8 text-black ml-1" />
-                      </motion.div>
-                    </motion.div>
-                  )}
-
-                  {/* YouTube Video Iframe */}
-                  <iframe
-                    src={`https://www.youtube.com/embed/8WTlff0TT_w?autoplay=${
-                      hasStarted ? 1 : 0
-                    }&mute=${
-                      hasStarted ? 0 : 1
-                    }&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    className="w-full h-full rounded-xl"
-                    frameBorder="0"
-                    allowFullScreen
-                    title="TPMS Training Video"
-                  />
-
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-black/10 pointer-events-none" />
-                </motion.div>
+                     <motion.div
+                            className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden shadow-xl"
+                            whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+                          >
+                            {/* Cover image with play button */}
+                            {!hasStarted && (
+                              <motion.div
+                                className="absolute inset-0 flex items-center justify-center z-20 cursor-pointer"
+                                onClick={() => setHasStarted(true)}
+                                whileHover={{ backgroundColor: "rgba(0,0,0,0.3)" }}
+                              >
+                                {/* Cover image */}
+                                <Image
+                                  src="/image/interview.webp"
+                                  width={1920}
+                                  height={1080}
+                                  alt="Video Cover"
+                                  className="absolute inset-0 w-full h-full object-cover"
+                                />
+                
+                                {/* Dark overlay */}
+                                <div className="absolute inset-0 bg-black/40" />
+                
+                                {/* Play button */}
+                                <motion.div
+                                  className="flex items-center justify-center w-20 h-20 bg-white/90 rounded-full shadow-2xl hover:bg-white transition-colors z-30"
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  animate={{ scale: [1, 1.05, 1] }}
+                                  transition={{ duration: 2, repeat: Infinity }}
+                                >
+                                  <FaPlay className="w-8 h-8 text-blue-600 ml-1" />
+                                </motion.div>
+                              </motion.div>
+                            )}
+                
+                            {/* YouTube iframe */}
+                            {hasStarted && (
+                              <iframe
+                                src={`https://www.youtube.com/embed/8WTlff0TT_w?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
+                                allow="autoplay; encrypted-media; picture-in-picture"
+                                className="w-full h-full rounded-xl"
+                                frameBorder="0"
+                                allowFullScreen
+                                title="TPMS Training Video"
+                              />
+                            )}
+                
+                            {/* Subtle overlay gradient for aesthetics */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none z-10" />
+                          </motion.div>
               </div>
             </div>
           </div>
@@ -523,9 +529,10 @@ export default function AboutPage() {
                           alt={cert.name}
                           width={64}
                           height={64}
-                          layout="responsive"
+                     
                           className="w-full h-full object-cover rounded-3xl"
                           loading="lazy"
+                          priority={false}
                         />
                       ) : (
                         cert.icon

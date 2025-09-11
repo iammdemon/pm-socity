@@ -2,33 +2,77 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaUserTie, FaCertificate, FaBook, FaBullseye, FaPlay } from "react-icons/fa";
+import {
+  FaUserTie,
+  FaCertificate,
+  FaBook,
+  FaBullseye,
+  FaPlay,
+} from "react-icons/fa";
 import localFont from "next/font/local";
+import Image from "next/image";
 
 const bonVivant = localFont({
   src: "../../../public/fonts/BonVivantSerifBold.ttf",
 });
 
 const reasons = [
-  { title: "Your Path to Success", description: "We're more than training—we're a full ecosystem of support, strategy, and community.", icon: <FaUserTie className="h-6 w-6" /> },
-  { title: "Pathway to Certification", description: "Live, instructor-led PMP training with expert guidance and real-world readiness.", icon: <FaCertificate className="h-6 w-6" /> },
-  { title: "Project Management Mentorship", description: "1-on-1 guidance for aspiring and active project professionals building clarity, confidence, and experience.", icon: <FaBook className="h-6 w-6" /> },
-  { title: "Society Membership", description: "Access peer matching, on-demand content, discussion forums, and a thriving community.", icon: <FaBullseye className="h-6 w-6" /> },
+  {
+    title: "Your Path to Success",
+    description:
+      "We're more than training—we're a full ecosystem of support, strategy, and community.",
+    icon: <FaUserTie className="h-6 w-6" />,
+  },
+  {
+    title: "Pathway to Certification",
+    description:
+      "Live, instructor-led PMP training with expert guidance and real-world readiness.",
+    icon: <FaCertificate className="h-6 w-6" />,
+  },
+  {
+    title: "Project Management Mentorship",
+    description:
+      "1-on-1 guidance for aspiring and active project professionals building clarity, confidence, and experience.",
+    icon: <FaBook className="h-6 w-6" />,
+  },
+  {
+    title: "Society Membership",
+    description:
+      "Access peer matching, on-demand content, discussion forums, and a thriving community.",
+    icon: <FaBullseye className="h-6 w-6" />,
+  },
 ];
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.2, delayChildren: 0.3 } },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2, delayChildren: 0.3 },
+  },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.42, 0, 0.58, 1] as [number, number, number, number] } }, // cubic-bezier
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.42, 0, 0.58, 1] as [number, number, number, number],
+    },
+  }, // cubic-bezier
 };
 
 const videoVariants = {
   hidden: { opacity: 0, scale: 0.95 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: [0.42, 0, 0.58, 1]  as [number, number, number, number]} },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: [0.42, 0, 0.58, 1] as [number, number, number, number],
+    },
+  },
 };
 
 const WhyChoose: React.FC = () => {
@@ -50,11 +94,14 @@ const WhyChoose: React.FC = () => {
               <span className="text-sm font-semibold uppercase tracking-wider">
                 Why Choose TPMS
               </span>
-              <h2 className={`mt-2 text-3xl font-bold text-black dark:text-white md:text-5xl ${bonVivant.className}`}>
+              <h2
+                className={`mt-2 text-3xl font-bold text-black dark:text-white md:text-5xl ${bonVivant.className}`}
+              >
                 Your Path to PMP Success
               </h2>
               <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
-                We empower you with the skills, confidence, and resources to excel in project management, not just pass an exam.
+                We empower you with the skills, confidence, and resources to
+                excel in project management, not just pass an exam.
               </p>
             </motion.div>
 
@@ -85,17 +132,30 @@ const WhyChoose: React.FC = () => {
           {/* Right: Video */}
           <motion.div
             className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden shadow-xl"
-            variants={videoVariants}
             whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
           >
+            {/* Cover image with play button */}
             {!hasStarted && (
               <motion.div
-                className="absolute inset-0 flex items-center justify-center z-10 bg-black/40 cursor-pointer"
+                className="absolute inset-0 flex items-center justify-center z-20 cursor-pointer"
                 onClick={() => setHasStarted(true)}
-                whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+                whileHover={{ backgroundColor: "rgba(0,0,0,0.3)" }}
               >
+                {/* Cover image */}
+                <Image
+                  src="/image/interview.webp"
+                  width={1920}
+                  height={1080}
+                  alt="Video Cover"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+
+                {/* Dark overlay */}
+                <div className="absolute inset-0 bg-black/40" />
+
+                {/* Play button */}
                 <motion.div
-                  className="flex items-center justify-center w-20 h-20 bg-white/90 rounded-full shadow-2xl hover:bg-white transition-colors"
+                  className="flex items-center justify-center w-20 h-20 bg-white/90 rounded-full shadow-2xl hover:bg-white transition-colors z-30"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   animate={{ scale: [1, 1.05, 1] }}
@@ -106,16 +166,20 @@ const WhyChoose: React.FC = () => {
               </motion.div>
             )}
 
-            <iframe
-              src={`https://www.youtube.com/embed/8WTlff0TT_w?${hasStarted ? 'autoplay=1&mute=0' : 'mute=1'}&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
-              allow="autoplay; encrypted-media; picture-in-picture"
-              className="w-full h-full rounded-xl"
-              frameBorder="0"
-              allowFullScreen
-              title="TPMS Training Video"
-            />
+            {/* YouTube iframe */}
+            {hasStarted && (
+              <iframe
+                src={`https://www.youtube.com/embed/8WTlff0TT_w?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
+                allow="autoplay; encrypted-media; picture-in-picture"
+                className="w-full h-full rounded-xl"
+                frameBorder="0"
+                allowFullScreen
+                title="TPMS Training Video"
+              />
+            )}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+            {/* Subtle overlay gradient for aesthetics */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none z-10" />
           </motion.div>
         </motion.div>
       </div>

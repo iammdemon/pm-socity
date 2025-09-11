@@ -1,120 +1,43 @@
 "use client";
 import Link from "next/link";
 import localFont from "next/font/local";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react"; // icons for sound toggle
-
-declare global {
-  interface Window {
-    Vimeo?: {
-      Player: new (
-        element: HTMLElement,
-        options: {
-          id: string;
-          background?: boolean;
-          autoplay?: boolean;
-          loop?: boolean;
-          muted?: boolean;
-          controls?: boolean;
-          responsive?: boolean;
-          playsinline?: boolean;
-        }
-      ) => VimeoPlayer;
-    };
-  }
-}
-
-interface VimeoPlayer {
-  on: (event: string, callback: () => void) => void;
-  setVolume: (volume: number) => Promise<void>;
-  destroy: () => Promise<void>;
-}
 
 const bonVivant = localFont({
   src: "../../../public/fonts/BonVivantSerifBold.ttf",
 });
 
 export default function Hero() {
-  const vimeoRef = useRef<HTMLDivElement>(null);
-  const playerRef = useRef<VimeoPlayer | null>(null);
-  const [isVideoReady, setIsVideoReady] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
 
-  useEffect(() => {
-    if (!vimeoRef.current) return;
-
-    let scriptElement: HTMLScriptElement | null = null;
-
-    const initializePlayer = () => {
-      if (!window.Vimeo || !vimeoRef.current) return;
-
-      const player = new window.Vimeo.Player(vimeoRef.current, {
-        id: "1115442895",
-        background: true,
-        autoplay: true,
-        loop: true,
-        muted: true,
-        controls: false,
-        responsive: true,
-        playsinline: true,
-      });
-
-      playerRef.current = player;
-      player.on("loaded", () => setIsVideoReady(true));
-    };
-
-    if (window.Vimeo) {
-      initializePlayer();
-    } else {
-      scriptElement = document.createElement("script");
-      scriptElement.src = "https://player.vimeo.com/api/player.js";
-      scriptElement.onload = initializePlayer;
-      scriptElement.onerror = () =>
-        console.error("Failed to load Vimeo Player API");
-      document.head.appendChild(scriptElement);
-    }
-
-    return () => {
-      if (playerRef.current) {
-        playerRef.current.destroy().catch(console.error);
-        playerRef.current = null;
-      }
-      if (scriptElement?.parentNode) {
-        scriptElement.parentNode.removeChild(scriptElement);
-      }
-    };
-  }, []);
-
-  const toggleMute = async () => {
-    if (!playerRef.current) return;
+  const toggleMute = () => {
+    if (!videoRef.current) return;
 
     if (isMuted) {
-      await playerRef.current.setVolume(1); // unmute
+      videoRef.current.muted = false;
+      videoRef.current.volume = 1;
       setIsMuted(false);
     } else {
-      await playerRef.current.setVolume(0); // mute
+      videoRef.current.muted = true;
+      videoRef.current.volume = 0;
       setIsMuted(true);
     }
   };
 
   return (
     <section className="relative w-full h-screen min-h-[350px] md:min-h-[500px] py-6 overflow-hidden">
-      {/* Vimeo Video Background */}
+      {/* Background Video */}
       <div className="absolute inset-0 z-0">
-        <div
-          ref={vimeoRef}
-          className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
-            isVideoReady ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            width: "100vw",
-            height: "56.25vw",
-            minHeight: "100vh",
-            minWidth: "177.78vh",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
+        <video
+          ref={videoRef}
+          src="/video/hero.webm"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
         />
 
         {/* Dark overlay */}
