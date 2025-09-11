@@ -1,12 +1,12 @@
 import { Package } from "@/types/package";
 
 import {
-  FiAward,
-  FiBookOpen,
   FiSettings,
-  FiTrendingUp,
-  FiUser,
-  FiUsers,
+  // FiAward,
+  // FiBookOpen,
+  // FiTrendingUp,
+  // FiUser,
+  // FiUsers,
 } from "react-icons/fi";
 export const packages: Package[] = [
   // {
