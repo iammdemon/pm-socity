@@ -187,17 +187,7 @@ export default function AboutPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
 
-  const videoVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.42, 0, 0.58, 1],
-      },
-    },
-  };
+
 
   useEffect(() => {
     setIsVisible(true);

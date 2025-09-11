@@ -63,17 +63,6 @@ const itemVariants = {
   }, // cubic-bezier
 };
 
-const videoVariants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.8,
-      ease: [0.42, 0, 0.58, 1] as [number, number, number, number],
-    },
-  },
-};
 
 const WhyChoose: React.FC = () => {
   const [hasStarted, setHasStarted] = useState(false);
