@@ -158,12 +158,12 @@ const WhyChoose: React.FC = () => {
             {/* YouTube iframe */}
             {hasStarted && (
               <iframe
-                src={`https://www.youtube.com/embed/8WTlff0TT_w?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
+                src={`https://www.youtube.com/embed/T-aDrrwzucI?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
                 allow="autoplay; encrypted-media; picture-in-picture"
                 className="w-full h-full rounded-xl"
                 frameBorder="0"
                 allowFullScreen
-                title="TPMS Training Video"
+                title="Why Choose TPMS"
               />
             )}
 

@@ -205,7 +205,7 @@ export default function ServicesPage() {
             <div className="text-center mb-12 sm:mb-16">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 border border-amber-200 text-amber-800 rounded-full text-sm font-medium mb-6">
                 <FiClock className="h-4 w-4" />
-                <span>Services launching Q3 2025</span>
+                <span>Services launching Q1 2026</span>
               </div>
               <h2
                 className={`${bonVivant.className} text-2xl sm:text-3xl lg:text-4xl font-black text-black mb-3 sm:mb-4`}

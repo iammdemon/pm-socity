@@ -26,7 +26,7 @@ export default function VideoSection() {
           viewport={{ once: true }}
         >
           <motion.h2
-            className={`${bonVivant.className} text-3xl md:text-5xl font-bold text-gray-900 mb-4`}
+            className={`${bonVivant.className} text-2xl md:text-5xl font-bold text-gray-900 mb-4`}
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.42, 0, 0.58, 1] as [number, number, number, number] }}
@@ -63,7 +63,7 @@ export default function VideoSection() {
           viewport={{ once: true }}
         >
           <VideoCard
-            thumbnailUrl="/image/elevate.webp"
+            thumbnailUrl="/image/mentor.webp"
             title="The TPMS Difference"
             videoUrl="https://www.youtube.com/embed/hmnoMYWbxLg?autoplay=1"
           />
@@ -127,7 +127,7 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
                 alt={title}
                 fill
                 className="object-cover"
-                sizes="(max-width: 768px) 100vw, 700px"
+                sizes="(max-width: 768px) 100vw, 600px"
                 priority
               />
 

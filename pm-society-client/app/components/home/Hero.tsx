@@ -27,12 +27,12 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative w-full h-screen min-h-[350px] md:min-h-[500px] py-6 overflow-hidden">
+    <section className="relative w-full md:h-screen min-h-[300px] md:min-h-[500px] py-6 overflow-hidden">
       {/* Background Video */}
       <div className="absolute inset-0 z-0">
         <video
           ref={videoRef}
-          src="/video/hero.webm"
+          src="/video/hero.mp4"
           autoPlay
           loop
           muted

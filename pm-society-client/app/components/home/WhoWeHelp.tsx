@@ -22,7 +22,7 @@ const services = [
     description:
       "Partner with a seasoned PM for career guidance, real-world insight, and post-certification growth.",
     icon: <FaHandsHelping className="h-8 w-8 dark:text-blue-400" />,
-    image: "/image/interview.webp",
+    image: "/image/mentor-3.webp",
   },
 ];
 
