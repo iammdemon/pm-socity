@@ -65,7 +65,7 @@ const BlogPage = () => {
       <Header />
       <main className="min-h-screen bg-[#ECE8E1]">
         {/* Hero */}
-        <section className="relative overflow-hidden min-h-[90vh] max-h-[800px] py-12 md:py-16 flex items-center">
+        <section className="relative overflow-hidden min-h-[60vh] md:min-h-[90vh] max-h-[800px] py-12 md:py-16 flex items-center">
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: 'url(/image/blog.webp)' }}

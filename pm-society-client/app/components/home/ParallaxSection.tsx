@@ -40,7 +40,7 @@ export default function ParallaxSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[70vh] md:min-h-[400px] max-h-[800px] overflow-hidden w-full"
+      className="relative min-h-[200px] md:min-h-[400px] max-h-[800px] overflow-hidden w-full"
     >
       {/* Image Container with Parallax */}
       <div
@@ -67,7 +67,7 @@ export default function ParallaxSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 to-black/70"></div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-6 md:px-8">
+      <div className="relative z-10 h-full flex items-center justify-center py-5 px-4 sm:px-6 md:px-8">
         <div className="text-center max-w-[90%] sm:max-w-3xl md:max-w-4xl">
           <h2
             className={`
