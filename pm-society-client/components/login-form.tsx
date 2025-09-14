@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn, getSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,44 +14,59 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useLoginMutation } from "@/app/redux/services/authApi";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export  function LoginForm({ className, ...props }: LoginFormProps) {
+export function LoginForm({ className, ...props }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
-  const [login, { isLoading }] = useLoginMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
 
     try {
-      const response = await login({ email, password }).unwrap();
+      // Use NextAuth signIn instead of custom mutation
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false, // Don't redirect automatically
+      });
 
-      // ✅ No need to store token, cookies are handled automatically
-      const role = response?.userRole;
+      if (result?.error) {
+        setError("Email or Password is invalid");
+        return;
+      }
 
+      // Get the session to access user role
+      const session = await getSession();
+      const role = session?.user?.role;
+
+      // Redirect based on role
       if (role === "admin") {
         router.push("/admin");
       } else {
         router.push("/dashboard");
       }
 
-      router.refresh(); // optional: revalidate if SSR used
+      // Clear form
       setEmail("");
       setPassword("");
+      
     } catch (err) {
       console.error("Login failed:", err);
       setError("Email or Password is invalid");
+    } finally {
+      setIsLoading(false);
     }
   };
 

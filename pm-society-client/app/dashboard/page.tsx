@@ -2,13 +2,13 @@
 
 import React, { useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   CalendarClock,
-  UserCheck,
   Sparkles,
   BookOpen,
   Users,
@@ -18,13 +18,13 @@ import {
   AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
-import { useGetMeQuery } from "../redux/services/authApi";
 
 interface User {
+  id: string;
   name: string;
   email: string;
-  packageType: string;
   role: string;
+  packageType: string;
   subscriptionStatus: string;
   subscriptionType: string;
   subscriptionEndDate: string;
@@ -55,25 +55,26 @@ const getDaysUntilExpiry = (endDate?: string) => {
 
 export default function MemberDashboard() {
   const router = useRouter();
-  const { data, isLoading, isError } = useGetMeQuery({});
+  const { data: session, status } = useSession();
 
-  // Expect user data directly, adjust if your API wraps it under `data`
-  const user: User | undefined = data?.data || data;
+  const user: User | undefined = session?.user as unknown as User;
 
   // Redirect if not authenticated
   useEffect(() => {
-    if (!isLoading && (isError || !user)) {
+    if (status === "unauthenticated") {
       router.replace("/login");
     }
-  }, [isLoading, isError, user, router]);
+  }, [status, router]);
 
   const daysUntilExpiry = useMemo(() => getDaysUntilExpiry(user?.subscriptionEndDate), [
     user?.subscriptionEndDate,
   ]);
 
-  const memberSince = useMemo(() => (user?.createdAt ? formatDate(user.createdAt) : ""), [user?.createdAt]);
+  const memberSince = useMemo(() => (user?.createdAt ? formatDate(user.createdAt) : ""), [
+    user?.createdAt,
+  ]);
 
-  if (isLoading) {
+  if (status === "loading") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4">
         <div className="container mx-auto space-y-6">
@@ -89,7 +90,7 @@ export default function MemberDashboard() {
     );
   }
 
-  if (!user) return null; // or spinner if you want
+  if (!user) return null; // user not available yet
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -250,7 +251,7 @@ export default function MemberDashboard() {
                     <span className="font-medium">💬 Community Forum</span>
                   </div>
                 </Link>
-                <Link
+                {/* <Link
                   href="/dashboard/support"
                   className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                 >
@@ -258,7 +259,7 @@ export default function MemberDashboard() {
                     <UserCheck className="h-5 w-5 text-gray-600" />
                     <span className="font-medium">🎧 Support Center</span>
                   </div>
-                </Link>
+                </Link> */}
               </div>
             </CardContent>
           </Card>

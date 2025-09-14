@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import ReduxProvider from "./providers/ReduxProviders";
 import { Toaster } from "sonner";
+import AuthProvider from "./providers/AuthProvider";
 
 export const runtime = "nodejs"
 
@@ -31,7 +32,9 @@ export default function RootLayout({
     <html lang="en" className={gothamPro.variable} suppressHydrationWarning>
       <body className={`${gothamPro.className} antialiased bg-[#ECE8E1]`}>
      
-          <ReduxProvider>{children}</ReduxProvider>
+          <AuthProvider>
+            <ReduxProvider>{children}</ReduxProvider>
+          </AuthProvider>
           <Toaster />
       
       </body>

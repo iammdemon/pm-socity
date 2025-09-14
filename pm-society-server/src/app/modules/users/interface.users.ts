@@ -8,7 +8,7 @@ export default interface IUser {
     course?: string;
     amount?: number;
     role?: "member" | "admin";
-    packageType?: "IGNITE" | "ELEVATE" | "ASCEND" | "THE_SOCIETY" | "THE_SOCIETY_PLUS";
+    packageType?: "IGNITE" | "ELEVATE" | "ASCEND" | "THE_SOCIETY" | "THE_SOCIETY_PLUS"| "BUILD_YOUR_OWN_PATH" | "ELEVATE_PILOT";
     subscriptionType?: "monthly" | "yearly" | "one_time";
     subscriptionId?: string; // Stripe subscription ID
     subscriptionStatus?: "active" | "canceled" | "past_due" | "unpaid";
