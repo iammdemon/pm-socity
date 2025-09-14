@@ -63,7 +63,7 @@ export default function VideoSection() {
           viewport={{ once: true }}
         >
           <VideoCard
-            thumbnailUrl="/image/mentor.webp"
+            thumbnailUrl="/image/video.webp"
             title="The TPMS Difference"
             videoUrl="https://www.youtube.com/embed/hmnoMYWbxLg?autoplay=1"
           />
