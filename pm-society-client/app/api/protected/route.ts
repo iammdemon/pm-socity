@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import axios from 'axios'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     })
 
     return NextResponse.json(response.data)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Backend request failed' }, { status: 500 })
   }
 }

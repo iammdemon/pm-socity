@@ -3,6 +3,8 @@ import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import axios from 'axios'
 
+
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -51,9 +53,13 @@ console.log(credentials)
             }
           }
           return null
-        } catch (error: any) {
-          console.error('Auth error:', error.response?.data?.message || error.message)
-          throw new Error(error.response?.data?.message || 'Invalid email or password')
+        } catch (error) {
+          if (axios.isAxiosError(error)) {
+            console.error('Auth error:', error.response?.data?.message || error.message);
+            throw new Error(error.response?.data?.message || 'Invalid email or password');
+          }
+          console.error('Auth error:', (error as Error).message);
+          throw new Error((error as Error).message || 'Invalid email or password');
         }
       }
     })

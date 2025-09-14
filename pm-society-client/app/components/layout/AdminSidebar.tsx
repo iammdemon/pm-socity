@@ -25,6 +25,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Types
+interface User {
+  name?: string;
+  email?: string;
+  role?: string;
+}
+
 interface MenuItem {
   icon: React.ElementType;
   label: string;
@@ -160,7 +166,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
 
         {/* Footer */}
         <SidebarFooter 
-          user={user}
+          user={user as User | undefined}
           onLogout={handleLogout}
         />
       </aside>
@@ -250,7 +256,7 @@ const SidebarFooter = ({
   user,
   onLogout,
 }: {
-  user: any;
+  user: User | undefined;
   onLogout: () => Promise<void>;
 }) => (
   <footer className="p-4 border-t border-gray-100">
@@ -261,7 +267,7 @@ const SidebarFooter = ({
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-black truncate">
-          {user?.name || user?.email}
+          {user?.name || user?.email || "Admin"}
         </p>
         <p className="text-xs text-gray-600 truncate">
           System Administrator

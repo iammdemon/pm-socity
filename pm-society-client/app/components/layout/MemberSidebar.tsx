@@ -22,6 +22,12 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Types
+interface User {
+  name?: string;
+  email?: string;
+  role?: string;
+}
+
 interface MenuItem {
   icon: React.ElementType;
   label: string;
@@ -150,7 +156,7 @@ export default function MemberSidebar({ className }: MemberSidebarProps) {
 
         {/* Footer */}
         <SidebarFooter 
-          user={user}
+          user={user as User | undefined}
           onLogout={handleLogout}
           isLoading={isLogoutLoading}
         />
@@ -249,7 +255,7 @@ const SidebarFooter = ({
   onLogout,
   isLoading,
 }: {
-  user: any;
+  user: User | undefined;
   onLogout: () => Promise<void>;
   isLoading?: boolean;
 }) => (
