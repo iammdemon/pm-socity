@@ -68,7 +68,7 @@ export default function BookWithCalendly() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {consultants.map((consultant, index) => (
-              <motion.div variants={fadeInUp}>
+              <motion.div key={index} variants={fadeInUp}>
                 <Card
                   className={`bg-white/90 backdrop-blur-sm border-none shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl overflow-hidden ${
                     !consultant.isAvailable ? "opacity-70" : ""
