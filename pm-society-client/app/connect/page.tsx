@@ -27,6 +27,7 @@ import Header from "../components/layout/Header";
 import { useSubmitContactFormMutation } from "../redux/services/contactApi";
 import { ContactSection } from "../components/connect/ContactSection";
 import { useForm } from "react-hook-form";
+import BookWithCalendly from "../components/connect/BookwithCalendly";
 
 export interface ContactData {
   name: string;
@@ -390,6 +391,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
             </motion.div>
           </div>
         </section>
+        <BookWithCalendly/>
       </div>
       <Footer />
     </>

@@ -2,85 +2,57 @@
 
 import Image from 'next/image';
 import localFont from 'next/font/local';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 const bonVivant = localFont({
   src: '../../../public/fonts/BonVivantSerifBold.ttf',
 });
 
 export default function ParallaxSection() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current || !imageRef.current) return;
-
-      const scrollPosition = window.scrollY;
-      const sectionTop = sectionRef.current.offsetTop;
-      const sectionHeight = sectionRef.current.offsetHeight;
-
-      // Only apply parallax if section is in view
-      if (
-        scrollPosition + window.innerHeight > sectionTop &&
-        scrollPosition < sectionTop + sectionHeight
-      ) {
-        const relativePos = scrollPosition - sectionTop;
-        // Adjust parallax rate based on screen size for smoother effect
-        const rate = relativePos * (window.innerWidth < 768 ? 0.2 : 0.3);
-        imageRef.current.style.transform = `translateY(${rate}px) scale(1.1)`;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <section
-      ref={sectionRef}
-      className="relative min-h-[200px] md:min-h-[400px] max-h-[800px] overflow-hidden w-full"
+      className="relative w-full min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh] max-h-[90vh] overflow-hidden"
     >
-      {/* Image Container with Parallax */}
-      <div
-        ref={imageRef}
-        className="absolute inset-0 w-full md:h-[110%] md:-top-[5%]"
-      >
+      {/* Image Container */}
+      <div className="absolute inset-0 w-full h-full">
         <Image
           src="/image/elevate.webp"
           alt="Project Management Career - Professional team collaboration"
           fill
-          className={`md:object-cover transition-opacity duration-500 ${
+          className={`object-cover transition-opacity duration-300 ease-in-out ${
             imageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
-            objectPosition: 'center 30%', // Focus on upper-center for better visibility
+            objectPosition: 'center 30%',
           }}
           onLoad={() => setImageLoaded(true)}
           priority
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, (min-width: 1280px) 1200px"
         />
       </div>
 
       {/* Gradient Overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 to-black/70"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60"></div>
 
       {/* Content */}
-      <div className="relative z-10 h-full flex items-center justify-center py-5 px-4 sm:px-6 md:px-8">
-        <div className="text-center max-w-[90%] sm:max-w-3xl md:max-w-4xl">
+      <div className="relative z-10 h-full flex items-center justify-center px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
+        <div className="flex flex-col items-center justify-center text-center w-full max-w-[95%] sm:max-w-[85%] md:max-w-3xl lg:max-w-4xl">
           <h2
             className={`
               ${bonVivant.className}
               font-bold
               text-white
-              text-xl
-              sm:text-2xl
-              md:text-4xl
-              lg:text-5xl
-              xl:text-6xl
+              text-lg
+              sm:text-xl
+              md:text-3xl
+              lg:text-4xl
+              xl:text-5xl
+              2xl:text-6xl
               leading-tight
               drop-shadow-2xl
+              tracking-tight
             `}
           >
             Elevate Your Project Management Career
@@ -95,13 +67,15 @@ export default function ParallaxSection() {
               md:text-base
               lg:text-lg
               xl:text-xl
-              mt-3
-              sm:mt-4
-              md:mt-6
+              mt-2
+              sm:mt-3
+              md:mt-4
+              lg:mt-5
               drop-shadow-lg
               max-w-[90%]
-              sm:max-w-xl
-              md:max-w-2xl
+              sm:max-w-md
+              md:max-w-xl
+              lg:max-w-2xl
               mx-auto
               leading-relaxed
             "
@@ -113,7 +87,7 @@ export default function ParallaxSection() {
 
       {/* Loading placeholder */}
       {!imageLoaded && (
-        <div className="absolute inset-0 bg-gray-800 animate-pulse flex items-center justify-center">
+        <div className="absolute inset-0 bg-gray-900 animate-pulse flex items-center justify-center">
           <div className="text-white/50 text-xs sm:text-sm">Loading...</div>
         </div>
       )}

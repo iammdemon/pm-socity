@@ -1,13 +1,13 @@
+import { Instagram, Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { FaTiktok } from "react-icons/fa6";
 
 import {
-  LuFacebook,
-  LuLinkedin,
   LuMail,
   LuMapPin,
   LuPhone,
-  LuTwitter,
+
 } from "react-icons/lu";
 
 export default function Footer() {
@@ -32,20 +32,21 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4 text-white mt-4">
               <SocialIcon
-                icon={<LuFacebook size={18} />}
-                href="#"
-                label="Facebook"
+                icon={<Linkedin size={18} />}
+                href="https://www.linkedin.com/company/the-pm-society-inc"
+                label="Linkedin"
               />
               <SocialIcon
-                icon={<LuLinkedin size={18} />}
-                href="#"
-                label="LinkedIn"
+                icon={<Instagram size={18} />}
+                href="https://www.instagram.com/the_pm_society"
+                label="Instagram"
               />
               <SocialIcon
-                icon={<LuTwitter size={18} />}
-                href="#"
-                label="Twitter"
+                icon={<FaTiktok size={18} />}
+                href="https://www.tiktok.com/@the_pm_society"
+                label="TikTok"
               />
+              
             </div>
           </div>
 
@@ -56,7 +57,7 @@ export default function Footer() {
               <FooterLink href="/">Home</FooterLink>
               <FooterLink href="/about">About Us</FooterLink>
               <FooterLink href="/services">Services</FooterLink>
-              <FooterLink href="/contact">Contact</FooterLink>
+              <FooterLink href="/connect">Connect</FooterLink>
               <FooterLink href="/privacy-policy">Privacy Policy</FooterLink>
               <FooterLink href="/terms">Terms of Service</FooterLink>
             

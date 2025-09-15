@@ -1,32 +1,28 @@
-import React from "react";
-import {
 
-  Mail,
-  Calendar,
+'use client';
 
-} from "lucide-react";
-import Footer from "../components/layout/Footer";
-import Header from "../components/layout/Header";
+import React from 'react';
+import { Mail, Calendar } from 'lucide-react';
+import Footer from '../components/layout/Footer';
+import Header from '../components/layout/Header';
 
 export default function TermsOfService() {
   return (
     <>
-      {" "}
       <Header />
-      <div className="min-h-screen   py-8  sm:px-6 lg:px-8">
+      <div className="min-h-screen py-8 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto md:my-20 my-16">
           {/* Header Section */}
-          <div className="  border border-gray-200 mb-8 overflow-hidden">
-            <div className=" p-6 sm:p-8">
+          <div className="border border-gray-200 mb-8 overflow-hidden">
+            <div className="p-6 sm:p-8">
               <div className="flex items-center gap-4">
-             
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-bold">
                     Terms of Service
                   </h1>
-                  <p className=" mt-1 flex items-center gap-2">
+                  <p className="mt-1 flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
-                    Last Updated: August 19, 2025
+                    Last Updated: September 15, 2025
                   </p>
                 </div>
               </div>
@@ -50,7 +46,6 @@ export default function TermsOfService() {
               {/* Section 1: Eligibility */}
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4 mb-4">
-               
                   <div className="flex-1">
                     <h2 className="text-xl font-bold text-gray-900 mb-3">
                       1. Eligibility
@@ -67,7 +62,6 @@ export default function TermsOfService() {
               {/* Section 2: Accounts & Membership */}
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4 mb-4">
-               
                   <div className="flex-1">
                     <h2 className="text-xl font-bold text-gray-900 mb-3">
                       2. Accounts & Membership
@@ -85,7 +79,6 @@ export default function TermsOfService() {
               {/* Section 3: Payments & Refunds */}
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4 mb-4">
-                 
                   <div className="flex-1">
                     <h2 className="text-xl font-bold text-gray-900 mb-3">
                       3. Payments & Refunds
@@ -108,21 +101,53 @@ export default function TermsOfService() {
                         <div className="w-1.5 h-1.5 rounded-full bg-black mt-2 shrink-0"></div>
                         <span>
                           Refunds are only available in accordance with our
-                          published refund policy.
+                          published refund policy below.
                         </span>
                       </li>
                     </ul>
+                    <h3 className="text-lg font-semibold text-gray-900 mt-4 mb-2">
+                      Refund Policy
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed">
+                      All purchases with The PM Society, Inc. are final and non-refundable. This applies to courses, memberships, mentorship and coaching sessions, events, and all other services. Because our programs provide immediate access to digital resources, live training, and exclusive benefits, refunds are not available once a purchase is made. If you are unable to attend a scheduled session or event, we may be able to reschedule you for a future program or event if availability allows. Please note that refunds will not be issued under any circumstances. Enrollment or purchase confirms your acceptance of this policy. For questions, please contact us at{' '}
+                      <a
+                        href="mailto:contact@thepmsociety.com"
+                        className="text-blue-600 hover:underline"
+                      >
+                        contact@thepmsociety.com
+                      </a>.
+                    </p>
                   </div>
                 </div>
               </div>
 
-              {/* Section 4: Acceptable Use */}
+              {/* Section 4: Dispute Resolution */}
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4 mb-4">
-                  
                   <div className="flex-1">
                     <h2 className="text-xl font-bold text-gray-900 mb-3">
-                      4. Acceptable Use
+                      4. Dispute Resolution
+                    </h2>
+                    <p className="text-gray-700 leading-relaxed">
+                      At The PM Society, Inc., we aim to resolve all concerns quickly and fairly. If you have a dispute regarding your purchase, please contact us at{' '}
+                      <a
+                        href="mailto:contact@thepmsociety.com"
+                        className="text-blue-600 hover:underline"
+                      >
+                        contact@thepmsociety.com
+                      </a>{' '}
+                      so we can work toward a resolution. If a resolution cannot be reached directly, you agree that any dispute will be resolved through binding arbitration under the laws of the State of Texas. By purchasing from The PM Society, you waive the right to pursue claims in court or through class actions.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Section 5: Acceptable Use */}
+              <div className="p-6 sm:p-8">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="flex-1">
+                    <h2 className="text-xl font-bold text-gray-900 mb-3">
+                      5. Acceptable Use
                     </h2>
                     <p className="text-gray-700 leading-relaxed mb-3">
                       You agree not to misuse our Services. This includes, but
@@ -151,13 +176,12 @@ export default function TermsOfService() {
                 </div>
               </div>
 
-              {/* Section 5: Intellectual Property */}
+              {/* Section 6: Intellectual Property */}
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4 mb-4">
-              
                   <div className="flex-1">
                     <h2 className="text-xl font-bold text-gray-900 mb-3">
-                      5. Intellectual Property
+                      6. Intellectual Property
                     </h2>
                     <p className="text-gray-700 leading-relaxed">
                       All materials, including training content, course guides,
@@ -169,13 +193,12 @@ export default function TermsOfService() {
                 </div>
               </div>
 
-              {/* Section 6: Disclaimers & Limitation of Liability */}
+              {/* Section 7: Disclaimers & Limitation of Liability */}
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4 mb-4">
-              
                   <div className="flex-1">
                     <h2 className="text-xl font-bold text-gray-900 mb-3">
-                      6. Disclaimers & Limitation of Liability
+                      7. Disclaimers & Limitation of Liability
                     </h2>
                     <p className="text-gray-700 leading-relaxed">
                       Our Services are provided &quot;as is&quot; without warranties of
@@ -187,13 +210,12 @@ export default function TermsOfService() {
                 </div>
               </div>
 
-              {/* Section 7: Termination */}
+              {/* Section 8: Termination */}
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4 mb-4">
-                
                   <div className="flex-1">
                     <h2 className="text-xl font-bold text-gray-900 mb-3">
-                      7. Termination
+                      8. Termination
                     </h2>
                     <p className="text-gray-700 leading-relaxed">
                       We reserve the right to suspend or terminate your account
@@ -203,31 +225,28 @@ export default function TermsOfService() {
                 </div>
               </div>
 
-              {/* Section 8: Governing Law */}
+              {/* Section 9: Governing Law */}
               <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4 mb-4">
-              
                   <div className="flex-1">
                     <h2 className="text-xl font-bold text-gray-900 mb-3">
-                      8. Governing Law
+                      9. Governing Law
                     </h2>
                     <p className="text-gray-700 leading-relaxed">
                       These Terms shall be governed by and construed under the
-                      laws of the
-                      <strong> State of Texas</strong>, without regard to
+                      laws of the <strong>State of Texas</strong>, without regard to
                       conflict of law provisions.
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Section 9: Contact Us */}
-              <div className="p-6 sm:p-8 ">
+              {/* Section 10: Contact Us */}
+              <div className="p-6 sm:p-8">
                 <div className="flex items-start gap-4">
-             
                   <div className="flex-1">
                     <h2 className="text-xl font-bold text-gray-900 mb-3">
-                      9. Contact Us
+                      10. Contact Us
                     </h2>
                     <p className="text-gray-700 leading-relaxed mb-4">
                       If you have questions about these Terms, please contact us
@@ -235,7 +254,7 @@ export default function TermsOfService() {
                     </p>
                     <a
                       href="mailto:contact@thepmsociety.com"
-                      className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg  transition-colors font-medium"
+                      className="inline-flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg transition-colors font-medium"
                     >
                       <Mail className="w-4 h-4" />
                       contact@thepmsociety.com
@@ -245,8 +264,6 @@ export default function TermsOfService() {
               </div>
             </div>
           </div>
-
-       
         </div>
       </div>
       <Footer />

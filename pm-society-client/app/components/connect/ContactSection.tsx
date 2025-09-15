@@ -1,6 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
-import { Mail, Phone, Instagram, Facebook, Linkedin } from 'lucide-react';
+import { Mail, Phone, Instagram,  Linkedin } from 'lucide-react';
+import { FaTiktok } from 'react-icons/fa';
 
 
 const fadeInUp = {
@@ -36,27 +37,28 @@ export const ContactSection = () => {
                 href: "tel:8325355064",
                 hover: "hover:bg-green-600",
               },
+               {
+                icon: Linkedin,
+                title: "LinkedIn",
+                content: "the_pm_society",
+                href: "https://www.linkedin.com/company/the-pm-society-inc",
+                hover: "hover:bg-blue-800",
+              },
               {
                 icon: Instagram,
                 title: "Instagram",
-                content: "@thepmsociety",
-                href: "https://www.instagram.com/thepmsociety",
-                hover: "hover:bg-purple-600",
+                content: "thepmsociety",
+                href: "https://www.instagram.com/the_pm_society",
+                hover: "hover:bg-red-600",
               },
               {
-                icon: Facebook,
-                title: "Facebook",
-                content: "@thepmsociety",
-                href: "https://www.facebook.com/thepmsociety",
-                hover: "hover:bg-blue-600",
+                icon: FaTiktok,
+                title: "TikTok",
+                content: "@the_pm_society",
+                href: "https://www.tiktok.com/@the_pm_society",
+               
               },
-              {
-                icon: Linkedin,
-                title: "LinkedIn",
-                content: "@thepmsociety",
-                href: "https://www.linkedin.com/company/thepmsociety",
-                hover: "hover:bg-blue-800",
-              },
+             
             ].map((item, index) => (
               <motion.div
                 key={index}
