@@ -413,7 +413,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                      <span className="italic">I confirm that I have read and agree to The PM Society's{" "}
+                      <span className="italic">I confirm that I have read and agree to The PM Society&apos;s{" "}
                         <a 
                           href="terms" 
                           className="text-gray-900 underline hover:text-gray-700 font-medium"
@@ -440,7 +440,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                      <span className="italic">I confirm that I have read and agree to The PM Society's{" "}
+                      <span className="italic">I confirm that I have read and agree to The PM Society&apos;s{" "}
                         <a 
                           href="privacy-policy" 
                           className="text-gray-900 underline hover:text-gray-700 font-medium"
