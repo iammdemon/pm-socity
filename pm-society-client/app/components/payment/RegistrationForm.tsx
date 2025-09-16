@@ -23,12 +23,19 @@ import {
   useVerifyPaymentMutation,
 } from "@/app/redux/services/userApi";
 import { packages } from "./Packages";
+import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Valid email required"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   phoneNumber: z.string().min(1, "Phone number is required"),
+  agreeToTerms: z.boolean().refine((val) => val === true, {
+    message: "You must agree to the Terms of Service",
+  }),
+  agreeToRefundPolicy: z.boolean().refine((val) => val === true, {
+    message: "You must agree to the Refund & Dispute Resolution Policy",
+  }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -58,7 +65,14 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", password: "", phoneNumber: "" },
+    defaultValues: { 
+      name: "", 
+      email: "", 
+      password: "", 
+      phoneNumber: "",
+      agreeToTerms: false,
+      agreeToRefundPolicy: false,
+    },
   });
 
   const selectedPackageData = packages.find((p) => p.id === selectedPackage);
@@ -312,16 +326,18 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
             {/* Payment Information Section */}
             <div className="space-y-4">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-                Payment Information
-              </h3>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+                  Payment Information
+                </h3>
+              </div>
+              
               <div className="p-4 sm:p-6 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-gray-50">
                 <CardElement
                   options={{
                     style: {
                       base: {
-              
                         color: "#111827",
                         fontFamily: "system-ui, sans-serif",
                         "::placeholder": {
@@ -331,6 +347,123 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                     },
                   }}
                 />
+              </div>
+
+              {/* Payment Card Logos */}
+              <div className="flex items-center justify-center  gap-2 sm:gap-4">
+               
+                
+                  {/* Visa */}
+                  <div className=" bg-white border border-gray-200 rounded flex items-center justify-center shadow-sm">
+                    <Image
+                      src="/image/visa.png" 
+                      alt="Visa" 
+                      className="w-12 h-8 object-contain"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                  <div className=" bg-white border border-gray-200 rounded flex items-center justify-center shadow-sm">
+                    <Image
+                      src="/image/mastercard.webp" 
+                      alt="Mastercard" 
+                      className="w-12 h-8 object-contain"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                  <div className=" bg-white border border-gray-200 rounded flex items-center justify-center shadow-sm">
+                    <Image
+                      src="/image/american-express.png" 
+                      alt="American Express" 
+                      className="w-12 h-8 object-contain"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                  <div className=" bg-white border border-gray-200 rounded flex items-center justify-center shadow-sm">
+                    <Image
+                      src="/image/discover.webp" 
+                      alt="Discover" 
+                      className="w-12 h-8 object-contain"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                  
+             
+                </div>
+            
+            </div>
+
+            {/* Terms and Conditions Section */}
+            <div className="space-y-4">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
+                Terms and Conditions
+              </h3>
+              
+              <div className="space-y-4 p-4 sm:p-6 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-gray-50">
+                {/* Terms of Service Checkbox */}
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    {...form.register("agreeToTerms")}
+                    className="mt-1 w-4 h-4 sm:w-5 sm:h-5 text-gray-900 border-2 border-gray-300 rounded focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                      <span className="italic">I confirm that I have read and agree to The PM Society's{" "}
+                        <a 
+                          href="terms" 
+                          className="text-gray-900 underline hover:text-gray-700 font-medium"
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          Terms of Service
+                        </a>.</span>
+                    </p>
+                    {form.formState.errors.agreeToTerms && (
+                      <p className="mt-2 text-xs sm:text-sm text-red-600">
+                        {form.formState.errors.agreeToTerms.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Refund Policy Checkbox */}
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    {...form.register("agreeToRefundPolicy")}
+                    className="mt-1 w-4 h-4 sm:w-5 sm:h-5 text-gray-900 border-2 border-gray-300 rounded focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                      <span className="italic">I confirm that I have read and agree to The PM Society's{" "}
+                        <a 
+                          href="privacy-policy" 
+                          className="text-gray-900 underline hover:text-gray-700 font-medium"
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          Refund & Dispute Resolution Policy
+                        </a>.</span>
+                    </p>
+                    {form.formState.errors.agreeToRefundPolicy && (
+                      <p className="mt-2 text-xs sm:text-sm text-red-600">
+                        {form.formState.errors.agreeToRefundPolicy.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Enrollment Commitment Notice */}
+                <div className="pt-2 border-t border-gray-300">
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    <span className="italic">I understand that my enrollment is a commitment to the program and subject to the stated refund policy.</span>
+                  </p>
+                </div>
               </div>
             </div>
 
