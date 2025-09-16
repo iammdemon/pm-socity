@@ -207,6 +207,10 @@ const verifyPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
             subscriptionEndDate = new Date();
             subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 6);
             break;
+        case "ELEVATE_PILOT":
+            subscriptionEndDate = new Date();
+            subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 2);
+            break;
         default:
             break;
     }
