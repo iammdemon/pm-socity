@@ -245,6 +245,10 @@ const verifyPayment = catchAsync(async (req: Request, res: Response) => {
       subscriptionEndDate = new Date();
       subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 6);
       break;
+    case "ELEVATE_PILOT":
+      subscriptionEndDate = new Date();
+      subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 2);
+      break;
     default:
       break;
   }
