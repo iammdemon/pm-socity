@@ -354,7 +354,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                
                 
                   {/* Visa */}
-                  <div className=" bg-white border border-gray-200 rounded flex items-center justify-center shadow-sm">
+                  <div className=" ">
                     <Image
                       src="/image/visa.png" 
                       alt="Visa" 
@@ -363,7 +363,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       height={20}
                     />
                   </div>
-                  <div className=" bg-white border border-gray-200 rounded flex items-center justify-center shadow-sm">
+                  <div className=" ">
                     <Image
                       src="/image/mastercard.webp" 
                       alt="Mastercard" 
@@ -372,7 +372,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       height={20}
                     />
                   </div>
-                  <div className=" bg-white border border-gray-200 rounded flex items-center justify-center shadow-sm">
+                  <div className=" ">
                     <Image
                       src="/image/american-express.png" 
                       alt="American Express" 
@@ -381,10 +381,28 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                       height={20}
                     />
                   </div>
-                  <div className=" bg-white border border-gray-200 rounded flex items-center justify-center shadow-sm">
+                  <div className=" ">
                     <Image
                       src="/image/discover.webp" 
                       alt="Discover" 
+                      className="w-12 h-8 object-contain"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                  <div className=" ">
+                    <Image
+                      src="/image/afterpay.jpeg" 
+                      alt="After Pay" 
+                      className="w-12 h-8 object-contain"
+                      width={20}
+                      height={20}
+                    />
+                  </div>
+                  <div className=" ">
+                    <Image
+                      src="/image/klarna.jpeg" 
+                      alt="Klarna" 
                       className="w-12 h-8 object-contain"
                       width={20}
                       height={20}

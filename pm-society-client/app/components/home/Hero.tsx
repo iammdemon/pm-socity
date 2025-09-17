@@ -18,6 +18,7 @@ export default function Hero() {
     if (isMuted) {
       videoRef.current.muted = false;
       videoRef.current.volume = 1;
+      videoRef.current.play().catch((err) => console.log("Play blocked:", err));
       setIsMuted(false);
     } else {
       videoRef.current.muted = true;
@@ -37,11 +38,13 @@ export default function Hero() {
           loop
           muted
           playsInline
+          preload="none"
+          poster="/image/video.webp"
           className="absolute inset-0 w-full h-full object-cover"
         />
 
         {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/30 z-10" />
+        <div className="absolute inset-0 bg-black/20 z-10" />
       </div>
 
       {/* Sound Toggle Button */}
