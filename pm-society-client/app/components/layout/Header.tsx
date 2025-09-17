@@ -248,7 +248,7 @@ const MobileMenu = ({
           // Non-authenticated mobile menu
           <>
             <Link
-              href="/signin"
+              href="/login"
               className="bg-white text-black font-medium px-4 py-3 rounded-lg text-center block hover:bg-gray-100 transition-colors duration-200"
               onClick={() => setIsMobileMenuOpen(false)}
             >
