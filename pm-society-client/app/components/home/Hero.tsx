@@ -2,57 +2,58 @@
 import Link from "next/link";
 import localFont from "next/font/local";
 import { useRef, useState } from "react";
-import { Volume2, VolumeX } from "lucide-react"; // icons for sound toggle
+import { Volume2, VolumeX } from "lucide-react";
 
 const bonVivant = localFont({
   src: "../../../public/fonts/BonVivantSerifBold.ttf",
+  fallback: ["Georgia", "serif"],
 });
+
+const VIDEO_PATH = "/video/welcome.mp4";
+const POSTER_PATH = "/image/video.webp";
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
 
   const toggleMute = () => {
-    if (!videoRef.current) return;
-
-    if (isMuted) {
-      videoRef.current.muted = false;
-      videoRef.current.volume = 1;
-      videoRef.current.play().catch((err) => console.log("Play blocked:", err));
-      setIsMuted(false);
-    } else {
-      videoRef.current.muted = true;
-      videoRef.current.volume = 0;
-      setIsMuted(true);
+    if (!videoRef.current) {
+      console.warn("Video element not found");
+      return;
     }
+    videoRef.current.muted = !videoRef.current.muted;
+    videoRef.current.volume = videoRef.current.muted ? 0 : 1;
+    if (!videoRef.current.muted) {
+      videoRef.current.play().catch((err) => console.error("Playback failed:", err));
+    }
+    setIsMuted(videoRef.current.muted);
   };
 
   return (
-    <section className="relative w-full md:h-screen min-h-[300px] md:min-h-[500px] py-6 overflow-hidden">
+    <section className="relative w-full md:h-screen min-h-[400px] py-6 overflow-hidden">
       {/* Background Video */}
       <div className="absolute inset-0 z-0">
         <video
           ref={videoRef}
-          src="/video/hero.mp4"
+          src={VIDEO_PATH}
           autoPlay
           loop
           muted
           playsInline
-          preload="none"
-      
-          poster="/image/video.webp"
-          className="absolute inset-0 w-full h-full object-cover"
+          preload="metadata"
+          poster={POSTER_PATH}
+          className="absolute inset-0 w-full h-full object-cover aspect-video"
+          onError={() => console.error("Video failed to load")}
         />
-
-        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/20 z-10" />
       </div>
 
       {/* Sound Toggle Button */}
       <button
         onClick={toggleMute}
-        className="absolute bottom-4 right-4 z-30 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white transition md:bottom-6 md:right-6"
+        className="absolute bottom-4 right-4 z-30 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white transition md:bottom-6 md:right-6 focus-visible:ring-2 focus-visible:ring-white"
         aria-label={isMuted ? "Unmute video" : "Mute video"}
+        title={isMuted ? "Unmute video" : "Mute video"}
       >
         {isMuted ? <VolumeX size={22} /> : <Volume2 size={22} />}
       </button>
@@ -65,12 +66,10 @@ export default function Hero() {
           >
             Welcome to The Society!
           </h1>
-
           <p className="text-sm leading-relaxed sm:text-base sm:leading-relaxed md:text-lg md:leading-relaxed lg:text-xl lg:leading-relaxed text-white/90 mb-6 md:mb-8 drop-shadow-lg max-w-2xl mx-auto">
             More Than a Certificate — A Society Built on Collaboration. Get
             Certified, Build Confidence, Community, & Your Career.
           </p>
-
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-4 max-w-md sm:max-w-none mx-auto">
             <Link
               href="/services"
