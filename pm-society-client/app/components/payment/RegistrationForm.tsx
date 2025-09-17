@@ -30,6 +30,7 @@ const formSchema = z.object({
   email: z.string().email("Valid email required"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   phoneNumber: z.string().min(1, "Phone number is required"),
+  coupon: z.string().optional(),
   agreeToTerms: z.boolean().refine((val) => val === true, {
     message: "You must agree to the Terms of Service",
   }),
@@ -65,10 +66,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: { 
-      name: "", 
-      email: "", 
-      password: "", 
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
       phoneNumber: "",
       agreeToTerms: false,
       agreeToRefundPolicy: false,
@@ -205,7 +206,9 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
               </h1>
               <p className="text-gray-300 mt-1 text-sm sm:text-base leading-snug">
                 {selectedPackageData
-                  ? `Enrolling in ${selectedPackageData.name} • ${getPriceDisplay()}`
+                  ? `Enrolling in ${
+                      selectedPackageData.name
+                    } • ${getPriceDisplay()}`
                   : "Select a package to continue"}
               </p>
             </div>
@@ -226,11 +229,11 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   <User className="w-4 h-4 sm:w-5 sm:h-5" />
                   Personal Information
                 </h3>
-                
+
                 {/* Responsive grid - single column on mobile, two columns on larger screens */}
                 <div className="grid grid-cols-1  gap-4 sm:gap-6">
                   {/* Full Name */}
-                  <div >
+                  <div>
                     <label className="block text-sm font-medium text-gray-900 mb-2">
                       Full Name
                     </label>
@@ -248,7 +251,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   </div>
 
                   {/* Email */}
-                  <div >
+                  <div>
                     <label className="block text-sm font-medium text-gray-900 mb-2">
                       Email Address
                     </label>
@@ -269,7 +272,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   </div>
 
                   {/* Phone Number */}
-                  <div >
+                  <div>
                     <label className="block text-sm font-medium text-gray-900 mb-2">
                       Phone Number
                     </label>
@@ -290,7 +293,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   </div>
 
                   {/* Password */}
-                  <div >
+                  <div>
                     <label className="block text-sm font-medium text-gray-900 mb-2">
                       Password
                     </label>
@@ -323,6 +326,18 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 </div>
               </div>
             </div>
+            {/* Coupon Code */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Coupon Code
+              </label>
+              <input
+                {...form.register("coupon")}
+                type="text"
+                placeholder="Enter coupon (optional)"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-gray-900 focus:outline-none transition-colors text-gray-900 placeholder-gray-500 text-sm sm:text-base"
+              />
+            </div>
 
             {/* Payment Information Section */}
             <div className="space-y-4">
@@ -332,7 +347,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   Payment Information
                 </h3>
               </div>
-              
+
               <div className="p-4 sm:p-6 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-gray-50">
                 <CardElement
                   options={{
@@ -351,67 +366,62 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
               {/* Payment Card Logos */}
               <div className="flex items-center justify-center  gap-2 sm:gap-4">
-               
-                
-                  {/* Visa */}
-                  <div className=" ">
-                    <Image
-                      src="/image/visa.png" 
-                      alt="Visa" 
-                      className="w-12 h-8 object-contain"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                  <div className=" ">
-                    <Image
-                      src="/image/mastercard.webp" 
-                      alt="Mastercard" 
-                      className="w-12 h-8 object-contain"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                  <div className=" ">
-                    <Image
-                      src="/image/american-express.png" 
-                      alt="American Express" 
-                      className="w-12 h-8 object-contain"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                  <div className=" ">
-                    <Image
-                      src="/image/discover.webp" 
-                      alt="Discover" 
-                      className="w-12 h-8 object-contain"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                  <div className=" ">
-                    <Image
-                      src="/image/afterpay.jpeg" 
-                      alt="After Pay" 
-                      className="w-12 h-8 object-contain"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                  <div className=" ">
-                    <Image
-                      src="/image/klarna.jpeg" 
-                      alt="Klarna" 
-                      className="w-12 h-8 object-contain"
-                      width={20}
-                      height={20}
-                    />
-                  </div>
-                  
-             
+                {/* Visa */}
+                <div className=" ">
+                  <Image
+                    src="/image/visa.png"
+                    alt="Visa"
+                    className="w-12 h-8 object-contain"
+                    width={20}
+                    height={20}
+                  />
                 </div>
-            
+                <div className=" ">
+                  <Image
+                    src="/image/mastercard.webp"
+                    alt="Mastercard"
+                    className="w-12 h-8 object-contain"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                <div className=" ">
+                  <Image
+                    src="/image/american-express.png"
+                    alt="American Express"
+                    className="w-12 h-8 object-contain"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                <div className=" ">
+                  <Image
+                    src="/image/discover.webp"
+                    alt="Discover"
+                    className="w-12 h-8 object-contain"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                <div className=" ">
+                  <Image
+                    src="/image/afterpay.jpeg"
+                    alt="After Pay"
+                    className="w-12 h-8 object-contain"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                <div className=" ">
+                  <Image
+                    src="/image/klarna.jpeg"
+                    alt="Klarna"
+                    className="w-12 h-8 object-contain"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Terms and Conditions Section */}
@@ -420,7 +430,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
                 Terms and Conditions
               </h3>
-              
+
               <div className="space-y-4 p-4 sm:p-6 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-gray-50">
                 {/* Terms of Service Checkbox */}
                 <div className="flex items-start gap-3">
@@ -431,15 +441,19 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                      <span className="italic">I confirm that I have read and agree to The PM Society&apos;s{" "}
-                        <a 
-                          href="terms" 
+                      <span className="italic">
+                        I confirm that I have read and agree to The PM
+                        Society&apos;s{" "}
+                        <a
+                          href="terms"
                           className="text-gray-900 underline hover:text-gray-700 font-medium"
-                          target="_blank" 
+                          target="_blank"
                           rel="noopener noreferrer"
                         >
                           Terms of Service
-                        </a>.</span>
+                        </a>
+                        .
+                      </span>
                     </p>
                     {form.formState.errors.agreeToTerms && (
                       <p className="mt-2 text-xs sm:text-sm text-red-600">
@@ -458,15 +472,19 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                      <span className="italic">I confirm that I have read and agree to The PM Society&apos;s{" "}
-                        <a 
-                          href="privacy-policy" 
+                      <span className="italic">
+                        I confirm that I have read and agree to The PM
+                        Society&apos;s{" "}
+                        <a
+                          href="privacy-policy"
                           className="text-gray-900 underline hover:text-gray-700 font-medium"
-                          target="_blank" 
+                          target="_blank"
                           rel="noopener noreferrer"
                         >
                           Refund & Dispute Resolution Policy
-                        </a>.</span>
+                        </a>
+                        .
+                      </span>
                     </p>
                     {form.formState.errors.agreeToRefundPolicy && (
                       <p className="mt-2 text-xs sm:text-sm text-red-600">
@@ -479,7 +497,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 {/* Enrollment Commitment Notice */}
                 <div className="pt-2 border-t border-gray-300">
                   <p className="text-sm text-gray-600 leading-relaxed">
-                    <span className="italic">I understand that my enrollment is a commitment to the program and subject to the stated refund policy.</span>
+                    <span className="italic">
+                      I understand that my enrollment is a commitment to the
+                      program and subject to the stated refund policy.
+                    </span>
                   </p>
                 </div>
               </div>
@@ -503,7 +524,9 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
               {isProcessing ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-sm sm:text-base">Processing Payment...</span>
+                  <span className="text-sm sm:text-base">
+                    Processing Payment...
+                  </span>
                 </div>
               ) : selectedPackageData ? (
                 <div className="flex items-center justify-center gap-2 flex-wrap">
@@ -513,7 +536,9 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   </span>
                 </div>
               ) : (
-                <span className="text-sm sm:text-base">Select a package to continue</span>
+                <span className="text-sm sm:text-base">
+                  Select a package to continue
+                </span>
               )}
             </button>
 
