@@ -88,7 +88,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
     setPaymentError(null);
 
     try {
-      let isSubscription = !selectedPackageData.pricing.oneTime;
+      const isSubscription = !selectedPackageData.pricing.oneTime;
       let subscriptionData: {
         subscriptionId: string;
         customerId: string;
@@ -179,9 +179,9 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           password: data.password,
           phoneNumber: data.phoneNumber,
           course: selectedPackageData.name,
-          amount: selectedPackageData.discountPricing
-            ? selectedPackageData.discountPricing?.oneTime!
-            : selectedPackageData.pricing.oneTime!,
+          amount: selectedPackageData.discountPricing?.oneTime 
+            ?? selectedPackageData.pricing.oneTime 
+            ?? 0, 
           packageType: selectedPackage,
           subscriptionType: "one_time",
         }).unwrap();
