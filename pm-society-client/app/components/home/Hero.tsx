@@ -10,7 +10,7 @@ const bonVivant = localFont({
 });
 
 const VIDEO_PATH = "/video/welcome.mp4";
-const POSTER_PATH = "/image/video.webp";
+// const POSTER_PATH = "/image/video.webp";
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -41,7 +41,7 @@ export default function Hero() {
           muted
           playsInline
           preload="metadata"
-          poster={POSTER_PATH}
+          // poster={POSTER_PATH}
           className="absolute inset-0 w-full h-full object-cover aspect-video"
           onError={() => console.error("Video failed to load")}
         />
