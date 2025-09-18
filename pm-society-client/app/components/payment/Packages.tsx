@@ -144,8 +144,10 @@ export const packages: Package[] = [
       "2 months access to PM learning materials",
       "2 mentorship sessions",
       "2 months access to Society+ portal",
+      
     ],
-    pricing: { oneTime: 558 },
+    pricing: { oneTime: 3500 },
+    discountPricing: { oneTime: 558 },
     icon: <FiSettings className="w-8 h-8" />,
     color: "from-pink-500 to-red-500",
     gradient: "bg-gradient-to-br from-pink-50 to-red-50",

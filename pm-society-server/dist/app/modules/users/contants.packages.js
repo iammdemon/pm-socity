@@ -34,9 +34,10 @@ exports.packages = {
         price: 40000, // 3 sessions for $400
         description: "Customized coaching with choice of executive, mentorship, communication, or Agile focus",
     },
-    "ELEVATE (Pilot Cohort)": {
-        type: "one-time",
-        price: 55800, // $558
-        description: "Pilot PMP training cohort with PMP application support, coaching & 2m portal",
-    },
+    // "ELEVATE (Pilot Cohort)": {
+    //   type: "one-time",
+    //   price: 55800, // $558
+    //   description:
+    //     "Pilot PMP training cohort with PMP application support, coaching & 2m portal",
+    // },
 };

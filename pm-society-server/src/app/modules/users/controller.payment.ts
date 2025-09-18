@@ -11,6 +11,7 @@ function isOneTimePackage(
   return pkg && pkg.type === "one_time";
 }
 
+
 const startCheckout = catchAsync(async (req: Request, res: Response) => {
   const { packageType, subscriptionType } = req.body;
 
@@ -30,7 +31,8 @@ const startCheckout = catchAsync(async (req: Request, res: Response) => {
 
   const paymentIntent = await PaymentService.createPaymentIntent(
     packageType,
-    subscriptionType
+    subscriptionType,
+ 
   );
 
   res.status(200).json({
@@ -211,19 +213,23 @@ const verifyPayment = catchAsync(async (req: Request, res: Response) => {
 
   const exists = await User.isUserExistsByEmail(email);
   if (exists) {
+    console.error("❌ Verify failed: email already registered", email);
     res.status(400).json({ message: "Email already registered" });
     return;
   }
 
   const paymentIntent = await PaymentService.verifyPayment(paymentIntentId);
   if (paymentIntent.status !== "succeeded") {
+    console.error("❌ Verify failed: PI not succeeded", paymentIntent.status);
     res.status(400).json({ message: "Payment not completed" });
     return;
   }
 
   const { packageType, subscriptionType } = paymentIntent.metadata;
+  console.log("pkgh",packageType, subscriptionType)
 
   if (subscriptionType !== "one_time") {
+    console.error("❌ Verify failed: wrong subscriptionType", subscriptionType);
     res
       .status(400)
       .json({ message: "Use subscription endpoint for recurring payments" });
@@ -313,4 +319,5 @@ export const PaymentController = {
   completeSubscriptionRegistration,
   verifyPayment,
   cancelSubscription,
+ 
 };

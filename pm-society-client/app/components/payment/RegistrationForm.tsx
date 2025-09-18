@@ -4,7 +4,11 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import {
+  PaymentElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 import {
   Shield,
   Eye,
@@ -18,12 +22,10 @@ import {
 
 import {
   useCompleteSubscriptionRegistrationMutation,
-  useStartCheckoutMutation,
   useStartSubscriptionCheckoutMutation,
   useVerifyPaymentMutation,
 } from "@/app/redux/services/userApi";
 import { packages } from "./Packages";
-import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -45,12 +47,14 @@ interface RegistrationFormProps {
   selectedPackage: string;
   selectedBilling: string;
   onRegistrationComplete: () => void;
+  clientSecret: string;
 }
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   selectedPackage,
   selectedBilling,
   onRegistrationComplete,
+  clientSecret,
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -59,7 +63,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const [startCheckout] = useStartCheckoutMutation();
   const [startSubscriptionCheckout] = useStartSubscriptionCheckoutMutation();
   const [verifyPayment] = useVerifyPaymentMutation();
   const [completeSubscription] = useCompleteSubscriptionRegistrationMutation();
@@ -85,66 +88,90 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
     setPaymentError(null);
 
     try {
-      const cardElement = elements.getElement(CardElement);
-      if (!cardElement) throw new Error("Card element not found");
-
-      let clientSecret: string;
-      let isSubscription = false;
+      let isSubscription = !selectedPackageData.pricing.oneTime;
       let subscriptionData: {
         subscriptionId: string;
         customerId: string;
       } | null = null;
 
-      if (selectedPackageData.pricing.oneTime) {
-        // One-time payment flow
-        const result = await startCheckout({
-          packageType: selectedPackage,
-          subscriptionType: "one_time",
-        }).unwrap();
-        clientSecret = result.clientSecret;
-      } else {
-        // Subscription payment flow
+      // For subscriptions, we need to create the subscription first
+      if (isSubscription) {
         const result = await startSubscriptionCheckout({
           packageType: selectedPackage,
           subscriptionType: selectedBilling,
           email: data.email,
           name: data.name,
         }).unwrap();
-        clientSecret = result.clientSecret;
-        isSubscription = true;
+
         subscriptionData = result;
-      }
 
-      // Confirm payment with Stripe
-      const { error, paymentIntent } = await stripe.confirmCardPayment(
-        clientSecret,
-        {
-          payment_method: {
-            card: cardElement,
-            billing_details: { name: data.name, email: data.email },
+        // Use the subscription's client secret for payment confirmation
+        const { error, paymentIntent } = await stripe.confirmPayment({
+          clientSecret: result.clientSecret,
+          elements,
+          confirmParams: {
+            return_url: "/payment-success",
+            payment_method_data: {
+              billing_details: {
+                name: data.name,
+                email: data.email,
+              },
+            },
           },
+          redirect: "if_required",
+        });
+
+        if (error) {
+          setPaymentError(error.message || "Payment failed");
+          return;
         }
-      );
 
-      if (error) {
-        setPaymentError(error.message || "Payment failed");
-        return;
-      }
+        if (!paymentIntent || paymentIntent.status !== "succeeded") {
+          setPaymentError("Payment was not successful");
+          return;
+        }
 
-      if (!paymentIntent || paymentIntent.status !== "succeeded") {
-        setPaymentError("Payment was not successful");
-        return;
-      }
-
-      // Different flows for one-time vs subscription
-      if (isSubscription && subscriptionData) {
+        // Complete subscription registration
         await completeSubscription({
           subscriptionId: subscriptionData.subscriptionId,
           customerId: subscriptionData.customerId,
           password: data.password,
         }).unwrap();
       } else {
-        // For one-time payments
+        await elements.submit();
+        // For one-time payments, use the clientSecret from PaymentWrapper
+        const { error, paymentIntent } = await stripe.confirmPayment({
+          elements,
+          clientSecret: clientSecret,
+          confirmParams: {
+            return_url: `${window.location.origin}/payment-success`,
+            payment_method_data: {
+              billing_details: {
+                name: data.name,
+                email: data.email,
+              },
+            },
+          },
+          redirect: "if_required",
+        });
+
+        if (error) {
+          setPaymentError(error.message || "Payment failed");
+          return;
+        }
+
+        if (!paymentIntent || paymentIntent.status !== "succeeded") {
+          setPaymentError("Payment was not successful");
+          return;
+        }
+
+        console.log({
+          paymentIntentId: paymentIntent.id,
+          subscriptionType: "one_time",
+          packageType: selectedPackage,
+        });
+
+        // Verify one-time payment
         await verifyPayment({
           paymentIntentId: paymentIntent.id,
           email: data.email,
@@ -152,7 +179,9 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           password: data.password,
           phoneNumber: data.phoneNumber,
           course: selectedPackageData.name,
-          amount: selectedPackageData.pricing.oneTime!,
+          amount: selectedPackageData.discountPricing
+            ? selectedPackageData.discountPricing?.oneTime!
+            : selectedPackageData.pricing.oneTime!,
           packageType: selectedPackage,
           subscriptionType: "one_time",
         }).unwrap();
@@ -181,12 +210,18 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
   const getPriceDisplay = () => {
     if (!selectedPackageData) return "";
-    if (selectedPackageData.pricing.oneTime)
+
+    if (selectedPackageData.discountPricing?.oneTime) {
+      return `$${selectedPackageData.discountPricing.oneTime}`;
+    }
+    if (selectedPackageData.pricing.oneTime) {
       return `$${selectedPackageData.pricing.oneTime}`;
+    }
     if (selectedBilling === "monthly")
-      return `$${selectedPackageData.pricing.monthly}/mo`;
+      return `${selectedPackageData.pricing.monthly}/mo`;
     if (selectedBilling === "yearly")
-      return `$${selectedPackageData.pricing.yearly}/yr`;
+      return `${selectedPackageData.pricing.yearly}/yr`;
+
     return "";
   };
 
@@ -230,8 +265,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                   Personal Information
                 </h3>
 
-                {/* Responsive grid - single column on mobile, two columns on larger screens */}
-                <div className="grid grid-cols-1  gap-4 sm:gap-6">
+                <div className="grid grid-cols-1 gap-4 sm:gap-6">
                   {/* Full Name */}
                   <div>
                     <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -326,18 +360,6 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 </div>
               </div>
             </div>
-            {/* Coupon Code */}
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                Coupon Code
-              </label>
-              <input
-                {...form.register("coupon")}
-                type="text"
-                placeholder="Enter coupon (optional)"
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-gray-900 focus:outline-none transition-colors text-gray-900 placeholder-gray-500 text-sm sm:text-base"
-              />
-            </div>
 
             {/* Payment Information Section */}
             <div className="space-y-4">
@@ -348,85 +370,25 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 </h3>
               </div>
 
+              {/* Payment Element Container */}
               <div className="p-4 sm:p-6 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-gray-50">
-                <CardElement
+                <PaymentElement
                   options={{
-                    style: {
-                      base: {
-                        color: "#111827",
-                        fontFamily: "system-ui, sans-serif",
-                        "::placeholder": {
-                          color: "#6B7280",
-                        },
+                    layout: "tabs",
+                    defaultValues: {
+                      billingDetails: {
+                        name: form.watch("name"),
+                        email: form.watch("email"),
                       },
                     },
                   }}
                 />
               </div>
-
-              {/* Payment Card Logos */}
-              <div className="flex items-center justify-center  gap-2 sm:gap-4">
-                {/* Visa */}
-                <div className=" ">
-                  <Image
-                    src="/image/visa.png"
-                    alt="Visa"
-                    className="w-12 h-8 object-contain"
-                    width={20}
-                    height={20}
-                  />
-                </div>
-                <div className=" ">
-                  <Image
-                    src="/image/mastercard.webp"
-                    alt="Mastercard"
-                    className="w-12 h-8 object-contain"
-                    width={20}
-                    height={20}
-                  />
-                </div>
-                <div className=" ">
-                  <Image
-                    src="/image/american-express.png"
-                    alt="American Express"
-                    className="w-12 h-8 object-contain"
-                    width={20}
-                    height={20}
-                  />
-                </div>
-                <div className=" ">
-                  <Image
-                    src="/image/discover.webp"
-                    alt="Discover"
-                    className="w-12 h-8 object-contain"
-                    width={20}
-                    height={20}
-                  />
-                </div>
-                <div className=" ">
-                  <Image
-                    src="/image/afterpay.jpeg"
-                    alt="After Pay"
-                    className="w-12 h-8 object-contain"
-                    width={20}
-                    height={20}
-                  />
-                </div>
-                <div className=" ">
-                  <Image
-                    src="/image/klarna.jpeg"
-                    alt="Klarna"
-                    className="w-12 h-8 object-contain"
-                    width={20}
-                    height={20}
-                  />
-                </div>
-              </div>
             </div>
 
             {/* Terms and Conditions Section */}
             <div className="space-y-4">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <h3 className="text-base  font-semibold text-gray-900 flex items-center gap-2">
                 <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
                 Terms and Conditions
               </h3>
@@ -440,7 +402,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                     className="mt-1 w-4 h-4 sm:w-5 sm:h-5 text-gray-900 border-2 border-gray-300 rounded focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                    <p className="text-sm  text-gray-700 leading-relaxed">
                       <span className="italic">
                         I confirm that I have read and agree to The PM
                         Society&apos;s{" "}
@@ -471,7 +433,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                     className="mt-1 w-4 h-4 sm:w-5 sm:h-5 text-gray-900 border-2 border-gray-300 rounded focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                    <p className="text-sm  text-gray-700 leading-relaxed">
                       <span className="italic">
                         I confirm that I have read and agree to The PM
                         Society&apos;s{" "}
@@ -514,6 +476,44 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 </p>
               </div>
             )}
+
+            {/* Checkout Summary Section */}
+            <div className="space-y-4 p-4 sm:p-6 border-2 border-gray-200 rounded-lg sm:rounded-xl bg-gray-50">
+              {/* Discount Code Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Discount Code
+                </label>
+                <input
+                  type="text"
+                  defaultValue="PILOT2025"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:border-gray-900 focus:outline-none transition-colors text-gray-900 placeholder-gray-500 text-sm sm:text-base"
+                  placeholder="Enter discount code"
+                  readOnly // lock it so user sees it's applied
+                />
+              </div>
+
+              {/* Price Breakdown */}
+              <div className="text-sm sm:text-base text-gray-800 space-y-2">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span className="font-medium">$3,500</span>
+                </div>
+                <div className="flex justify-between text-red-600">
+                  <span>Pilot Discount (PILOT2025)</span>
+                  <span>–$2,942</span>
+                </div>
+                <div className="border-t border-gray-300 pt-2 flex justify-between font-bold text-gray-900">
+                  <span>Total Due Today</span>
+                  <span>$558</span>
+                </div>
+              </div>
+
+              {/* Subtle Note */}
+              <p className="text-xs text-gray-500 italic">
+                Special pilot pricing applied. Original price $3,500.
+              </p>
+            </div>
 
             {/* Submit Button - Enhanced responsive design */}
             <button

@@ -1,18 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import { SuccessCard } from "../components/payment/SuccessCard";
-import {  RegistrationForm } from "../components/payment/RegistrationForm";
+import { PaymentWrapper } from "../components/payment/PaymentWrapper";
 import { PackageCard } from "../components/payment/PackageCard";
 import { packages } from "../components/payment/Packages";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
-// import ComingSoon from "../components/payment/ComingSoon";
-
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
 export default function EnrollmentPage() {
   const [selectedPackage, setSelectedPackage] = useState("");
@@ -29,8 +23,7 @@ export default function EnrollmentPage() {
 
   return (
     <> 
-     <Header/>
-    <Elements stripe={stripePromise}>
+      <Header/>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -60,7 +53,7 @@ export default function EnrollmentPage() {
             </div>
 
             <div className="lg:col-span-1">
-              <RegistrationForm
+              <PaymentWrapper
                 selectedPackage={selectedPackage}
                 selectedBilling={selectedBilling}
                 onRegistrationComplete={() => setRegistrationComplete(true)}
@@ -69,9 +62,7 @@ export default function EnrollmentPage() {
           </div>
         </div>
       </div> 
-    </Elements>
-    {/* <ComingSoon /> */}
-    <Footer/>
+      <Footer/>
     </>
   );
 }

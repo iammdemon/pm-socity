@@ -12,6 +12,8 @@ interface ServiceCardProps {
   ctaLink: string;
   icon: React.ReactNode;
   featured?: boolean;
+  discountPrice?: string;
+  discountText?: string | React.ReactNode;
 }
 
 function ServiceCard({
@@ -22,6 +24,8 @@ function ServiceCard({
   cta,
   ctaLink,
   icon,
+  discountPrice,
+  discountText,
   featured = false,
 }: ServiceCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -83,13 +87,18 @@ function ServiceCard({
                 {description}
               </p>
               
-              {price && (
+              {discountPrice ?  (
                 <div className="mb-4 sm:mb-6">
+                  <div className="text-lg sm:text-xl  md:text-2xl font-bold text-gray-900">
+                     <span className=" line-through text-red-500">{price}</span><span className="text-gray-900 ml-2">{discountPrice}</span>
+                  </div>
+                  <p className="mt-1 text-sm sm:text-base text-gray-600">{discountText}</p>
+                </div>): (<div className="mb-4 sm:mb-6">
                   <div className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
                     {price}
                   </div>
-                </div>
-              )}
+                </div>)
+              }
             </div>
 
             <button

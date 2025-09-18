@@ -51,7 +51,9 @@ export const PackageCard: React.FC<PackageCardProps> = ({
           {pkg.icon}
         </div>
         <div className="text-right">
-          <div className="text-2xl font-bold text-gray-900">{getPriceDisplay()}</div>
+          {
+            pkg.discountPricing ? <div className="text-2xl font-bold text-gray-900"><span className="line-through text-red-500">{getPriceDisplay()}</span> <span>${pkg.discountPricing.oneTime}</span></div> :<div className="text-2xl font-bold text-gray-900">{getPriceDisplay()}</div>
+          }
           {hasSubscription && (
             <div className="text-sm text-gray-500">
               {selectedBilling === "yearly" ? "Save 2 months!" : "Billed monthly"}
@@ -105,6 +107,7 @@ export const PackageCard: React.FC<PackageCardProps> = ({
             <span className="text-sm text-gray-700">{feature}</span>
           </li>
         ))}
+        <p className="text-sm text-gray-900">Use discount code <strong>PILOT2025</strong> at checkout to unlock this special pricing.</p>
       </ul>
     </div>
   );

@@ -177,16 +177,20 @@ const verifyPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     const { paymentIntentId, email, name, password } = req.body;
     const exists = yield model_users_1.User.isUserExistsByEmail(email);
     if (exists) {
+        console.error("❌ Verify failed: email already registered", email);
         res.status(400).json({ message: "Email already registered" });
         return;
     }
     const paymentIntent = yield service_payment_1.PaymentService.verifyPayment(paymentIntentId);
     if (paymentIntent.status !== "succeeded") {
+        console.error("❌ Verify failed: PI not succeeded", paymentIntent.status);
         res.status(400).json({ message: "Payment not completed" });
         return;
     }
     const { packageType, subscriptionType } = paymentIntent.metadata;
+    console.log("pkgh", packageType, subscriptionType);
     if (subscriptionType !== "one_time") {
+        console.error("❌ Verify failed: wrong subscriptionType", subscriptionType);
         res
             .status(400)
             .json({ message: "Use subscription endpoint for recurring payments" });

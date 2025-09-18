@@ -21,8 +21,8 @@ function isOneTimePackage(pkg) {
 }
 exports.PACKAGE_PRICES = {
     IGNITE: { amount: 99900, type: "one_time" },
-    ELEVATE: { amount: 250000, type: "one_time" },
-    ASCEND: { amount: 350000, type: "one_time" },
+    ELEVATE: { amount: 350000, type: "one_time" },
+    ASCEND: { amount: 450000, type: "one_time" },
     THE_SOCIETY: {
         monthly: { amount: 3900, type: "recurring", priceId: "price_1Rij16IAC5sTC0XP0CtmB3mz" },
         yearly: { amount: 39900, type: "recurring", priceId: "price_1Rij16IAC5sTC0XPMIUcf86k" }
@@ -55,10 +55,10 @@ const createPaymentIntent = (packageType, subscriptionType) => __awaiter(void 0,
     return yield stripe.paymentIntents.create({
         amount,
         currency: "usd",
-        payment_method_types: ["card"],
+        automatic_payment_methods: { enabled: true },
         metadata: {
             packageType,
-            subscriptionType: subscriptionType || "one_time"
+            subscriptionType: "one_time"
         }
     });
 });
@@ -109,5 +109,5 @@ exports.PaymentService = {
     getSubscription,
     getCustomer,
     verifyPayment,
-    cancelSubscription
+    cancelSubscription,
 };

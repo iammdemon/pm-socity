@@ -12,6 +12,11 @@ export interface Package {
     monthly?: number;
     yearly?: number;
   };
+  discountPricing?:{
+    oneTime?: number;
+    monthly?: number;
+    yearly?: number;
+  }
   popular?: boolean;
   icon: React.ReactNode;
   color: string;

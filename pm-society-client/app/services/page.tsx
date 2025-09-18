@@ -4,7 +4,6 @@ import {
   FiUsers,
   FiTrendingUp,
   FiCheck,
- 
   FiClock,
   FiUser,
   FiTarget,
@@ -19,7 +18,6 @@ import Image from "next/image";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Link from "next/link";
-
 
 const bonVivant = localFont({
   src: "../../public/fonts/BonVivantSerifBold.ttf",
@@ -133,23 +131,28 @@ export default function ServicesPage() {
       cta: "Book Now",
       ctaLink: "enroll",
       featured: false,
-    },{
+    },
+    {
       icon: <FiSettings className="h-8 w-8 sm:h-10 sm:w-10" />,
       title: "ELEVATE (Pilot Cohort)",
-      description:"Guide professionals through PMP certification, mentoring & leadership roles. For experienced PMs ready for growth.",
+      description:
+        "Guide professionals through PMP certification, mentoring & leadership roles. For experienced PMs ready for growth.",
       features: [
-       "35 hours of virtual instructor-led PMP® training",
+        "35 hours of virtual instructor-led PMP® training",
         "PMP application support",
         "3 executive coaching sessions",
         "2 months access to PM learning materials",
         "2 mentorship sessions",
-        "2 months access to Society+ portal",],
-        price: "$558",
+        "2 months access to Society+ portal",
+      ],
+      price: "$3500",
+      discountPrice: "$558",
+      discountText:
+        <>Use discount code <strong>PILOT2025</strong> at checkout to unlock this special pricing. </>,
       cta: "Enroll Now",
       ctaLink: "enroll",
       featured: true,
-
-    }
+    },
   ];
 
   return (
@@ -158,46 +161,45 @@ export default function ServicesPage() {
 
       <div className="min-h-screen bg-white">
         {/* Hero Section - Responsive Height */}
-      <section className="relative w-full overflow-hidden min-h-[400px] md:min-h-screen flex items-center">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/image/olivia.webp"
-          alt="Team collaboration in modern workspace"
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-black/30" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center py-16 sm:py-20 md:py-28">
-        <div className="text-center w-full max-w-4xl">
-          {/* Tagline */}
-          <div className="inline-flex items-center gap-2 px-3 sm:px-5 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 shadow-lg">
-            
-            <span className="tracking-wide">
-              Professional Development & Networking Platform
-            </span>
+        <section className="relative w-full overflow-hidden min-h-[400px] md:min-h-screen flex items-center">
+          {/* Background Image */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/image/olivia.webp"
+              alt="Team collaboration in modern workspace"
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-black/30" />
           </div>
 
-          {/* Title */}
-          <h1
-            className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight mb-4 sm:mb-6 ${bonVivant.className}`}
-          >
-            Elevate Your Career
-          </h1>
+          {/* Content */}
+          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center py-16 sm:py-20 md:py-28">
+            <div className="text-center w-full max-w-4xl">
+              {/* Tagline */}
+              <div className="inline-flex items-center gap-2 px-3 sm:px-5 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 shadow-lg">
+                <span className="tracking-wide">
+                  Professional Development & Networking Platform
+                </span>
+              </div>
 
-          {/* Subtitle */}
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed max-w-2xl mx-auto px-2 sm:px-4">
-            Strategic training, mentorship, and community support designed to
-            grow confident project leaders and drive real impact.
-          </p>
-        </div>
-      </div>
-    </section>
+              {/* Title */}
+              <h1
+                className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight mb-4 sm:mb-6 ${bonVivant.className}`}
+              >
+                Elevate Your Career
+              </h1>
+
+              {/* Subtitle */}
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed max-w-2xl mx-auto px-2 sm:px-4">
+                Strategic training, mentorship, and community support designed
+                to grow confident project leaders and drive real impact.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Services Cards Section */}
         <section id="services" className="py-8 lg:py-12 bg-[#ECE8E1]">
@@ -237,11 +239,11 @@ export default function ServicesPage() {
                 <h2
                   className={`${bonVivant.className} text-2xl sm:text-3xl lg:text-4xl font-black text-black mb-3 sm:mb-4`}
                 >
-                 Certification and Career Growth Programs
+                  Certification and Career Growth Programs
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 leading-relaxed">
-                  Whether you&apos;re just getting started or ready to certify, our
-                  programs provide expert instruction, mentorship, and the
+                  Whether you&apos;re just getting started or ready to certify,
+                  our programs provide expert instruction, mentorship, and the
                   support you need to lead with confidence.
                 </p>
 
@@ -251,7 +253,9 @@ export default function ServicesPage() {
                       <FiClock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-700" />
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 text-sm sm:text-base">Live Virtual Sessions</p>
+                      <p className="font-semibold text-gray-900 text-sm sm:text-base">
+                        Live Virtual Sessions
+                      </p>
                       <p className="text-xs sm:text-sm text-gray-600">
                         PMI Required Training
                       </p>
@@ -291,7 +295,8 @@ export default function ServicesPage() {
                       Get Certified
                     </h3>
                     <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
-                     Expert-led training with community support and our commitment to your success.
+                      Expert-led training with community support and our
+                      commitment to your success.
                     </p>
                     <div className="flex items-center justify-center gap-2 text-black font-semibold text-sm sm:text-base">
                       <FiCheck className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -356,7 +361,9 @@ export default function ServicesPage() {
                       <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
                         <FiCheck className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-gray-700" />
                       </div>
-                      <span className="text-gray-700 text-sm sm:text-base">{item}</span>
+                      <span className="text-gray-700 text-sm sm:text-base">
+                        {item}
+                      </span>
                     </div>
                   ))}
                 </div>

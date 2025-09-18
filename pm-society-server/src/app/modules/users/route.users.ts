@@ -20,4 +20,5 @@ router.post("/cancel-subscription", PaymentController.cancelSubscription);
 router.get("/", userController.getAllUsers);
 router.post("/create-admin", userController.createUser);
 
+
 export const UserRoutes = router;
