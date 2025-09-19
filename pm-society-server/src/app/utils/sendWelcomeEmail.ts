@@ -33,59 +33,59 @@ export async function sendWelcomeEmail({
     : "N/A"; // fallback if undefined
 
 const htmlContent = `
-<div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 24px;">
-  <div style="max-width: 400px; margin: auto; background: white; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); overflow: hidden;">
+<div style="font-family: Arial, sans-serif; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 24px;">
+  <div style="max-width: 480px; margin: auto; background: #ffffff; border-radius: 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.12); overflow: hidden;">
     
     <!-- Header -->
-    <div style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); padding: 24px; text-align: center;">
-      <h1 style="color: white; font-size: 24px; font-weight: bold; margin: 0; letter-spacing: 2px;">PM SOCIETY</h1>
+    <div style="background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%); padding: 28px; text-align: center;">
+      <h1 style="color: #ffffff; font-size: 24px; font-weight: 700; margin: 0; letter-spacing: 1px;">PM SOCIETY</h1>
     </div>
     
     <!-- Main Content -->
     <div style="padding: 32px;">
-      <h2 style="color: #111827; font-size: 24px; font-weight: bold; margin: 0 0 24px 0; line-height: 1.3;">
+      <h2 style="color: #111827; font-size: 22px; font-weight: bold; margin: 0 0 20px 0; line-height: 1.4;">
         Welcome to PM Society!
       </h2>
       
-      <p style="color: #374151; margin: 0 0 16px 0;">
+      <p style="color: #374151; margin: 0 0 16px 0; font-size: 15px; line-height: 1.6;">
         Hi <strong>${userName}</strong>,
       </p>
       
-      <p style="color: #374151; margin: 0 0 24px 0; line-height: 1.6;">
+      <p style="color: #374151; margin: 0 0 24px 0; font-size: 15px; line-height: 1.6;">
         Thank you for joining PM Society. We're excited to have you on board!
       </p>
       
       <!-- Details Box -->
-      <div style="background: #f9fafb; border-radius: 8px; padding: 24px; margin: 0 0 24px 0;">
-        <h3 style="color: #111827; font-weight: 600; margin: 0 0 16px 0;">Your Membership Details:</h3>
-        <div style="space-y: 12px;">
-          
-          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-            <span style="color: #6b7280;">Package:</span>
-            <strong style="color: #111827;">${packageType}</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-            <span style="color: #6b7280;">Subscription:</span>
-            <strong style="color: #111827;">${subscriptionType}</strong>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: #6b7280;">Membership Ends:</span>
-            <strong style="color: #111827;">${membershipEnds}</strong>
-          </div>
+      <div style="background: #f3f4f6; border-radius: 10px; padding: 20px; margin: 0 0 28px 0;">
+        <h3 style="color: #111827; font-size: 16px; font-weight: 600; margin: 0 0 14px 0;">Your Membership Details:</h3>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+          <span style="color: #6b7280; font-size: 14px;">Package:</span>
+          <strong style="color: #111827; font-size: 14px;">${packageType}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+          <span style="color: #6b7280; font-size: 14px;">Subscription:</span>
+          <strong style="color: #111827; font-size: 14px;">${subscriptionType}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: #6b7280; font-size: 14px;">Membership Ends:</span>
+          <strong style="color: #111827; font-size: 14px;">${membershipEnds}</strong>
         </div>
       </div>
       
       <!-- CTA Button -->
-      <a href="https://pmsociety.com/login" style="display: block; width: 100%; background: #dc2626; color: white; font-weight: 600; padding: 12px; border-radius: 8px; text-decoration: none; text-align: center; margin: 0 0 24px 0;">
+      <a href="https://thepmsociety.com/login" 
+         style="display: block; width: 100%; background: #dc2626; color: #ffffff; font-weight: 600; font-size: 15px; padding: 14px; border-radius: 10px; text-decoration: none; text-align: center; margin: 0 0 24px 0; box-shadow: 0 4px 10px rgba(220,38,38,0.3);">
         GET STARTED
       </a>
       
       <p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 0 0 16px 0;">
-        We're here to help if you need it.For more info  <a href="https://pmsociety.com/connect" style="color: #2563eb; font-weight: 500;">Connect with us</a>.
+        We're here to help if you need it. For more info, 
+        <a href="https://thepmsociety.com/connect" style="color: #2563eb; font-weight: 600; text-decoration: none;">Connect with us</a>.
       </p>
       
-      <p style="color: #374151; margin: 0;">
-        Best regards,<br />
+      <p style="color: #374151; font-size: 14px; margin: 0;">
+        Best regards,<br/>
         <strong>The PM Society Team</strong>
       </p>
     </div>
@@ -99,6 +99,7 @@ const htmlContent = `
   </div>
 </div>
 `;
+
 
   await transporter.sendMail({
     from: config.EMAIL_FROM,
