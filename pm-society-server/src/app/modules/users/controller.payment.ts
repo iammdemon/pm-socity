@@ -189,8 +189,7 @@ const completeSubscriptionRegistration = catchAsync(
       to: user.email,
       userName: user.name,
       packageType: user.packageType!,
-      subscriptionType: user.subscriptionType!,
-      subscriptionEndDate: user.subscriptionEndDate!,
+      email: user.email,
     });
 
     res.json({
@@ -277,8 +276,8 @@ const verifyPayment = catchAsync(async (req: Request, res: Response) => {
     to: user.email,
     userName: user.name,
     packageType: user.packageType!,
-    subscriptionType: user.subscriptionType!,
-    subscriptionEndDate: user.subscriptionEndDate!,
+    email: user.email,
+   
   });
 
   res.json({
