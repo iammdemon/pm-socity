@@ -81,10 +81,10 @@ export const SuccessCard = () => {
             </div>
 
             <CardTitle className="text-3xl md:text-4xl font-bold text-black mb-4">
-              🎉 Welcome to The Society!
+               Welcome to The Society!
             </CardTitle>
             <CardDescription className="text-lg text-gray-700 max-w-md mx-auto leading-relaxed">
-              Your enrollment was successful! You're now part of an exclusive community 
+              Your enrollment was successful! You&apos;re now part of an exclusive community 
               dedicated to growth and collaboration.
             </CardDescription>
           </CardHeader>
@@ -187,7 +187,7 @@ export const SuccessCard = () => {
             {/* Estimated Timeline */}
             <div className="text-center text-sm text-gray-500 bg-gray-50 rounded-xl p-4">
               <Calendar className="w-4 h-4 inline mr-2" />
-              <strong>Expected Timeline:</strong> You'll receive your welcome email within 5 minutes, 
+              <strong>Expected Timeline:</strong> You&apos;ll receive your welcome email within 5 minutes, 
               and full access will be activated within 1 hour.
             </div>
           </CardContent>

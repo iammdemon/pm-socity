@@ -157,8 +157,7 @@ const completeSubscriptionRegistration = (0, catchAsync_1.default)((req, res) =>
         to: user.email,
         userName: user.name,
         packageType: user.packageType,
-        subscriptionType: user.subscriptionType,
-        subscriptionEndDate: user.subscriptionEndDate,
+        email: user.email,
     });
     res.json({
         message: "Subscription registration complete",
@@ -234,8 +233,7 @@ const verifyPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         to: user.email,
         userName: user.name,
         packageType: user.packageType,
-        subscriptionType: user.subscriptionType,
-        subscriptionEndDate: user.subscriptionEndDate,
+        email: user.email,
     });
     res.json({
         message: "Registration complete",
