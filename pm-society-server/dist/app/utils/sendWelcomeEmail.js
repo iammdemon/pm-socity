@@ -18,7 +18,7 @@ const config_1 = __importDefault(require("../config"));
 const transporter = nodemailer_1.default.createTransport({
     host: config_1.default.EMAIL_HOST,
     port: Number(config_1.default.EMAIL_PORT),
-    secure: false,
+    secure: true,
     auth: {
         user: config_1.default.EMAIL_USER,
         pass: config_1.default.EMAIL_PASS,
