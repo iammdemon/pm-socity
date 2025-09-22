@@ -279,6 +279,8 @@ const verifyPayment = catchAsync(async (req: Request, res: Response) => {
     email: user.email,
    
   });
+ 
+
 
   res.json({
     message: "Registration complete",
