@@ -7,6 +7,7 @@ import { PackageCard } from "../components/payment/PackageCard";
 import { packages } from "../components/payment/Packages";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import PmpFaqCard from "../components/payment/Faq";
 
 export default function EnrollmentPage() {
   const [selectedPackage, setSelectedPackage] = useState("");
@@ -25,9 +26,9 @@ export default function EnrollmentPage() {
     <> 
       <Header/>
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-20 px-4">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-8xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="md:text-4xl text-2xl font-bold text-gray-900 mb-4">
               Choose Your Project Management Path
             </h1>
             <p className="text-xl text-gray-600">
@@ -62,6 +63,7 @@ export default function EnrollmentPage() {
           </div>
         </div>
       </div> 
+      <PmpFaqCard />
       <Footer/>
     </>
   );
