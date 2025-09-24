@@ -87,7 +87,7 @@ const faqs = [
     id: "q13",
     q: "Is financial assistance available?",
     a:
-      "While The PM Society does not currently offer direct scholarships or grants, many employers provide tuition reimbursement for professional certifications like the PMP®. We encourage you to check with your HR or Learning & Development team about reimbursement options. We also make the course more accessible by offering installment plans through Afterpay and Klarna at checkout.",
+      "While The PM Society does not currently offer direct scholarships or grants, many employers provide tuition reimbursement for professional certifications like the PMP®. We also make the course more accessible by offering installment plans through Afterpay and Klarna at checkout.",
   },
 ];
 
