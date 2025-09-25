@@ -42,7 +42,7 @@ Answer clearly and professionally, and always relate back to project/product man
 User question: ${input.question}
 `;
         const completion = yield groq.chat.completions.create({
-            model: "llama3-70b-8192",
+            model: "openai/gpt-oss-20b",
             messages: [
                 { role: "system", content: prompt },
             ],
