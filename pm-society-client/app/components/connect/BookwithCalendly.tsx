@@ -17,18 +17,18 @@ const consultants = [
     isAvailable: true,
   },
   {
+    name: "Angela Ward",
+    title: "Mentorship & Training",
+    description:
+      "Schedule your complimentary consultation to learn more about The PM Society’s courses, mentoring, and community offerings.",
+    bookingLink: "https://calendly.com/angela-ward-thepmsociety/30min",
+    isAvailable: true,
+  },
+  {
     name: "Toni Merrill",
     title: "Executive Coaching",
     description:
       "High-level coaching to elevate your leadership in project management.",
-    bookingLink: "",
-    isAvailable: false,
-  },
-  {
-    name: "Angela Ward",
-    title: "Mentorship & Training",
-    description:
-      "Personalized mentorship and training to enhance your PM skills.",
     bookingLink: "",
     isAvailable: false,
   },
@@ -109,7 +109,7 @@ export default function BookWithCalendly() {
                         </a>
                       </Button>
                     ) : (
-                     <Button
+                      <Button
                         asChild
                         className="w-full bg-black hover:bg-gray-800 text-white text-sm font-medium py-2 rounded-lg transition-colors duration-200"
                       >
