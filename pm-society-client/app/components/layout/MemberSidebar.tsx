@@ -139,7 +139,7 @@ export default function MemberSidebar({ className }: MemberSidebarProps) {
       {/* Main Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 h-screen bg-white border-r border-gray-200 flex flex-col z-50 transition-all duration-300 w-64",
+          "fixed top-0 left-0 h-screen  border-r border-gray-200 flex flex-col z-50 transition-all duration-300 w-64",
           isMobileOpen ? "" : "hidden lg:flex",
           className
         )}
