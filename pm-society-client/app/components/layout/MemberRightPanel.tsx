@@ -443,17 +443,7 @@ export default function MemberRightPanel() {
       )}
 
       {/* Profile Panel */}
-      <aside
-        className={`
-    fixed lg:static top-0 right-0 h-screen 
-    w-full sm:w-80 lg:w-96 flex-shrink-0
-    bg-gradient-to-b from-slate-900 via-slate-950 to-black 
-    text-white border-l border-slate-800
-    backdrop-blur-2xl shadow-2xl
-    transform transition-all duration-500 ease-in-out
-    ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}
-  `}
-      >
+     <aside className={`fixed lg:static top-0 right-0 h-screen w-full sm:w-96 flex-shrink-0 bg-gray-900/50 text-white flex flex-col backdrop-blur-xl border-l border-slate-700/50 z-40 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}`}>
         {/* Enhanced Profile Header */}
         <div className="relative h-48 sm:h-56 w-full overflow-hidden">
           {/* Settings Button */}
