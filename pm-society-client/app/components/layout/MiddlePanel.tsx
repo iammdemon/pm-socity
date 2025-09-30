@@ -95,7 +95,7 @@ export default function MiddlePanel() {
         >
           <TabsTrigger
             value="posts"
-            className="flex flex-col items-center text-xs text-white px-3 py-2 rounded-md 
+            className="flex flex-col items-center text-xs text-white px-2 py-6 rounded-md 
               data-[state=active]:bg-green-500 data-[state=active]:text-black"
           >
             <MessageSquare className="h-5 w-5" />
@@ -104,7 +104,7 @@ export default function MiddlePanel() {
 
           <TabsTrigger
             value="circles"
-            className="flex flex-col items-center text-xs text-white px-3 py-2 rounded-md 
+            className="flex flex-col items-center text-xs text-white px-2 py-6 rounded-md 
               data-[state=active]:bg-green-500 data-[state=active]:text-black"
           >
             <Users className="h-5 w-5" />
@@ -113,7 +113,7 @@ export default function MiddlePanel() {
 
           <TabsTrigger
             value="directory"
-            className="flex flex-col items-center text-xs text-white px-3 py-2 rounded-md 
+            className="flex flex-col items-center text-xs text-white px-2 py-6 rounded-md 
               data-[state=active]:bg-green-500 data-[state=active]:text-black"
           >
             <Users className="h-5 w-5" />
@@ -122,7 +122,7 @@ export default function MiddlePanel() {
 
           <TabsTrigger
             value="events"
-            className="flex flex-col items-center text-xs text-white px-3 py-2 rounded-md 
+            className="flex flex-col items-center text-xs text-white px-2 py-6 rounded-md 
               data-[state=active]:bg-green-500 data-[state=active]:text-black"
           >
             <Calendar className="h-5 w-5" />
@@ -131,7 +131,7 @@ export default function MiddlePanel() {
 
           <TabsTrigger
             value="resources"
-            className="flex flex-col items-center text-xs text-white px-3 py-2 rounded-md 
+            className="flex flex-col items-center text-xs text-white px-2 py-6 rounded-md 
               data-[state=active]:bg-green-500 data-[state=active]:text-black"
           >
             <BookOpen className="h-5 w-5" />
