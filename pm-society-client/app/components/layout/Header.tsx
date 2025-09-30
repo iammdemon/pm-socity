@@ -106,7 +106,8 @@ const Header = () => {
                 />
               ) : (
                 // Non-authenticated user buttons
-                <GuestDesktopButtons />
+                // <GuestDesktopButtons />
+                <p>Coming Soon</p>
               )}
             </div>
 
@@ -168,22 +169,22 @@ const AuthenticatedDesktopButtons = ({
 );
 
 // Guest Desktop Buttons Component
-const GuestDesktopButtons = () => (
-  <div className="flex items-center space-x-2 lg:space-x-4">
-    <Link
-      href="/login"
-      className="bg-black text-white hover:bg-white hover:text-black border border-black font-medium px-3 py-2 lg:px-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-sm lg:text-base"
-    >
-      Login
-    </Link>
-    <Link
-      href="/enroll"
-      className="bg-black text-white hover:bg-white hover:text-black border border-black font-medium px-3 py-2 lg:px-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-sm lg:text-base"
-    >
-      Join Now
-    </Link>
-  </div>
-);
+// const GuestDesktopButtons = () => (
+//   <div className="flex items-center space-x-2 lg:space-x-4">
+//     <Link
+//       href="/login"
+//       className="bg-black text-white hover:bg-white hover:text-black border border-black font-medium px-3 py-2 lg:px-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-sm lg:text-base"
+//     >
+//       Login
+//     </Link>
+//     <Link
+//       href="/enroll"
+//       className="bg-black text-white hover:bg-white hover:text-black border border-black font-medium px-3 py-2 lg:px-6 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-sm lg:text-base"
+//     >
+//       Join Now
+//     </Link>
+//   </div>
+// );
 
 // Mobile Menu Component
 const MobileMenu = ({
@@ -246,22 +247,27 @@ const MobileMenu = ({
           </>
         ) : (
           // Non-authenticated mobile menu
-          <>
-            <Link
-              href="/login"
-              className="bg-white text-black font-medium px-4 py-3 rounded-lg text-center block hover:bg-gray-100 transition-colors duration-200"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Login
-            </Link>
-            <Link
-              href="/enroll"
-              className="bg-sky-600 hover:bg-sky-700 text-white font-medium px-4 py-3 rounded-lg text-center block transition-colors duration-200"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Join Now
-            </Link>
-          </>
+          // <>
+          //   <Link
+          //     href="/login"
+          //     className="bg-white text-black font-medium px-4 py-3 rounded-lg text-center block hover:bg-gray-100 transition-colors duration-200"
+          //     onClick={() => setIsMobileMenuOpen(false)}
+          //   >
+          //     Login
+          //   </Link>
+          //   <Link
+          //     href="/enroll"
+          //     className="bg-sky-600 hover:bg-sky-700 text-white font-medium px-4 py-3 rounded-lg text-center block transition-colors duration-200"
+          //     onClick={() => setIsMobileMenuOpen(false)}
+          //   >
+          //     Join Now
+          //   </Link>
+          // </>
+          <p
+            className="text-gray-400 text-sm"
+          >
+            Wait
+          </p>
         )}
       </div>
     </nav>
