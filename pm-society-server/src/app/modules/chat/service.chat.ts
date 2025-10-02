@@ -1,69 +1,66 @@
 import Groq from "groq-sdk";
-
 import config from "../../config";
-import { tpmsData } from "./model.chat";
+import { tpmsData, coachingData } from "./model.chat";
 import { ChatRequest, ChatResponse } from "./interface.chat";
 import { GoogleGenAI } from "@google/genai";
 
-import { coachingData } from "./model.chat";
-
+// Initialize AI clients
 const ai = new GoogleGenAI({});
+const groq = new Groq({ apiKey: config.GROQ_API_KEY });
 
-const groq = new Groq({
-  apiKey: config.GROQ_API_KEY,
-});
-
+/**
+ * Get response from Groq (GPT OSS model)
+ */
 export async function getTPMSAIResponse(input: ChatRequest): Promise<ChatResponse> {
   const prompt = `
-You are TPMS AI, the virtual agent for TPMS PMP Coaching website.
+You are SIA – Your Society Intelligent Assistant, the official virtual agent for TPMS PMP Coaching.
 
-Data about your program:
+Data about TPMS programs:
 ${JSON.stringify(tpmsData, null, 2)}
 
 Behavior rules:
-- If question is about PMP, project management, product management, or your offerings, answer from data.
-- If question is generally about project or product management (even if not in data), give a useful tip.
-- If completely unrelated (sports, politics, weather, crypto etc), reply:
-"Sorry, I'm TPMS AI. I only help with project and product management."
+- Answer questions specifically about PMP, project management, product management, or TPMS offerings using the provided data.
+- If the question is about general project/product management, provide a useful tip or guidance.
+- If the question is unrelated (sports, politics, crypto, weather, etc.), reply politely:
+"Sorry, I'm SIA – Your Society Intelligent Assistant. I only help with project and product management."
 
-Answer clearly and professionally, and always relate back to project/product management.
+Always answer clearly, professionally, and provide actionable advice if possible.
 
 User question: ${input.question}
 `;
 
   const completion = await groq.chat.completions.create({
     model: "openai/gpt-oss-20b",
-    messages: [
-      { role: "system", content: prompt },
-    ],
+    messages: [{ role: "system", content: prompt }],
   });
 
   return {
-    answer: completion.choices[0].message.content || "No response generated."
+    answer: completion.choices[0].message.content || "No response generated.",
   };
 }
 
-
-
-
-
+/**
+ * Get response from Google Gemini model
+ */
 export async function getTPMSAIResponseByGemini(req: ChatRequest): Promise<ChatResponse> {
   const prompt = `
-You are TPMS AI, a friendly assistant for PMP coaching.
-Use this context to answer questions:
+You are SIA – Your Society Intelligent Assistant, a friendly and professional assistant for TPMS PMP Coaching.
 
+Use this context to answer user questions:
 ${coachingData}
 
 Question: ${req.question}
 
-Answer:`;
+Answer professionally, providing helpful guidance for PMP or project management questions. 
+If unrelated, politely say you only assist with project/product management.
+`;
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
     contents: prompt,
   });
 
-  let answer = response.text?.trim() ?? "Sorry, I cannot answer that.";
+  const answer = response.text?.trim() ?? "Sorry, I cannot answer that.";
 
   return { answer };
 }

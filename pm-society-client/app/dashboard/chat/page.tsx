@@ -152,6 +152,7 @@ export default function ChatPage() {
         sender: "ai",
         timestamp: Date.now(),
       };
+      console.error(error);
       setSessions((prev) =>
         prev.map((s) =>
           s.id === sessionId
@@ -215,7 +216,7 @@ export default function ChatPage() {
       <div className="flex-1 flex flex-col md:ml-64">
         <div className="bg-white border-b px-4 py-4 flex items-center justify-between shadow-sm">
           <div>
-            <h1 className="text-xl font-semibold text-gray-800">TPMS AI Assistant</h1>
+            <h1 className="text-xl font-semibold text-gray-800">SIA- Your Society Intelligent Assistant</h1>
             <p className="text-sm text-gray-500">Ask me anything about PMP coaching and project management</p>
           </div>
           <button className="md:hidden p-2" onClick={() => setSidebarOpen(true)}>

@@ -1,66 +1,94 @@
 export const tpmsData = {
   name: "TPMS PMP Coaching, Training & Mentoring",
-  overview: "The PM Society offers a comprehensive, people-centered pathway to PMP certification...",
+  tagline: "Your pathway to PMP certification and real-world project leadership",
+  overview: `The PM Society (TPMS) offers a comprehensive, people-centered pathway to PMP certification. 
+Our program combines live instruction, personalized coaching, and mentorship to help aspiring and current project managers not just pass the exam, but excel in real-world project leadership.`,
+
   offerings: {
     liveVirtualCourse: {
+      title: "Live Virtual PMP Course",
       hours: 35,
-      content: "PMBOK and Agile, exam prep, quizzes, templates, study guides",
-      extras: "office hours, Q&A, contact hours PDUs"
+      content: [
+        "PMBOK and Agile methodologies",
+        "Exam preparation, quizzes, templates, study guides",
+      ],
+      extras: [
+        "Office hours and Q&A support",
+        "Earn 35 Contact Hours and PDUs recognized by PMI",
+      ],
     },
     coaching: {
+      title: "Personalized Coaching",
       type: "1:1 or small group",
-      help: "application, exam strategies, mindset, custom schedules"
+      support: [
+        "Application guidance",
+        "Exam strategies and mindset support",
+        "Custom study schedules",
+      ],
     },
     mentoring: {
-      focus: "career strategy, resume/LinkedIn, transition to PM roles"
-    }
+      title: "Professional Mentorship",
+      focus: [
+        "Career strategy development",
+        "Resume & LinkedIn optimization",
+        "Transition support into PM roles",
+      ],
+    },
   },
+
   targetAudience: [
     "Aspiring project managers",
-    "Mid-career professionals",
-    "Transitioning professionals",
-    "Existing PMs seeking structured support"
+    "Mid-career professionals seeking PMP certification",
+    "Professionals transitioning into project management roles",
+    "Existing PMs seeking structured support",
   ],
+
   whyChoose: [
-    "Led by seasoned project leader with agile & corporate experience",
-    "Focus on building confidence & capability",
-    "Thorough prep materials with workbook, guides, podcasts",
-    "Exclusive exam tips & tricks"
-  ]
+    "Led by seasoned project leader with Agile & corporate experience",
+    "Focus on building confidence and practical capability",
+    "Thorough prep materials: workbook, guides, podcasts",
+    "Exclusive exam tips & real-world strategies",
+  ],
 };
 
+
 export const coachingData = `
-TPMS PMP Coaching, Training & Mentoring
-Overview
-The PM Society offers a comprehensive, people-centered pathway to PMP certification. Our program combines live instruction, personalized coaching, and mentorship to help aspiring and current project managers not only pass the exam but excel in real-world project leadership roles.
+# TPMS PMP Coaching, Training & Mentoring
 
-What We Offer
-Live Virtual PMP Course
-•	35 hours of live instruction
-•	Covers PMBOK and Agile content, exam preparation, quizzes, templates, and study guides
-•	Includes office hours and Q&A support
-•	Structured to provide exactly what you need to pass the PMP exam
-•	Earn 35 Contact Hours and PDUs recognized by the Project Management Institute (PMI) 
-PMP Coaching
-•	1:1 or small group coaching sessions
-•	Assistance with application preparation, exam strategies, and mindset support
-•	Customized study schedules and stress-free PMP application guidance 
-Mentoring Beyond Certification
-•	Guidance on transitioning into project management roles
-•	Career strategy development, resume and LinkedIn optimization
-•	Support for professionals moving into project management from other industries 
+## Overview
+The PM Society offers a people-centered pathway to PMP certification. 
+Our program combines live instruction, personalized coaching, and mentorship to help aspiring and current project managers not only pass the exam but excel in real-world project leadership.
 
-Target Audience
-•	Aspiring project managers and mid-career professionals seeking PMP certification
-•	Professionals transitioning into project management roles
-•	Existing project managers seeking structured support and community
-Why Choose TPMS
-•	Instructor-led by a seasoned project leader with corporate and agile experience
-•	Focuses on building confidence and capability beyond just passing the exam
-•	Combines PMP preparation with real-world coaching and professional mentorship
-•	Provides thorough preparation materials, including a comprehensive workbook, study guides, chapter tests, and access to podcasts and chapter videos
-•	Offers exclusive exam-taking tips and tricks to align your intentions with your purpose 
+## What We Offer
 
+### Live Virtual PMP Course
+- 35 hours of live instruction
+- Covers PMBOK and Agile content, exam preparation, quizzes, templates, and study guides
+- Includes office hours and Q&A support
+- Structured for PMP exam success
+- Earn 35 Contact Hours and PDUs recognized by PMI
 
+### PMP Coaching
+- 1:1 or small group sessions
+- Assistance with application, exam strategies, and mindset
+- Customized study schedules for stress-free preparation
+
+### Mentoring Beyond Certification
+- Guidance on transitioning into project management roles
+- Career strategy, resume, and LinkedIn optimization
+- Support for professionals moving into project management from other industries
+
+## Target Audience
+- Aspiring project managers and mid-career professionals seeking PMP certification
+- Professionals transitioning into project management roles
+- Existing project managers seeking structured support and community
+
+## Why Choose TPMS
+- Instructor-led by seasoned project leaders with corporate & Agile experience
+- Focus on building confidence and capability beyond passing the exam
+- Combines PMP preparation with real-world coaching and mentorship
+- Thorough preparation materials including workbook, guides, chapter tests, podcasts, and videos
+- Exclusive exam-taking tips to align intentions with purpose
 `;
+
 
