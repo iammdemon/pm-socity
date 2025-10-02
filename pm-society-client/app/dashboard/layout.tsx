@@ -6,7 +6,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-[#071018]">
+    <div className="flex min-h-screen ">
   
       
         {children}
