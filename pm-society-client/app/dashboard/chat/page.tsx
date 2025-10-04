@@ -30,14 +30,12 @@ export default function ChatPage() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Load sessions
   useEffect(() => {
     const stored = sessionStorage.getItem("tpms_chat_sessions");
     if (stored) {
-      const parsed = JSON.parse(stored);
-      const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
-      const validSessions = parsed.filter(
-        (s: ChatSession) => s.lastActive > thirtyDaysAgo
-      );
+      const parsed: ChatSession[] = JSON.parse(stored);
+      const validSessions = parsed.filter(s => s.lastActive > Date.now() - 30 * 24 * 60 * 60 * 1000);
       setSessions(validSessions);
       if (validSessions.length > 0) setCurrentSessionId(validSessions[0].id);
     }
@@ -47,12 +45,14 @@ export default function ChatPage() {
     sessionStorage.setItem("tpms_chat_sessions", JSON.stringify(sessions));
   }, [sessions]);
 
-  const currentSession = sessions.find((s) => s.id === currentSessionId);
+  const currentSession = sessions.find(s => s.id === currentSessionId);
 
+  // Scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentSession?.messages]);
 
+  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -73,11 +73,9 @@ export default function ChatPage() {
   };
 
   const deleteSession = (id: string) => {
-    const filtered = sessions.filter((s) => s.id !== id);
+    const filtered = sessions.filter(s => s.id !== id);
     setSessions(filtered);
-    if (currentSessionId === id) {
-      setCurrentSessionId(filtered[0]?.id || "");
-    }
+    if (currentSessionId === id) setCurrentSessionId(filtered[0]?.id || "");
   };
 
   const sendMessage = async () => {
@@ -106,8 +104,8 @@ export default function ChatPage() {
     const userInput = input;
     setInput("");
 
-    setSessions((prev) =>
-      prev.map((s) =>
+    setSessions(prev =>
+      prev.map(s =>
         s.id === sessionId
           ? {
               ...s,
@@ -134,14 +132,10 @@ export default function ChatPage() {
         sender: "ai",
         timestamp: Date.now(),
       };
-      setSessions((prev) =>
-        prev.map((s) =>
+      setSessions(prev =>
+        prev.map(s =>
           s.id === sessionId
-            ? {
-                ...s,
-                messages: [...s.messages, aiMessage],
-                lastActive: Date.now(),
-              }
+            ? { ...s, messages: [...s.messages, aiMessage], lastActive: Date.now() }
             : s
         )
       );
@@ -153,12 +147,8 @@ export default function ChatPage() {
         timestamp: Date.now(),
       };
       console.error(error);
-      setSessions((prev) =>
-        prev.map((s) =>
-          s.id === sessionId
-            ? { ...s, messages: [...s.messages, errorMessage] }
-            : s
-        )
+      setSessions(prev =>
+        prev.map(s => (s.id === sessionId ? { ...s, messages: [...s.messages, errorMessage] } : s))
       );
     } finally {
       setIsLoading(false);
@@ -173,12 +163,18 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden">
+    <div className="flex h-screen w-screen bg-gray-50">
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 text-white flex flex-col transition-transform transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
-        <div className="p-4 flex items-center justify-between">
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 text-white flex flex-col transition-transform transform ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0`}
+      >
+        <div className="p-4 flex items-center justify-between border-b border-gray-800">
           <span className="font-bold text-lg">Chats</span>
-          <button className="md:hidden" onClick={() => setSidebarOpen(false)}>✕</button>
+          <button className="md:hidden" onClick={() => setSidebarOpen(false)}>
+            ✕
+          </button>
         </div>
         <div className="p-4">
           <button
@@ -188,18 +184,24 @@ export default function ChatPage() {
             <MessageSquare className="w-4 h-4" /> New Chat
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto px-2">
-          {sessions.map((session) => (
+        <div className="flex-1 overflow-y-auto px-2 space-y-1">
+          {sessions.map(session => (
             <div
               key={session.id}
-              className={`group flex items-center justify-between p-3 mb-1 rounded-lg cursor-pointer transition-colors ${
-                session.id === currentSessionId ? "bg-gray-800" : "hover:bg-gray-800"
+              className={`group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors truncate ${
+                session.id === currentSessionId ? "bg-gray-800 font-semibold" : "hover:bg-gray-800"
               }`}
-              onClick={() => { setCurrentSessionId(session.id); setSidebarOpen(false); }}
+              onClick={() => {
+                setCurrentSessionId(session.id);
+                setSidebarOpen(false);
+              }}
             >
               <div className="flex-1 truncate text-sm">{session.title}</div>
               <button
-                onClick={(e) => { e.stopPropagation(); deleteSession(session.id); }}
+                onClick={e => {
+                  e.stopPropagation();
+                  deleteSession(session.id);
+                }}
                 className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-700 rounded transition-opacity"
               >
                 <Trash2 className="w-4 h-4" />
@@ -208,63 +210,75 @@ export default function ChatPage() {
           ))}
         </div>
         <div className="p-4 border-t border-gray-800 text-xs text-gray-400">Chat history stored for 30 days</div>
-      </div>
+      </aside>
 
       {sidebarOpen && <div className="fixed inset-0 z-20 bg-black/30 md:hidden" onClick={() => setSidebarOpen(false)} />}
 
-      {/* Main chat */}
-      <div className="flex-1 flex flex-col md:ml-64">
-        <div className="bg-white border-b px-4 py-4 flex items-center justify-between shadow-sm">
+      {/* Main Chat */}
+      <main className="flex-1 flex flex-col md:ml-64">
+        {/* Header */}
+        <div className="bg-white border-b px-4 py-4 flex items-center justify-between shadow sticky top-0 z-10">
           <div>
-            <h1 className="text-xl font-semibold text-gray-800">SIA- Your Society Intelligent Assistant</h1>
-            <p className="text-sm text-gray-500">Ask me anything about PMP coaching and project management</p>
+            <h1 className="text-xl font-semibold text-gray-800">SIA - Your Society Intelligent Assistant</h1>
+            <p className="text-sm text-gray-500">Ask anything about PMP & project management</p>
           </div>
           <button className="md:hidden p-2" onClick={() => setSidebarOpen(true)}>
             <Menu className="w-6 h-6" />
           </button>
         </div>
 
-        {/* Chat messages */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 flex flex-col">
-          <div className="flex-1 space-y-4 flex flex-col">
-            {(!currentSession || currentSession.messages.length === 0) && (
-              <div className="text-center py-12 flex-1 flex flex-col justify-center items-center">
-                <MessageSquare className="w-16 h-16 text-gray-300 mb-4" />
-                <h2 className="text-2xl font-semibold text-gray-700 mb-2">How can I help you today?</h2>
-                <p className="text-gray-500">Ask me about PMP certification, project management, or TPMS coaching programs</p>
-              </div>
-            )}
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto px-4 py-6 flex flex-col space-y-4">
+          {(!currentSession || currentSession.messages.length === 0) && (
+            <div className="text-center py-12 flex-1 flex flex-col justify-center items-center text-gray-500">
+              <MessageSquare className="w-16 h-16 mb-4" />
+              <h2 className="text-2xl font-semibold mb-2">How can I help you today?</h2>
+              <p className="max-w-xs">Ask about PMP certification, project management, or TPMS coaching programs</p>
+            </div>
+          )}
 
-            {currentSession?.messages.map(msg => (
-              <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`px-4 py-2 rounded-2xl shadow-sm max-w-full md:max-w-[80%] prose prose-sm lg:prose-base ${msg.sender === "user" ? "bg-blue-600 text-white prose-invert" : "bg-white text-gray-800 border border-gray-200"}`}>
-                  {msg.sender === "ai" ? <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{msg.text}</ReactMarkdown> : msg.text}
-                </div>
+          {currentSession?.messages.map(msg => (
+            <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                className={`px-4 py-3 rounded-2xl shadow-sm max-w-full  break-words prose prose-sm sm:prose md:prose-base transition-all ${
+                  msg.sender === "user"
+                    ? "bg-blue-600 text-white animate-fade-in prose-invert"
+                    : "bg-white text-gray-800 border border-gray-200 animate-fade-in"
+                }`}
+              >
+                {msg.sender === "ai" ? (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                    {msg.text}
+                  </ReactMarkdown>
+                ) : (
+                  msg.text
+                )}
               </div>
-            ))}
+            </div>
+          ))}
 
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white border border-gray-200 px-6 py-4 rounded-2xl shadow-sm">
-                  <Loader2 className="w-5 h-5 animate-spin text-gray-500" />
-                </div>
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="bg-white border border-gray-200 px-6 py-4 rounded-2xl shadow-sm flex items-center gap-2 animate-pulse">
+                <Loader2 className="w-5 h-5 text-gray-500 animate-spin" />
+                <span className="text-gray-500">SIA is typing...</span>
               </div>
-            )}
+            </div>
+          )}
 
-            <div ref={bottomRef} />
-          </div>
+          <div ref={bottomRef} />
         </div>
 
-        {/* Input bar */}
+        {/* Input */}
         <div className="bg-white border-t px-4 py-4 flex-shrink-0">
           <div className="flex items-end gap-2 bg-gray-50 rounded-2xl border border-gray-200 p-2 w-full">
             <textarea
               ref={textareaRef}
               rows={1}
               className="flex-1 bg-transparent resize-none outline-none px-3 py-2 max-h-32 overflow-y-auto"
-              placeholder="Message TPMS AI..."
+              placeholder="Message SIA..."
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               disabled={isLoading}
             />
@@ -278,7 +292,7 @@ export default function ChatPage() {
           </div>
           <p className="text-xs text-gray-500 text-center mt-1">Press Enter to send, Shift + Enter for new line</p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

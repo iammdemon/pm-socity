@@ -153,12 +153,12 @@ const completeSubscriptionRegistration = (0, catchAsync_1.default)((req, res) =>
         customerId: customer.id,
     });
     // Send welcome email
-    yield (0, sendWelcomeEmail_1.sendWelcomeEmail)({
-        to: user.email,
-        userName: user.name,
-        packageType: user.packageType,
-        email: user.email,
-    });
+    // await sendWelcomeEmail({
+    //   to: user.email,
+    //   userName: user.name,
+    //   packageType: user.packageType!,
+    //   email: user.email,
+    // });
     res.json({
         message: "Subscription registration complete",
         user: {
