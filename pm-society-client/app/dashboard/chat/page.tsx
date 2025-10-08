@@ -1,157 +1,87 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Loader2, Send, MessageSquare, Trash2, Menu } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
+import { useState, useRef, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { Send, Sparkles, Trash2 } from "lucide-react";
 
 interface Message {
   id: string;
-  text: string;
   sender: "user" | "ai";
-  timestamp: number;
+  text: string;
+  timestamp: Date;
 }
 
-interface ChatSession {
-  id: string;
-  title: string;
-  messages: Message[];
-  lastActive: number;
-}
+const WEBHOOK_URL = "https://n8n.thepmsociety.com/webhook/sia";
 
 export default function ChatPage() {
-  const [sessions, setSessions] = useState<ChatSession[]>([]);
-  const [currentSessionId, setCurrentSessionId] = useState<string>("");
+  const { data: session } = useSession();
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load sessions
-  useEffect(() => {
-    const stored = sessionStorage.getItem("tpms_chat_sessions");
-    if (stored) {
-      const parsed: ChatSession[] = JSON.parse(stored);
-      const validSessions = parsed.filter(s => s.lastActive > Date.now() - 30 * 24 * 60 * 60 * 1000);
-      setSessions(validSessions);
-      if (validSessions.length > 0) setCurrentSessionId(validSessions[0].id);
-    }
-  }, []);
-
-  useEffect(() => {
-    sessionStorage.setItem("tpms_chat_sessions", JSON.stringify(sessions));
-  }, [sessions]);
-
-  const currentSession = sessions.find(s => s.id === currentSessionId);
-
-  // Scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [currentSession?.messages]);
+  }, [messages]);
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 150)}px`;
     }
   }, [input]);
 
-  const createNewSession = () => {
-    const newSession: ChatSession = {
-      id: Date.now().toString(),
-      title: "New Chat",
-      messages: [],
-      lastActive: Date.now(),
-    };
-    setSessions([newSession, ...sessions]);
-    setCurrentSessionId(newSession.id);
-    setSidebarOpen(false);
-  };
-
-  const deleteSession = (id: string) => {
-    const filtered = sessions.filter(s => s.id !== id);
-    setSessions(filtered);
-    if (currentSessionId === id) setCurrentSessionId(filtered[0]?.id || "");
-  };
-
   const sendMessage = async () => {
-    if (!input.trim()) return;
-    let sessionId = currentSessionId;
+    if (!input.trim() || !session?.user?.email) return;
 
-    if (!sessionId) {
-      const newSession: ChatSession = {
-        id: Date.now().toString(),
-        title: input.slice(0, 50),
-        messages: [],
-        lastActive: Date.now(),
-      };
-      setSessions([newSession]);
-      sessionId = newSession.id;
-      setCurrentSessionId(sessionId);
-    }
-
-    const userMessage: Message = {
+    const userMsg: Message = {
       id: Date.now().toString(),
-      text: input,
       sender: "user",
-      timestamp: Date.now(),
+      text: input,
+      timestamp: new Date(),
     };
-
+    setMessages((prev) => [...prev, userMsg]);
     const userInput = input;
     setInput("");
-
-    setSessions(prev =>
-      prev.map(s =>
-        s.id === sessionId
-          ? {
-              ...s,
-              messages: [...s.messages, userMessage],
-              lastActive: Date.now(),
-              title: s.messages.length === 0 ? userInput.slice(0, 50) : s.title,
-            }
-          : s
-      )
-    );
-
-    setIsLoading(true);
+    setLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
+      const res = await fetch(WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: userInput }),
+        body: JSON.stringify({
+          sessionId: session.user.email,
+          message: userInput,
+        }),
       });
-      const data = await response.json();
-      const aiMessage: Message = {
-        id: Date.now().toString() + "-ai",
-        text: data.answer || "Sorry, I didn't get that.",
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      console.log(data);
+
+      const aiMsg: Message = {
+        id: (Date.now() + 1).toString(),
         sender: "ai",
-        timestamp: Date.now(),
+        text: data.output ?? "Sorry, I didn't understand.",
+        timestamp: new Date(),
       };
-      setSessions(prev =>
-        prev.map(s =>
-          s.id === sessionId
-            ? { ...s, messages: [...s.messages, aiMessage], lastActive: Date.now() }
-            : s
-        )
-      );
-    } catch (error) {
-      const errorMessage: Message = {
-        id: Date.now().toString() + "-error",
-        text: "Error communicating with AI server. Please try again.",
+
+      setMessages((prev) => [...prev, aiMsg]);
+    } catch (err) {
+      console.error("Chat error:", err);
+      const errorMsg: Message = {
+        id: (Date.now() + 1).toString(),
         sender: "ai",
-        timestamp: Date.now(),
+        text: "⚠️ Sorry, there was an error contacting the AI server. Please try again.",
+        timestamp: new Date(),
       };
-      console.error(error);
-      setSessions(prev =>
-        prev.map(s => (s.id === sessionId ? { ...s, messages: [...s.messages, errorMessage] } : s))
-      );
+      setMessages((prev) => [...prev, errorMsg]);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -162,137 +92,161 @@ export default function ChatPage() {
     }
   };
 
+  const clearChat = () => {
+    setMessages([]);
+  };
+
+  const quickPrompts = [
+    "What are the steps to get PMP certified?",
+    "Tell me about the Elevate PMP Program.",
+    "What do I get with a Society+ membership?",
+    "Can you help me prepare for the PMP application?",
+    "Do you offer coaching or mentoring?",
+  ];
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20">
+            <Sparkles className="w-10 h-10 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Welcome to SIA</h2>
+          <p className="text-gray-600 dark:text-gray-400">Please log in to continue</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-screen w-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 text-white flex flex-col transition-transform transform ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0`}
-      >
-        <div className="p-4 flex items-center justify-between border-b border-gray-800">
-          <span className="font-bold text-lg">Chats</span>
-          <button className="md:hidden" onClick={() => setSidebarOpen(false)}>
-            ✕
-          </button>
-        </div>
-        <div className="p-4">
-          <button
-            onClick={createNewSession}
-            className="w-full py-2 px-4 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center gap-2 transition-colors"
-          >
-            <MessageSquare className="w-4 h-4" /> New Chat
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto px-2 space-y-1">
-          {sessions.map(session => (
-            <div
-              key={session.id}
-              className={`group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors truncate ${
-                session.id === currentSessionId ? "bg-gray-800 font-semibold" : "hover:bg-gray-800"
-              }`}
-              onClick={() => {
-                setCurrentSessionId(session.id);
-                setSidebarOpen(false);
-              }}
-            >
-              <div className="flex-1 truncate text-sm">{session.title}</div>
+    <div className="flex flex-col h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950">
+      {/* Header */}
+      <header className="sticky top-0 z-10 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-800/50">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 flex-shrink-0">
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-base sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent truncate">
+                  SIA
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">
+                  Society Intelligent Assistant
+                </p>
+              </div>
+            </div>
+            {messages.length > 0 && (
               <button
-                onClick={e => {
-                  e.stopPropagation();
-                  deleteSession(session.id);
-                }}
-                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-700 rounded transition-opacity"
+                onClick={clearChat}
+                className="flex items-center gap-1.5 text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 flex-shrink-0"
+                title="Clear chat"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Clear</span>
               </button>
-            </div>
-          ))}
-        </div>
-        <div className="p-4 border-t border-gray-800 text-xs text-gray-400">Chat history stored for 30 days</div>
-      </aside>
-
-      {sidebarOpen && <div className="fixed inset-0 z-20 bg-black/30 md:hidden" onClick={() => setSidebarOpen(false)} />}
-
-      {/* Main Chat */}
-      <main className="flex-1 flex flex-col md:ml-64">
-        {/* Header */}
-        <div className="bg-white border-b px-4 py-4 flex items-center justify-between shadow sticky top-0 z-10">
-          <div>
-            <h1 className="text-xl font-semibold text-gray-800">SIA - Your Society Intelligent Assistant</h1>
-            <p className="text-sm text-gray-500">Ask anything about PMP & project management</p>
+            )}
           </div>
-          <button className="md:hidden p-2" onClick={() => setSidebarOpen(true)}>
-            <Menu className="w-6 h-6" />
-          </button>
         </div>
+      </header>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 flex flex-col space-y-4">
-          {(!currentSession || currentSession.messages.length === 0) && (
-            <div className="text-center py-12 flex-1 flex flex-col justify-center items-center text-gray-500">
-              <MessageSquare className="w-16 h-16 mb-4" />
-              <h2 className="text-2xl font-semibold mb-2">How can I help you today?</h2>
-              <p className="max-w-xs">Ask about PMP certification, project management, or TPMS coaching programs</p>
-            </div>
-          )}
-
-          {currentSession?.messages.map(msg => (
-            <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
-              <div
-                className={`px-4 py-3 rounded-2xl shadow-sm max-w-full  break-words prose prose-sm sm:prose md:prose-base transition-all ${
-                  msg.sender === "user"
-                    ? "bg-blue-600 text-white animate-fade-in prose-invert"
-                    : "bg-white text-gray-800 border border-gray-200 animate-fade-in"
-                }`}
-              >
-                {msg.sender === "ai" ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-                    {msg.text}
-                  </ReactMarkdown>
-                ) : (
-                  msg.text
-                )}
+      {/* Messages */}
+      <main className="flex-1 overflow-y-auto">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center min-h-[calc(100vh-280px)] text-center">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-3xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg shadow-blue-500/10 animate-in fade-in zoom-in duration-500">
+                <Sparkles className="w-10 h-10 sm:w-12 sm:h-12 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-3 px-4 animate-in fade-in slide-in-from-bottom-3 duration-500">
+                Hello! I&apos;m SIA
+              </h2>
+              <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-md px-4 mb-6 sm:mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                Your intelligent assistant for The PM Society. How can I help you today?
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-2.5 w-full max-w-4xl px-4 animate-in fade-in slide-in-from-bottom-5 duration-500">
+                {quickPrompts.map((prompt, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setInput(prompt)}
+                    className="p-3 sm:p-3.5 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200/60 dark:border-gray-700/60 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-white dark:hover:bg-gray-800 transition-all text-left group shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                      {prompt}
+                    </span>
+                  </button>
+                ))}
               </div>
             </div>
-          ))}
-
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-white border border-gray-200 px-6 py-4 rounded-2xl shadow-sm flex items-center gap-2 animate-pulse">
-                <Loader2 className="w-5 h-5 text-gray-500 animate-spin" />
-                <span className="text-gray-500">SIA is typing...</span>
-              </div>
+          ) : (
+            <div className="space-y-3 sm:space-y-4 md:space-y-5">
+              {messages.map((m) => (
+                <article
+                  key={m.id}
+                  className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-500`}
+                >
+                  <div
+                    className={`max-w-[90%] sm:max-w-[85%] md:max-w-[80%] lg:max-w-[75%] px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 rounded-3xl shadow-sm relative ${
+                      m.sender === "user"
+                        ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-blue-500/20"
+                        : "bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm text-gray-900 dark:text-gray-100 border border-gray-200/60 dark:border-gray-700/60"
+                    }`}
+                  >
+                    <p className="text-sm sm:text-base leading-relaxed whitespace-pre-wrap break-words pr-12">
+                      {m.text}
+                    </p>
+                    <time className="absolute bottom-2 right-3 text-[10px] sm:text-xs opacity-60">
+                      {m.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </time>
+                  </div>
+                </article>
+              ))}
+              {loading && (
+                <article className="flex justify-start animate-in fade-in slide-in-from-bottom-2 duration-500">
+                  <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-4 sm:px-5 py-3 sm:py-3.5 rounded-3xl border border-gray-200/60 dark:border-gray-700/60 shadow-sm">
+                    <div className="flex gap-1.5">
+                      <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce"></span>
+                      <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                      <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                    </div>
+                  </div>
+                </article>
+              )}
+              <div ref={bottomRef} />
             </div>
           )}
-
-          <div ref={bottomRef} />
-        </div>
-
-        {/* Input */}
-        <div className="bg-white border-t px-4 py-4 flex-shrink-0">
-          <div className="flex items-end gap-2 bg-gray-50 rounded-2xl border border-gray-200 p-2 w-full">
-            <textarea
-              ref={textareaRef}
-              rows={1}
-              className="flex-1 bg-transparent resize-none outline-none px-3 py-2 max-h-32 overflow-y-auto"
-              placeholder="Message SIA..."
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              disabled={isLoading}
-            />
-            <button
-              onClick={sendMessage}
-              disabled={isLoading || !input.trim()}
-              className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-            </button>
-          </div>
-          <p className="text-xs text-gray-500 text-center mt-1">Press Enter to send, Shift + Enter for new line</p>
         </div>
       </main>
+
+      {/* Input */}
+      <footer className="sticky bottom-0 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-t border-gray-200/50 dark:border-gray-800/50">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4 md:py-6">
+          <div className="flex gap-2 sm:gap-3 items-end">
+            <div className="flex-1 relative">
+              <textarea
+                ref={textareaRef}
+                className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-2xl sm:rounded-3xl px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 resize-none outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm sm:text-base shadow-sm placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                placeholder="Ask me anything..."
+                rows={1}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={loading}
+                style={{ maxHeight: "150px" }}
+              />
+            </div>
+            <button
+              onClick={sendMessage}
+              disabled={loading || !input.trim()}
+              className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-2.5 sm:p-3 md:p-3.5 rounded-xl sm:rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/30 transition-all flex-shrink-0 transform hover:scale-105 active:scale-95 disabled:transform-none"
+              aria-label="Send message"
+            >
+              <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

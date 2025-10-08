@@ -15,9 +15,12 @@
   "type": "commonjs",
   "dependencies": {
     "@google/genai": "^1.8.0",
+    "@langchain/core": "^0.3.78",
+    "@langchain/langgraph": "^0.4.9",
+    "@langchain/mongodb": "^0.1.0",
+    "@langchain/openai": "^0.6.14",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@openai/agents": "^0.0.10",
-    "@types/pdf-parse": "^1.1.5",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -25,6 +28,7 @@
     "express": "^5.1.0",
     "groq-sdk": "^0.26.0",
     "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.35",
     "mongoose": "^8.16.1",
     "nodemailer": "^7.0.5",
     "openai": "^5.8.2",
@@ -39,6 +43,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mailchimp__mailchimp_marketing": "^3.0.21",
     "@types/nodemailer": "^6.4.17",
+    "@types/pdf-parse": "^1.1.5",
     "typescript": "^5.8.3"
   }
 }
