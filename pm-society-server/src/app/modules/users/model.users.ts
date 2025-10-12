@@ -24,7 +24,10 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       enum: ["active", "canceled", "past_due", "unpaid"]
     },
-    subscriptionEndDate: Date
+    subscriptionEndDate: Date,
+    bio: String,
+    avatar: String,
+    linkedUsers: [String],
   },
   { timestamps: true }
 );

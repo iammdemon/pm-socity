@@ -1,25 +1,74 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { IForumTopic, IForumMessage } from "./interface.discussions";
+import { model, Schema } from "mongoose";
+import { ICounter, IForumTopic, IReply } from "./interface.discussions";
 
-interface ForumTopicDoc extends IForumTopic, Document {}
-interface ForumMessageDoc extends IForumMessage, Document {}
+const CounterSchema = new Schema<ICounter>({
+  name: { type: String, required: true, unique: true },
+  seq: { type: Number, default: 0 },
+});
 
-const ForumTopicSchema: Schema = new Schema(
+const ReplySchema = new Schema<IReply>(
   {
-    title: { type: String, required: true },
-    slug: { type: String, required: true, unique: true, lowercase: true },
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    content: { type: String, required: true },
+    reactions: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+  }
 );
 
-const ForumMessageSchema: Schema = new Schema(
+ReplySchema.virtual("reactionCount").get(function () {
+  return this.reactions.length;
+});
+
+const ForumTopicSchema = new Schema<IForumTopic>(
   {
-    topicId: { type: Schema.Types.ObjectId, ref: "ForumTopic", required: true },
-    userName: { type: String, required: true },
-    message: { type: String, required: true },
+    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    topicId: { type: Number, unique: true },
+    content: { type: String, required: true, trim: true },
+    reactions: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    replies: [ReplySchema],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+  }
 );
 
-export const ForumTopic = mongoose.model<ForumTopicDoc>("ForumTopic", ForumTopicSchema);
-export const ForumMessage = mongoose.model<ForumMessageDoc>("ForumMessage", ForumMessageSchema);
+// Auto-increment topicId
+ForumTopicSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    const counter = await Counter.findOneAndUpdate(
+      { name: "forumTopic" },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+    this.topicId = counter.seq;
+  }
+  next();
+});
+
+ForumTopicSchema.virtual("reactionCount").get(function () {
+  return this.reactions.length;
+});
+
+ForumTopicSchema.virtual("replyCount").get(function () {
+  return this.replies.length;
+});
+
+ForumTopicSchema.index({ createdAt: 1 });
+
+export const ForumTopic = model<IForumTopic>("ForumTopic", ForumTopicSchema);
+export const Reply = model<IReply>("Reply", ReplySchema);
+export const Counter = model<ICounter>("Counter", CounterSchema);

@@ -11,29 +11,78 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ForumService = void 0;
 const model_discussions_1 = require("./model.discussions");
-const createTopic = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const model_users_1 = require("../users/model.users");
+const createTopic = (payload, userEmail) => __awaiter(void 0, void 0, void 0, function* () {
+    // Find user by email
+    const user = yield model_users_1.User.findOne({ email: userEmail });
+    if (!user)
+        throw new Error("User not found");
+    // Set author to user's ID
+    payload.author = user._id;
+    console.log(payload);
     return yield model_discussions_1.ForumTopic.create(payload);
 });
 const getAllTopics = () => __awaiter(void 0, void 0, void 0, function* () {
-    return yield model_discussions_1.ForumTopic.find().sort({ createdAt: -1 });
+    return yield model_discussions_1.ForumTopic.find()
+        .populate("author", "name username email")
+        .populate("reactions", "name username email")
+        .populate("replies.author", "name username email");
 });
-const getSingleTopic = (slug) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield model_discussions_1.ForumTopic.findOne({ slug });
+const getTopicById = (topicId) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield model_discussions_1.ForumTopic.findOne({ topicId })
+        .populate("author", "name username email")
+        .populate("reactions.author", "name username email")
+        .populate("replies.author", "name username email");
 });
-const createMessage = (topicId, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield model_discussions_1.ForumMessage.create(Object.assign(Object.assign({}, payload), { topicId }));
+const addReplyToTopic = (topicId, reply, userEmail) => __awaiter(void 0, void 0, void 0, function* () {
+    // Find user by email
+    const user = yield model_users_1.User.findOne({ email: userEmail });
+    if (!user)
+        throw new Error("User not found");
+    // Set author to user's ID
+    reply.author = user._id;
+    return yield model_discussions_1.ForumTopic.findOneAndUpdate({ topicId }, { $push: { replies: reply } }, { new: true }).populate("replies.author", "name username email");
 });
-const getMessagesByTopic = (topicId) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield model_discussions_1.ForumMessage.find({ topicId }).sort({ createdAt: 1 });
+const toggleReactionOnTopic = (topicId, userEmail) => __awaiter(void 0, void 0, void 0, function* () {
+    // Find user by email
+    const user = yield model_users_1.User.findOne({ email: userEmail });
+    if (!user)
+        throw new Error("User not found");
+    const topic = yield model_discussions_1.ForumTopic.findOne({ topicId });
+    if (!topic)
+        throw new Error("Topic not found");
+    if (topic.reactions.includes(user._id)) {
+        topic.reactions = topic.reactions.filter((id) => !id.equals(user._id));
+    }
+    else {
+        topic.reactions.push(user._id);
+    }
+    return yield topic.save();
 });
-const deleteTopic = (slug) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield model_discussions_1.ForumTopic.findOneAndDelete({ slug });
+const toggleReactionOnReply = (topicId, replyId, userEmail) => __awaiter(void 0, void 0, void 0, function* () {
+    // Find user by email
+    const user = yield model_users_1.User.findOne({ email: userEmail });
+    if (!user)
+        throw new Error("User not found");
+    const topic = yield model_discussions_1.ForumTopic.findOne({ topicId });
+    if (!topic)
+        throw new Error("Topic not found");
+    const reply = topic.replies.find((reply) => reply._id.equals(replyId));
+    if (!reply)
+        throw new Error("Reply not found");
+    if (reply.reactions.includes(user._id)) {
+        reply.reactions = reply.reactions.filter((id) => !id.equals(user._id));
+    }
+    else {
+        reply.reactions.push(user._id);
+    }
+    return yield topic.save();
 });
 exports.ForumService = {
     createTopic,
     getAllTopics,
-    getSingleTopic,
-    createMessage,
-    getMessagesByTopic,
-    deleteTopic
+    getTopicById,
+    addReplyToTopic,
+    toggleReactionOnTopic,
+    toggleReactionOnReply,
 };

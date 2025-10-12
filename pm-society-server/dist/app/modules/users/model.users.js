@@ -69,7 +69,10 @@ const UserSchema = new mongoose_1.Schema({
         type: String,
         enum: ["active", "canceled", "past_due", "unpaid"]
     },
-    subscriptionEndDate: Date
+    subscriptionEndDate: Date,
+    bio: String,
+    avatar: String,
+    linkedUsers: [String],
 }, { timestamps: true });
 // hash the password before saving
 // This middleware will run before saving a user document

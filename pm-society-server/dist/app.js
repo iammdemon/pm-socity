@@ -13,7 +13,7 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)({
     origin: ["http://localhost:3000", "https://pm-society.vercel.app", "https://www.thepmsociety.com", "https://thepmsociety.com"],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 }));
 app.use((0, cookie_parser_1.default)());
 // Trust proxy FIRST - crucial for Coolify deployments

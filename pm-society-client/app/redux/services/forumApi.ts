@@ -1,20 +1,50 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+import { getSession } from "next-auth/react";
+
+// Updated interfaces to match backend models
+export interface IUser {
+  _id: string;
+  name: string;
+  username: string;
+  email: string;
+  avatar: string;
+  bio: string;
+}
+
+export interface IReply {
+  _id: string;
+  author?: IAuthor | IUser;
+  content: string;
+  reactions?: IUser[] | string[];
+  createdAt: string;
+  updatedAt: string;
+  reactionCount?: number;
+}
+
+export interface IAuthor {
+  _id: string;
+  name: string;
+  username: string;
+  avatar: string;
+  bio: string;
+  email: string;
+}
+
 export interface IForumTopic {
   _id: string;
-  title: string;
-  slug: string;
-  createdAt: string;
-}
-
-export interface IMessage {
-  _id: string;
+  author: IAuthor;
   topicId: string;
-  userName: string;
-  message: string;
+  content: string;
+  reactions: IUser[] | string[];
+  replies: IReply[];
   createdAt: string;
+  updatedAt: string;
+  reactionCount?: number;
+  replyCount?: number;
 }
 
+// Response types
 interface ForumTopicsResponse {
   message: string;
   data: IForumTopic[];
@@ -25,62 +55,88 @@ interface SingleTopicResponse {
   data: IForumTopic;
 }
 
-interface MessagesResponse {
+interface ApiResponse {
   message: string;
-  data: IMessage[];
+  data: IForumTopic;
 }
 
 export const forumApi = createApi({
   reducerPath: "forumApi",
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
-  tagTypes: ["ForumTopic", "ForumMessage"],
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
+    prepareHeaders: async (headers) => {
+      const session = await getSession();
+      if (session?.accessToken) {
+        headers.set("Authorization", `Bearer ${session.accessToken}`);
+      }
+      return headers;
+    },
+  }),
+  tagTypes: ["ForumTopic", "Reply"],
   endpoints: (builder) => ({
     // Topics
     getForumTopics: builder.query<ForumTopicsResponse, void>({
-      query: () => "forums/topics",
+      query: () => "forums",
       providesTags: ["ForumTopic"],
     }),
-    getForumTopicBySlug: builder.query<SingleTopicResponse, string>({
-      query: (slug) => `forums/topics/${slug}`,
+    getForumTopicById: builder.query<SingleTopicResponse, string>({
+      query: (topicId) => `forums/${topicId}`,
       providesTags: ["ForumTopic"],
     }),
-    addForumTopic: builder.mutation<IForumTopic, Partial<IForumTopic>>({
+    createForumTopic: builder.mutation<ApiResponse, Partial<IForumTopic>>({
       query: (body) => ({
-        url: "forums/topics",
+        url: "forums",
         method: "POST",
         body,
-      }),
-      invalidatesTags: ["ForumTopic"],
-    }),
-    deleteForumTopic: builder.mutation<void, string>({
-      query: (slug) => ({
-        url: `forums/topics/${slug}`,
-        method: "DELETE",
       }),
       invalidatesTags: ["ForumTopic"],
     }),
 
-    // Messages (Replies)
-    getMessagesByTopic: builder.query<MessagesResponse, string>({
-      query: (topicId) => `forums/topics/${topicId}/messages`,
-      providesTags: ["ForumMessage"],
-    }),
-    createMessage: builder.mutation<IMessage, { topicId: string; userName: string; message: string }>({
-      query: ({ topicId, ...body }) => ({
-        url: `forums/topics/${topicId}/messages`,
+    // Replies
+    addReplyToTopic: builder.mutation<
+      ApiResponse,
+      { topicId: string; content: Partial<IReply> }
+    >({
+      query: ({ topicId, content }) => ({
+        url: `forums/${topicId}/reply`,
         method: "POST",
-        body,
+        body: content,
       }),
-      invalidatesTags: ["ForumMessage"],
+      invalidatesTags: ["ForumTopic"],
+    }),
+
+    // Reactions
+    toggleReactionOnTopic: builder.mutation<
+      ApiResponse,
+      { topicId: string; userId: string }
+    >({
+      query: ({ topicId, userId }) => ({
+        url: `forums/${topicId}/reaction`,
+        method: "PATCH",
+        body: { id: userId },
+      }),
+      invalidatesTags: ["ForumTopic"],
+    }),
+
+    toggleReactionOnReply: builder.mutation<
+      ApiResponse,
+      { topicId: string; replyId: string; userId: string }
+    >({
+      query: ({ topicId, replyId, userId }) => ({
+        url: `forums/${topicId}/reply/${replyId}/reaction`,
+        method: "PATCH",
+        body: { id: userId },
+      }),
+      invalidatesTags: ["ForumTopic"],
     }),
   }),
 });
 
 export const {
   useGetForumTopicsQuery,
-  useGetForumTopicBySlugQuery,
-  useAddForumTopicMutation,
-  useDeleteForumTopicMutation,
-  useGetMessagesByTopicQuery,
-  useCreateMessageMutation,
+  useGetForumTopicByIdQuery,
+  useCreateForumTopicMutation,
+  useAddReplyToTopicMutation,
+  useToggleReactionOnTopicMutation,
+  useToggleReactionOnReplyMutation,
 } = forumApi;

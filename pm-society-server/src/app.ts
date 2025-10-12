@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors({
   origin: ["http://localhost:3000", "https://pm-society.vercel.app", "https://www.thepmsociety.com","https://thepmsociety.com"],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 }));
 app.use(cookieParser());
 

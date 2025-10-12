@@ -174,6 +174,7 @@ const completeSubscriptionRegistration = catchAsync(
     const user = await User.create({
       email: customer.email,
       name: customer.name,
+      phoneNumber: customer.phone,
       password,
       packageType,
       subscriptionType,

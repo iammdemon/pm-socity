@@ -21,11 +21,12 @@ const moduleRoutes = [
   { path: "/resources", route: ResourceRoutes },
   { path: "/chat", route: chatRoutes },
   { path: "/contact", route: ContactRoutes },
-  { path: "/subscribe", route: mailchimpRoutes  },
+  { path: "/subscribe", route: mailchimpRoutes },
+
 ];
 
-moduleRoutes.forEach((route) =>{
-
-    router.use(route.path, route.route)});
+moduleRoutes.forEach((route) => {
+  router.use(route.path, route.route);
+});
 
 export default router;

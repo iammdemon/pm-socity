@@ -14,17 +14,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticateJWT = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = __importDefault(require("../config"));
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 exports.authenticateJWT = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    // Get token from Authorization header instead of cookies
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    if (!authHeader) {
+        res.status(401).json({ message: "Unauthorized: No token" });
+        return;
+    }
+    const token = authHeader.split(" ")[1];
+    console.log("Token", token);
+    // Bearer TOKEN
     if (!token) {
         res.status(401).json({ message: "Unauthorized: No token" });
         return;
     }
-    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.JWT_SECRET);
+    const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
 }));

@@ -7,6 +7,7 @@ exports.UserRoutes = void 0;
 const express_1 = __importDefault(require("express"));
 const controller_payment_1 = require("./controller.payment");
 const controller_users_1 = require("./controller.users");
+const auth_1 = require("../../middlewares/auth");
 const router = express_1.default.Router();
 router.post("/checkout", controller_payment_1.PaymentController.startCheckout);
 router.post("/subscription-checkout", controller_payment_1.PaymentController.startSubscriptionCheckout);
@@ -15,4 +16,7 @@ router.post("/verify-payment", controller_payment_1.PaymentController.verifyPaym
 router.post("/cancel-subscription", controller_payment_1.PaymentController.cancelSubscription);
 router.get("/", controller_users_1.userController.getAllUsers);
 router.post("/create-admin", controller_users_1.userController.createUser);
+router.put("/profile", auth_1.authenticateJWT, controller_users_1.userController.updateUserProfile);
+router.post("/link/:id", controller_users_1.userController.linkUserController);
+router.post("/unlink/:id", controller_users_1.userController.unlinkUserController);
 exports.UserRoutes = router;

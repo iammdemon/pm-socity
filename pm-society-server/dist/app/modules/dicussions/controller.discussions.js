@@ -15,78 +15,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ForumController = void 0;
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const service_discussions_1 = require("./service.discussions");
-// Create topic
 const createTopic = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield service_discussions_1.ForumService.createTopic(req.body);
-    res.status(201).json({
-        message: "Topic created successfully",
-        data: result,
-    });
+    console.log(req.body);
+    const result = yield service_discussions_1.ForumService.createTopic(req.body, req.user.email);
+    res.status(201).json({ message: "Topic created successfully", data: result });
 }));
-// Get all topics
 const getAllTopics = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield service_discussions_1.ForumService.getAllTopics();
-    res.status(200).json({
-        message: "Topics fetched successfully",
-        data: result,
-    });
+    res.status(200).json({ message: "Topics Fetched successfully", data: result });
 }));
-// Get single topic
-const getSingleTopic = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const slug = req.params.slug;
-    const result = yield service_discussions_1.ForumService.getSingleTopic(slug);
-    if (!result) {
-        res.status(404).json({ error: "Topic not found" });
-        return;
-    }
-    res.status(200).json({
-        message: "Topic fetched successfully",
-        data: result,
-    });
+const getTopicById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { topicId } = req.params;
+    const result = yield service_discussions_1.ForumService.getTopicById(topicId);
+    res.status(200).json({ message: "Topic Fetched successfully", data: result });
 }));
-// Create message
-const createMessage = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const topicId = req.params.topicId;
-    const result = yield service_discussions_1.ForumService.createMessage(topicId, req.body);
-    res.status(201).json({
-        message: "Message added successfully",
-        data: result,
-    });
+const addReply = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { topicId } = req.params;
+    const result = yield service_discussions_1.ForumService.addReplyToTopic(topicId, req.body, req.user.email);
+    res.status(201).json({ message: "Reply added successfully", data: result });
 }));
-// Get all messages by topic
-const getMessagesByTopic = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const topicId = req.params.topicId;
-    const result = yield service_discussions_1.ForumService.getMessagesByTopic(topicId);
-    res.status(200).json({
-        message: "Messages fetched successfully",
-        data: result,
-    });
+const toggleReactionOnTopic = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { topicId } = req.params;
+    const result = yield service_discussions_1.ForumService.toggleReactionOnTopic(topicId, req.user.email);
+    res.status(200).json({ message: "Reaction toggled successfully", data: result });
 }));
-const deleteTopic = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const slug = req.params.slug;
-        console.log(slug);
-        const result = yield service_discussions_1.ForumService.deleteTopic(slug);
-        console.log(result);
-        if (!result) {
-            res.status(404).json({ error: "Topic not found" });
-            return;
-        }
-        res.status(200).json({
-            message: "Topic deleted successfully",
-            data: result,
-        });
-    }
-    catch (error) {
-        console.error("Error deleting Topic:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
+const toggleReactionOnReply = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { topicId, replyId } = req.params;
+    const result = yield service_discussions_1.ForumService.toggleReactionOnReply(topicId, replyId, req.user.email);
+    res.status(200).json({ message: "Reaction toggled successfully", data: result });
 }));
 exports.ForumController = {
     createTopic,
     getAllTopics,
-    getSingleTopic,
-    createMessage,
-    getMessagesByTopic,
-    deleteTopic
+    getTopicById,
+    addReply,
+    toggleReactionOnTopic,
+    toggleReactionOnReply
 };

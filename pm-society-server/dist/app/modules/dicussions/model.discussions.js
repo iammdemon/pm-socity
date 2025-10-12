@@ -1,48 +1,68 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ForumMessage = exports.ForumTopic = void 0;
-const mongoose_1 = __importStar(require("mongoose"));
+exports.Counter = exports.Reply = exports.ForumTopic = void 0;
+const mongoose_1 = require("mongoose");
+const CounterSchema = new mongoose_1.Schema({
+    name: { type: String, required: true, unique: true },
+    seq: { type: Number, default: 0 },
+});
+const ReplySchema = new mongoose_1.Schema({
+    author: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
+    content: { type: String, required: true },
+    reactions: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "User" }],
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+    },
+    toObject: {
+        virtuals: true,
+    },
+});
+ReplySchema.virtual("reactionCount").get(function () {
+    return this.reactions.length;
+});
 const ForumTopicSchema = new mongoose_1.Schema({
-    title: { type: String, required: true },
-    slug: { type: String, required: true, unique: true, lowercase: true },
-}, { timestamps: true });
-const ForumMessageSchema = new mongoose_1.Schema({
-    topicId: { type: mongoose_1.Schema.Types.ObjectId, ref: "ForumTopic", required: true },
-    userName: { type: String, required: true },
-    message: { type: String, required: true },
-}, { timestamps: true });
-exports.ForumTopic = mongoose_1.default.model("ForumTopic", ForumTopicSchema);
-exports.ForumMessage = mongoose_1.default.model("ForumMessage", ForumMessageSchema);
+    author: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
+    topicId: { type: Number, unique: true },
+    content: { type: String, required: true, trim: true },
+    reactions: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "User" }],
+    replies: [ReplySchema],
+}, {
+    timestamps: true,
+    toJSON: {
+        virtuals: true,
+    },
+    toObject: {
+        virtuals: true,
+    },
+});
+// Auto-increment topicId
+ForumTopicSchema.pre("save", function (next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (this.isNew) {
+            const counter = yield exports.Counter.findOneAndUpdate({ name: "forumTopic" }, { $inc: { seq: 1 } }, { new: true, upsert: true });
+            this.topicId = counter.seq;
+        }
+        next();
+    });
+});
+ForumTopicSchema.virtual("reactionCount").get(function () {
+    return this.reactions.length;
+});
+ForumTopicSchema.virtual("replyCount").get(function () {
+    return this.replies.length;
+});
+ForumTopicSchema.index({ createdAt: 1 });
+exports.ForumTopic = (0, mongoose_1.model)("ForumTopic", ForumTopicSchema);
+exports.Reply = (0, mongoose_1.model)("Reply", ReplySchema);
+exports.Counter = (0, mongoose_1.model)("Counter", CounterSchema);

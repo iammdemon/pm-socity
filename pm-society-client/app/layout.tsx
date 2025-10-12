@@ -1,17 +1,28 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import ReduxProvider from "./providers/ReduxProviders";
+
 import { Toaster } from "sonner";
 import AuthProvider from "./providers/AuthProvider";
 
-export const runtime = "nodejs"
+import ReduxProvider from "./providers/ReduxProvider";
+import { ThemeProviders } from "./providers/ThemeProvider";
+
+
 
 const gothamPro = localFont({
   src: [
     { path: "../public/fonts/GothamPro.ttf", weight: "400", style: "normal" },
-    { path: "../public/fonts/GothamPro-Medium.ttf", weight: "500", style: "normal" },
-    { path: "../public/fonts/GothamPro-Bold.ttf", weight: "700", style: "normal" },
+    {
+      path: "../public/fonts/GothamPro-Medium.ttf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/GothamPro-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
   ],
   variable: "--font-gotham-pro",
   display: "swap",
@@ -31,12 +42,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={gothamPro.variable} suppressHydrationWarning>
       <body className={`${gothamPro.className} antialiased bg-[#ECE8E1]`}>
-     
+        <ThemeProviders>
           <AuthProvider>
             <ReduxProvider>{children}</ReduxProvider>
           </AuthProvider>
-          <Toaster />
-      
+        </ThemeProviders>
+        <Toaster />
       </body>
     </html>
   );

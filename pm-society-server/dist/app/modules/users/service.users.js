@@ -21,8 +21,46 @@ const getAllUsers = () => __awaiter(void 0, void 0, void 0, function* () {
 const findByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     return yield model_users_1.User.findOne({ email });
 });
+const getUserProfile = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield model_users_1.User.findById(userId);
+});
+const updateUser = (email, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield model_users_1.User.findOne({ email });
+    if (!user)
+        throw new Error("User not found");
+    const updatedUser = yield model_users_1.User.findOneAndUpdate({ email }, { $set: payload }, { new: true });
+    return updatedUser;
+});
+// Link another user
+const linkUser = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield model_users_1.User.findById(userId);
+    if (!user)
+        throw new Error("User not found");
+    if (!user.linkedUsers)
+        user.linkedUsers = [];
+    if (!user.linkedUsers.includes(targetUserId)) {
+        user.linkedUsers.push(targetUserId);
+        yield user.save();
+    }
+    return user;
+});
+// Unlink another user
+const unlinkUser = (userId, targetUserId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield model_users_1.User.findById(userId);
+    if (!user)
+        throw new Error("User not found");
+    if (user.linkedUsers) {
+        user.linkedUsers = user.linkedUsers.filter(id => id !== targetUserId);
+        yield user.save();
+    }
+    return user;
+});
 exports.userService = {
     createUserIntoDB,
     getAllUsers,
-    findByEmail
+    findByEmail,
+    updateUser,
+    linkUser,
+    unlinkUser,
+    getUserProfile
 };

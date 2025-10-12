@@ -71,10 +71,7 @@ console.log(credentials)
       if (user) {
         token.id = user.id
         token.role = user.role
-        token.packageType = user.packageType
-        token.subscriptionType = user.subscriptionType
-        token.subscriptionStatus = user.subscriptionStatus
-        token.subscriptionEndDate = user.subscriptionEndDate
+        
         token.accessToken = user.accessToken // Store backend token in JWT
         token.createdAt = user.createdAt
       }
@@ -86,11 +83,7 @@ console.log(credentials)
       if (token && session.user) {
         session.user.id = token.id as string
         session.user.role = token.role as string
-        session.user.packageType = token.packageType as string
-        session.user.subscriptionType = token.subscriptionType as string
-        session.user.createdAt = token.createdAt as string
-        session.user.subscriptionStatus = token.subscriptionStatus as string
-        session.user.subscriptionEndDate = token.subscriptionEndDate as string
+        
         session.accessToken = token.accessToken as string // Make backend token available
       }
       return session

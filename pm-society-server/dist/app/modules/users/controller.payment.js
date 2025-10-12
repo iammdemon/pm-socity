@@ -143,6 +143,7 @@ const completeSubscriptionRegistration = (0, catchAsync_1.default)((req, res) =>
     const user = yield model_users_1.User.create({
         email: customer.email,
         name: customer.name,
+        phoneNumber: customer.phone,
         password,
         packageType,
         subscriptionType,
