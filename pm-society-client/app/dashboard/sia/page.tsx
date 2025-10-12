@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Send, Sparkles,  Copy,  RefreshCw, Bot, User, Check } from "lucide-react";
+import { Send, Sparkles, Copy, RefreshCw, Bot, User, Check } from "lucide-react";
 
 interface Message {
   id: string;
@@ -98,7 +98,6 @@ export default function ChatPage() {
     }
   };
 
-
   const copyMessage = async (text: string, id: string) => {
     try {
       // Fallback for older browsers
@@ -130,10 +129,10 @@ export default function ChatPage() {
 
   if (!session) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
         <div className="text-center max-w-md w-full">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-blue-500/20">
-            <Sparkles className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+          <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-900 dark:bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+            <Sparkles className="w-10 h-10 sm:w-12 sm:h-12 text-white dark:text-black" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">Welcome to SIA</h2>
           <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg">Please log in to continue</p>
@@ -143,9 +142,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-screen md:mt-5 flex-col bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950">
-     
-
+    <div className="flex h-screen  flex-col bg-white dark:bg-black">
       {/* Messages */}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -153,8 +150,8 @@ export default function ChatPage() {
             <div className="flex flex-col h-full">
               <div className="flex-1 flex items-center justify-center text-center px-4">
                 <div className="space-y-6 max-w-lg w-full">
-                  <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-3xl flex items-center justify-center mx-auto shadow-xl">
-                    <Sparkles className="w-12 h-12 text-blue-600 dark:text-blue-400" />
+                  <div className="w-24 h-24 bg-gray-100 dark:bg-gray-900 rounded-3xl flex items-center justify-center mx-auto">
+                    <Sparkles className="w-12 h-12 text-gray-600 dark:text-gray-400" />
                   </div>
                   <div>
                     <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
@@ -172,9 +169,9 @@ export default function ChatPage() {
                     <button
                       key={idx}
                       onClick={() => setInput(prompt)}
-                      className="p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all text-left group shadow-sm hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98]"
+                      className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all text-left"
                     >
-                      <span className="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 text-sm sm:text-base">
+                      <span className="font-medium text-gray-900 dark:text-gray-100 line-clamp-2 text-sm sm:text-base">
                         {prompt}
                       </span>
                     </button>
@@ -190,18 +187,18 @@ export default function ChatPage() {
                   className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} px-1`}
                 >
                   <div className={`flex items-end max-w-[85%] sm:max-w-[75%] ${m.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${m.sender === "user" ? "ml-2 bg-blue-600" : "mr-2 bg-gradient-to-br from-purple-500 to-indigo-500"}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${m.sender === "user" ? "ml-2 bg-gray-900 dark:bg-white" : "mr-2 bg-gray-200 dark:bg-gray-800"}`}>
                       {m.sender === "user" ? (
-                        <User className="w-4 h-4 text-white" />
+                        <User className="w-4 h-4 text-white dark:text-black" />
                       ) : (
-                        <Bot className="w-4 h-4 text-white" />
+                        <Bot className="w-4 h-4 text-gray-900 dark:text-white" />
                       )}
                     </div>
                     <div
-                      className={`relative px-4 py-3 rounded-2xl shadow-md ${
+                      className={`relative px-4 py-3 rounded-2xl ${
                         m.sender === "user"
-                          ? "bg-gradient-to-br from-blue-600 to-indigo-600 text-white"
-                          : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
+                          ? "bg-gray-900 dark:bg-white text-white dark:text-black"
+                          : "bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                       }`}
                     >
                       <p className="text-sm sm:text-base leading-relaxed whitespace-pre-wrap break-words pr-12 sm:pr-16">
@@ -217,14 +214,14 @@ export default function ChatPage() {
                           aria-label="Copy message"
                         >
                           {copiedMessageId === m.id ? (
-                            <Check className="w-3 h-3 text-green-500" />
+                            <Check className="w-3 h-3 text-green-600 dark:text-green-400" />
                           ) : (
                             <Copy className="w-3 h-3 opacity-60 group-hover:opacity-100" />
                           )}
                         </button>
                       </div>
                       {copiedMessageId === m.id && (
-                        <div className="absolute -top-8 right-0 bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-lg">
+                        <div className="absolute -top-8 right-0 bg-gray-800 dark:bg-gray-200 text-white dark:text-black text-xs px-2 py-1 rounded shadow-lg">
                           Copied!
                         </div>
                       )}
@@ -235,14 +232,14 @@ export default function ChatPage() {
               {loading && (
                 <article className="flex justify-start px-1">
                   <div className="flex items-end max-w-[85%] sm:max-w-[75%]">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center mr-2">
-                      <Bot className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center mr-2">
+                      <Bot className="w-4 h-4 text-gray-900 dark:text-white" />
                     </div>
-                    <div className="bg-white dark:bg-gray-800 px-4 py-3 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
+                    <div className="bg-gray-100 dark:bg-gray-900 px-4 py-3 rounded-2xl">
                       <div className="flex space-x-1">
-                        <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce"></span>
-                        <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                        <span className="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                        <span className="w-2 h-2 bg-gray-600 dark:bg-gray-400 rounded-full animate-bounce"></span>
+                        <span className="w-2 h-2 bg-gray-600 dark:bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                        <span className="w-2 h-2 bg-gray-600 dark:bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
                       </div>
                     </div>
                   </div>
@@ -255,13 +252,13 @@ export default function ChatPage() {
       </main>
 
       {/* Input */}
-      <footer className="sticky bottom-0 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border-t border-gray-200/50 dark:border-gray-800/50">
+      <footer className="sticky bottom-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
           <div className="flex gap-2 items-end">
             <div className="flex-1 relative">
               <textarea
                 ref={textareaRef}
-                className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3 resize-none outline-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-blue-500 dark:focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm sm:text-base shadow-sm placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                className="w-full border border-gray-300 dark:border-gray-700 rounded-2xl px-4 py-3 resize-none outline-none bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:border-gray-500 dark:focus:border-gray-600 transition-all text-sm sm:text-base placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 placeholder="Ask me anything..."
                 rows={1}
                 value={input}
@@ -274,7 +271,7 @@ export default function ChatPage() {
             <button
               onClick={sendMessage}
               disabled={loading || !input.trim()}
-              className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white p-3 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-blue-500/30 transition-all flex-shrink-0 transform hover:scale-105 active:scale-95 disabled:transform-none"
+              className="bg-gray-900 dark:bg-white text-white dark:text-black p-3 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-800 dark:hover:bg-gray-100 transition-all flex-shrink-0"
               aria-label="Send message"
             >
               {loading ? (
