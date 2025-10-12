@@ -1,4 +1,4 @@
-// TrendingTopics.tsx - Twitter/LinkedIn style trending topics
+
 "use client";
 
 import { useState } from "react";
@@ -94,9 +94,9 @@ const TrendingTopics = () => {
           ))}
         </div>
         <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-800">
-          <button className="text-blue-500 hover:text-blue-600 text-sm font-medium">
+          {/* <button className="text-blue-500 hover:text-blue-600 text-sm font-medium">
             Show more
-          </button>
+          </button> */}
         </div>
       </CardContent>
     </Card>

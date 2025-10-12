@@ -1,78 +1,78 @@
 
-"use client";
+// "use client";
 
-import { useState } from "react";
-import { Users, UserPlus,Check } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+// import { useState } from "react";
+import { Users } from "lucide-react";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
-interface User {
-  id: string;
-  name: string;
-  username: string;
-  avatar: string;
-  bio: string;
-  verified: boolean;
-  followers: number;
-  following: number;
-  posts: number;
-  isFollowing?: boolean;
-}
+// interface User {
+//   id: string;
+//   name: string;
+//   username: string;
+//   avatar: string;
+//   bio: string;
+//   verified: boolean;
+//   followers: number;
+//   following: number;
+//   posts: number;
+//   isFollowing?: boolean;
+// }
 
-const mockUsers: User[] = [
-  {
-    id: "1",
-    name: "Sarah Johnson",
-    username: "sarah_pm",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b332c1ca?w=100&h=100&fit=crop&crop=face",
-    bio: "PMP® | Agile Coach | Helping teams deliver value",
-    verified: true,
-    followers: 5234,
-    following: 892,
-    posts: 342
-  },
-  {
-    id: "2",
-    name: "Michael Chen",
-    username: "michaelchen_pm",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-    bio: "Scrum Master | Product Owner | Agile enthusiast",
-    verified: false,
-    followers: 2156,
-    following: 445,
-    posts: 189
-  },
-  {
-    id: "3",
-    name: "Emily Rodriguez",
-    username: "emily_rod",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-    bio: "Program Manager | Tech enthusiast | Coffee lover ☕",
-    verified: true,
-    followers: 8932,
-    following: 234,
-    posts: 567
-  },
-];
+// const mockUsers: User[] = [
+//   {
+//     id: "1",
+//     name: "Sarah Johnson",
+//     username: "sarah_pm",
+//     avatar: "https://images.unsplash.com/photo-1494790108755-2616b332c1ca?w=100&h=100&fit=crop&crop=face",
+//     bio: "PMP® | Agile Coach | Helping teams deliver value",
+//     verified: true,
+//     followers: 5234,
+//     following: 892,
+//     posts: 342
+//   },
+//   {
+//     id: "2",
+//     name: "Michael Chen",
+//     username: "michaelchen_pm",
+//     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+//     bio: "Scrum Master | Product Owner | Agile enthusiast",
+//     verified: false,
+//     followers: 2156,
+//     following: 445,
+//     posts: 189
+//   },
+//   {
+//     id: "3",
+//     name: "Emily Rodriguez",
+//     username: "emily_rod",
+//     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+//     bio: "Program Manager | Tech enthusiast | Coffee lover ☕",
+//     verified: true,
+//     followers: 8932,
+//     following: 234,
+//     posts: 567
+//   },
+// ];
 
 const WhoToFollow = () => {
 
-  const [users, setUsers] = useState<User[]>(mockUsers.map(u => ({ ...u, isFollowing: false })));
+//   const [users, setUsers] = useState<User[]>(mockUsers.map(u => ({ ...u, isFollowing: false })));
 
-  const handleFollow = async (userId: string) => {
-    // Simulate API call
-    setUsers(users.map(user => 
-      user.id === userId 
-        ? { ...user, isFollowing: !user.isFollowing }
-        : user
-    ));
+//   const handleFollow = async (userId: string) => {
+//     // Simulate API call
+//     setUsers(users.map(user => 
+//       user.id === userId 
+//         ? { ...user, isFollowing: !user.isFollowing }
+//         : user
+//     ));
     
-    const user = users.find(u => u.id === userId);
-    toast.success(user?.isFollowing ? `Unfollowed ${user?.name}` : `Following ${user?.name}`);
-  };
+//     const user = users.find(u => u.id === userId);
+//     toast.success(user?.isFollowing ? `Unfollowed ${user?.name}` : `Following ${user?.name}`);
+//   };
 
   return (
     <Card className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800">
@@ -83,8 +83,8 @@ const WhoToFollow = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="space-y-4">
-          {users.slice(0, 3).map((user) => (
+        <div className="space-y-4 text-center">
+          {/* {users.slice(0, 3).map((user) => (
             <div key={user.id} className="flex items-center justify-between p-2">
               <div className="flex items-center space-x-3 flex-1">
                 <Avatar className="h-10 w-10">
@@ -134,12 +134,13 @@ const WhoToFollow = () => {
                 )}
               </Button>
             </div>
-          ))}
+          ))} */}
+          Upcoming
         </div>
         <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-800">
-          <button className="text-blue-500 hover:text-blue-600 text-sm font-medium">
+          {/* <button className="text-blue-500 hover:text-blue-600 text-sm font-medium">
             Show more suggestions
-          </button>
+          </button> */}
         </div>
       </CardContent>
     </Card>
