@@ -396,10 +396,10 @@ const ForumTopicPage = () => {
                   <button
                     type="submit"
                     disabled={!replyText.trim() || isSubmittingReply}
-                    className={`flex items-center space-x-2 px-6 py-2.5 rounded-full font-medium text-white text-sm transition-all duration-200 ${
+                    className={`flex items-center space-x-2 px-6 py-2.5 rounded-full font-medium dark:text-black text-white text-sm transition-all duration-200 ${
                       !replyText.trim() || isSubmittingReply
                         ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"
-                        : "bg-blue-500 hover:bg-blue-600 dark:hover:bg-blue-700 hover:scale-105"
+                        : "bg-black dark:bg-white hover:scale-105"
                     }`}
                   >
                     {isSubmittingReply ? (

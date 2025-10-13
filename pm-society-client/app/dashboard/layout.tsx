@@ -1,7 +1,10 @@
+"use client";
 
-import DashSidebar from "../components/layout/DashSidebar";
 import MobileNav from "../components/layout/MobileNav";
 import MobileHeader from "../components/layout/MobileHeader";
+import ExchangeHeader from "../components/layout/ExchangeHeader";
+import MemberLeftPanel from "../components/layout/MemberLeftPanel";
+import MemberRightPanel from "../components/layout/MemberRightPanel";
 
 export default function DashboardLayout({
   children,
@@ -9,29 +12,53 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white dark:bg-neutral-900 text-black dark:text-white min-h-screen flex">
-      {/* Fixed Sidebar - Always visible on desktop */}
-      <aside className="hidden lg:block w-64 xl:w-72 flex-shrink-0 fixed h-screen z-30">
-        <DashSidebar />
-      </aside>
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Desktop Layout */}
+      <div className="hidden lg:flex h-screen">
+        {/* Three Column Layout */}
+        <div className="flex flex-1 h-full w-full">
+          {/* Left Panel - Fixed width */}
+          <div className="w-80 flex-shrink-0 overflow-hidden">
+            <MemberLeftPanel />
+          </div>
+          
+          {/* Main Content Area - Flexible width */}
+          <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+            {/* Header */}
+            <div className="flex-shrink-0">
+              <ExchangeHeader />
+            </div>
+            
+            {/* Main Content - Scrollable */}
+            <div className="flex-1 overflow-y-auto">
+              {children}
+            </div>
+          </div>
+          
+          {/* Right Panel - Fixed width */}
+          <div className="w-80 flex-shrink-0 overflow-hidden">
+            <MemberRightPanel />
+          </div>
+        </div>
+      </div>
       
-      {/* Main Content Area - Takes remaining space with left margin for sidebar */}
-      <main className="flex-1 lg:ml-64 xl:ml-72 overflow-y-auto">
-        {/* Mobile Header - Visible only on mobile */}
-        <div className="lg:hidden sticky top-0 z-40">
+      {/* Mobile Layout */}
+      <div className="lg:hidden flex flex-col h-screen">
+        {/* Mobile Header */}
+        <div className="sticky top-0 z-40">
           <MobileHeader />
         </div>
         
-        {/* Content Container with proper padding and max-width */}
-        <div >
+        {/* Mobile Content Area */}
+        <main className="flex-1 overflow-y-auto pb-16">
           {children}
-        </div>
+        </main>
         
-        {/* Mobile Navigation - Visible only on mobile */}
-        <div className="lg:hidden sticky bottom-0 z-40">
+        {/* Mobile Navigation */}
+        <div className="fixed bottom-0 left-0 right-0 z-40">
           <MobileNav />
         </div>
-      </main>
+      </div>
     </div>
   );
 }
