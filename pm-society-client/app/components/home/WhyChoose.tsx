@@ -60,15 +60,14 @@ const itemVariants = {
       duration: 0.5,
       ease: [0.42, 0, 0.58, 1] as [number, number, number, number],
     },
-  }, // cubic-bezier
+  },
 };
-
 
 const WhyChoose: React.FC = () => {
   const [hasStarted, setHasStarted] = useState(false);
 
   return (
-    <section id="why-choose" className="py-20 md:px-12">
+    <section id="why-choose" className="py-20 md:px-12 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto px-4">
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
@@ -80,7 +79,7 @@ const WhyChoose: React.FC = () => {
           {/* Left: Text Content */}
           <div className="space-y-8">
             <motion.div variants={itemVariants}>
-              <span className="text-sm font-semibold uppercase tracking-wider">
+              <span className="inline-block px-3 py-1 mb-4 text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white bg-gray-200 dark:bg-gray-800 rounded-full">
                 Why Choose TPMS
               </span>
               <h2
@@ -88,7 +87,7 @@ const WhyChoose: React.FC = () => {
               >
                 Your Path to PMP Success
               </h2>
-              <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
+              <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
                 We empower you with the skills, confidence, and resources to
                 excel in project management, not just pass an exam.
               </p>
@@ -102,8 +101,10 @@ const WhyChoose: React.FC = () => {
                   variants={itemVariants}
                   whileHover={{ x: 5, transition: { duration: 0.2 } }}
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900 dark:text-blue-300 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors">
-                    {reason.icon}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 border-2 border-gray-900 dark:border-white group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
+                    <div className="text-gray-900 dark:text-white">
+                      {reason.icon}
+                    </div>
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -120,7 +121,7 @@ const WhyChoose: React.FC = () => {
 
           {/* Right: Video */}
           <motion.div
-            className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden shadow-xl"
+            className="relative h-96 lg:h-[500px] rounded-xl overflow-hidden shadow-xl border border-gray-200 dark:border-gray-700"
             whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
           >
             {/* Cover image with play button */}
@@ -150,7 +151,7 @@ const WhyChoose: React.FC = () => {
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <FaPlay className="w-8 h-8 text-blue-600 ml-1" />
+                  <FaPlay className="w-8 h-8 text-gray-900 ml-1" />
                 </motion.div>
               </motion.div>
             )}

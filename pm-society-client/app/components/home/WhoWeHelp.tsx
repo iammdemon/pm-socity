@@ -14,14 +14,14 @@ const services = [
     title: "Coach",
     description:
       "Get personalized 1:1 support to help you plan, prepare, and succeed in your journey.",
-    icon: <FaChalkboardTeacher className="h-8 w-8 dark:text-blue-400" />,
+    icon: <FaChalkboardTeacher className="h-8 w-8" />,
     image: "/image/coach.webp",
   },
   {
     title: "Mentor",
     description:
       "Partner with a seasoned PM for career guidance, real-world insight, and post-certification growth.",
-    icon: <FaHandsHelping className="h-8 w-8 dark:text-blue-400" />,
+    icon: <FaHandsHelping className="h-8 w-8" />,
     image: "/image/mentor-3.webp",
   },
 ];
@@ -39,7 +39,6 @@ const containerVariants = {
 };
 
 // Card animation
-// Card animation
 const cardVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -49,10 +48,9 @@ const cardVariants = {
   },
 };
 
-
 const WhoWeHelp: React.FC = () => {
   return (
-    <section id="who-we-help" className="py-20 md:px-12">
+    <section id="who-we-help" className="py-20 md:px-12 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto px-4">
         <motion.div
           className="text-center mb-12"
@@ -61,7 +59,7 @@ const WhoWeHelp: React.FC = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <span className="text-sm font-semibold uppercase tracking-wider">
+          <span className="inline-block px-3 py-1 mb-4 text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white bg-gray-200 dark:bg-gray-800 rounded-full">
             Who We Help
           </span>
           <h2
@@ -69,7 +67,7 @@ const WhoWeHelp: React.FC = () => {
           >
             Empowering Every Step of Your PM Journey
           </h2>
-          <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Whether you&apos;re just getting started or leading at a senior
             level, TPMS offers personalized support, practical resources, and a
             community built for your growth.
@@ -86,7 +84,7 @@ const WhoWeHelp: React.FC = () => {
           {services.map((service, index) => (
             <motion.div
               key={index}
-              className="relative bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 group"
+              className="relative bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group border border-gray-200 dark:border-gray-700"
               variants={cardVariants}
               whileHover={{ y: -5, scale: 1.02, transition: { duration: 0.3 } }}
             >
@@ -95,13 +93,15 @@ const WhoWeHelp: React.FC = () => {
                   src={service.image}
                   alt={`${service.title} illustration`}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/70 via-transparent to-transparent" />
               </div>
-              <div className="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 mx-auto mb-4">
-                {service.icon}
+              <div className="flex items-center justify-center h-12 w-12 rounded-full bg-gray-100 dark:bg-gray-700 mx-auto mb-4 border-2 border-gray-900 dark:border-white">
+                <div className="text-gray-900 dark:text-white">
+                  {service.icon}
+                </div>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white text-center">
                 {service.title}

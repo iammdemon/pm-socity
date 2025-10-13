@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { LuMenu, LuX } from "react-icons/lu";
+import { ModeToggle } from "./ModeToggle";
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -165,6 +166,7 @@ const AuthenticatedDesktopButtons = ({
     >
       Logout
     </button>
+    <ModeToggle/>
   </div>
 );
 

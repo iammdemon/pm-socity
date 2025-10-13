@@ -57,7 +57,7 @@ const WhatWeOffer = () => {
   ];
 
   return (
-    <section id="offerings" className="py-20 px-4 ">
+    <section id="offerings" className="py-20 px-4 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto max-w-6xl">
         <motion.div
           className="text-center mb-16"
@@ -66,8 +66,17 @@ const WhatWeOffer = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
+          <motion.span
+            className="inline-block px-3 py-1 mb-4 text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white bg-gray-200 dark:bg-gray-800 rounded-full"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            What We Offer
+          </motion.span>
           <motion.h2
-            className={`text-3xl md:text-5xl font-bold mb-4 text-gray-900 ${bonVivant.className}`}
+            className={`text-3xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white ${bonVivant.className}`}
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -76,7 +85,7 @@ const WhatWeOffer = () => {
             What We Offer
           </motion.h2>
           <motion.p
-            className="text-xl text-gray-700 max-w-2xl mx-auto"
+            className="text-xl text-gray-700 dark:text-gray-400 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -97,7 +106,7 @@ const WhatWeOffer = () => {
           {offerings.map((offering, index) => (
             <motion.div
               key={index}
-              className="relative bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden group cursor-pointer"
+              className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group cursor-pointer"
               initial={{ opacity: 0, y: 80, scale: 0.8 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
@@ -117,7 +126,7 @@ const WhatWeOffer = () => {
             >
               {/* Gradient overlay on hover */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-purple-600/5"
+                className="absolute inset-0 bg-gradient-to-br from-gray-900/5 to-gray-900/10 dark:from-white/5 dark:to-white/10"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
@@ -127,15 +136,15 @@ const WhatWeOffer = () => {
               <motion.div
                 className="absolute inset-0 border-2 border-transparent rounded-lg"
                 whileHover={{
-                  borderColor: "#3b82f6",
-                  boxShadow: "0 20px 40px rgba(59, 130, 246, 0.15)",
+                  borderColor: "#000000",
+                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.15)",
                 }}
                 transition={{ duration: 0.3 }}
               />
 
               {offering.badge && (
                 <motion.div
-                  className="absolute top-3 left-4 bg-black text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg"
+                  className="absolute top-3 left-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-1 rounded-full text-sm font-medium shadow-lg"
                   initial={{ scale: 0, rotate: -180 }}
                   whileInView={{ scale: 1, rotate: 0 }}
                   viewport={{ once: true }}
@@ -157,15 +166,15 @@ const WhatWeOffer = () => {
               <div className="p-8 relative z-10">
                 <div className="text-center mb-6">
                   <motion.div
-                    className="mx-auto mb-4 p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full w-fit"
+                    className="mx-auto mb-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-full w-fit border-2 border-gray-900 dark:border-white"
                     whileHover={{
                       scale: 1.1,
                       rotate: 360,
-                      background: "linear-gradient(135deg, #dbeafe, #bfdbfe)",
                     }}
                     transition={{ duration: 0.5 }}
                   >
                     <motion.div
+                      className="text-gray-900 dark:text-white"
                       whileHover={{ scale: 1.2 }}
                       transition={{ duration: 0.3 }}
                     >
@@ -174,7 +183,7 @@ const WhatWeOffer = () => {
                   </motion.div>
 
                   <motion.h3
-                    className="text-xl font-bold mb-2 text-gray-900"
+                    className="text-xl font-bold mb-2 text-gray-900 dark:text-white"
                     initial={{ opacity: 0, x: -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -184,7 +193,7 @@ const WhatWeOffer = () => {
                   </motion.h3>
 
                   <motion.p
-                    className="text-gray-600"
+                    className="text-gray-600 dark:text-gray-400"
                     initial={{ opacity: 0, x: 30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -215,15 +224,16 @@ const WhatWeOffer = () => {
                       whileHover={{ x: 5 }}
                     >
                       <motion.div
+                        className="text-gray-900 dark:text-white"
                         whileHover={{
                           scale: 1.3,
                           rotate: 360,
                         }}
                         transition={{ duration: 0.3 }}
                       >
-                        <BiCheckCircle className="h-5 w-5  mt-0.5 flex-shrink-0" />
+                        <BiCheckCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
                       </motion.div>
-                      <span className="text-sm text-gray-700">{feature}</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-400">{feature}</span>
                     </motion.li>
                   ))}
                 </motion.ul>

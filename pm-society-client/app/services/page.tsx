@@ -11,13 +11,12 @@ import {
 } from "react-icons/fi";
 
 import ServiceCard from "../components/services/ServiceCard";
-import Planning from "../components/services/Planning";
-
 import localFont from "next/font/local";
 import Image from "next/image";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 import Link from "next/link";
+import Planning from "../components/services/Planning";
 
 const bonVivant = localFont({
   src: "../../public/fonts/BonVivantSerifBold.ttf",
@@ -159,7 +158,7 @@ export default function ServicesPage() {
     <>
       <Header />
 
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
         {/* Hero Section - Responsive Height */}
         <section className="relative w-full overflow-hidden min-h-[400px] md:min-h-screen flex items-center">
           {/* Background Image */}
@@ -172,14 +171,14 @@ export default function ServicesPage() {
               className="object-cover object-center"
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-black/30" />
+            <div className="absolute inset-0 bg-black/40 dark:bg-black/60" />
           </div>
 
           {/* Content */}
           <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center py-16 sm:py-20 md:py-28">
             <div className="text-center w-full max-w-4xl">
               {/* Tagline */}
-              <div className="inline-flex items-center gap-2 px-3 sm:px-5 py-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 shadow-lg">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-5 py-2 bg-white/10 dark:bg-black/30 backdrop-blur-sm border border-white/20 dark:border-white/10 text-white rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 shadow-lg">
                 <span className="tracking-wide">
                   Professional Development & Networking Platform
                 </span>
@@ -193,7 +192,7 @@ export default function ServicesPage() {
               </h1>
 
               {/* Subtitle */}
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed max-w-2xl mx-auto px-2 sm:px-4">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto px-2 sm:px-4">
                 Strategic training, mentorship, and community support designed
                 to grow confident project leaders and drive real impact.
               </p>
@@ -202,24 +201,24 @@ export default function ServicesPage() {
         </section>
 
         {/* Services Cards Section */}
-        <section id="services" className="py-8 lg:py-12 bg-[#ECE8E1]">
+        <section id="services" className="py-8 lg:py-12 bg-[#ECE8E1] dark:bg-gray-800 transition-colors duration-300">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 sm:mb-16">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 border border-amber-200 text-amber-800 rounded-full text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 rounded-full text-sm font-medium mb-6">
                 <FiClock className="h-4 w-4" />
                 <span>Services launching Q1 2026</span>
               </div>
               <h2
-                className={`${bonVivant.className} text-2xl sm:text-3xl lg:text-4xl font-black text-black mb-3 sm:mb-4`}
+                className={`${bonVivant.className} text-2xl sm:text-3xl lg:text-4xl font-black text-black dark:text-white mb-3 sm:mb-4`}
               >
                 Our Services
               </h2>
-              <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
+              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4">
                 From certification to career elevation, our services are here to
                 guide every step of your journey.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 s">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
               {services.map((service, index) => (
                 <ServiceCard key={index} {...service} />
               ))}
@@ -228,20 +227,20 @@ export default function ServicesPage() {
         </section>
 
         {/* PMP Certification Feature Section */}
-        <section id="pmp" className="py-12 sm:py-16 lg:py-20 bg-[#f8f9fa]">
+        <section id="pmp" className="py-12 sm:py-16 lg:py-20 bg-[#f8f9fa] dark:bg-gray-900 transition-colors duration-300">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
               <div className="order-2 lg:order-1">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-black text-white rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-black dark:bg-white text-white dark:text-black rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
                   <FiAward className="h-3 w-3 sm:h-4 sm:w-4" />
                   98% Pass Rate
                 </div>
                 <h2
-                  className={`${bonVivant.className} text-2xl sm:text-3xl lg:text-4xl font-black text-black mb-3 sm:mb-4`}
+                  className={`${bonVivant.className} text-2xl sm:text-3xl lg:text-4xl font-black text-black dark:text-white mb-3 sm:mb-4`}
                 >
                   Certification and Career Growth Programs
                 </h2>
-                <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 leading-relaxed">
+                <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 leading-relaxed">
                   Whether you&apos;re just getting started or ready to certify,
                   our programs provide expert instruction, mentorship, and the
                   support you need to lead with confidence.
@@ -249,27 +248,27 @@ export default function ServicesPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <FiClock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-700" />
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <FiClock className="h-4 w-4 sm:h-5 sm:w-5 text-gray-700 dark:text-gray-300" />
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 text-sm sm:text-base">
+                      <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
                         Live Virtual Sessions
                       </p>
-                      <p className="text-xs sm:text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                         PMI Required Training
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <FiUsers className="h-4 w-4 sm:h-5 sm:w-5 text-gray-700" />
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <FiUsers className="h-4 w-4 sm:h-5 sm:w-5 text-gray-700 dark:text-gray-300" />
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-900 text-sm sm:text-base">
+                      <p className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">
                         Small Classes
                       </p>
-                      <p className="text-xs sm:text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                         Personalized Attention
                       </p>
                     </div>
@@ -278,27 +277,27 @@ export default function ServicesPage() {
 
                 <Link
                   href="enroll"
-                  className="group bg-gray-900 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-gray-800 transition-all duration-200 inline-flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="group bg-black dark:bg-white text-white dark:text-black px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 inline-flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   Enroll Now
                 </Link>
               </div>
 
               <div className="order-1 lg:order-2 relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl transform rotate-3"></div>
-                <div className="relative bg-white rounded-2xl p-6 sm:p-8 shadow-xl">
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-200 dark:from-gray-700 to-gray-300 dark:to-gray-600 rounded-2xl transform rotate-3"></div>
+                <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl">
                   <div className="text-center">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black rounded-2xl mx-auto mb-4 sm:mb-6 flex items-center justify-center">
-                      <FiAward className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black dark:bg-white rounded-2xl mx-auto mb-4 sm:mb-6 flex items-center justify-center">
+                      <FiAward className="h-8 w-8 sm:h-10 sm:w-10 text-white dark:text-black" />
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
                       Get Certified
                     </h3>
-                    <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
+                    <p className="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">
                       Expert-led training with community support and our
                       commitment to your success.
                     </p>
-                    <div className="flex items-center justify-center gap-2 text-black font-semibold text-sm sm:text-base">
+                    <div className="flex items-center justify-center gap-2 text-black dark:text-white font-semibold text-sm sm:text-base">
                       <FiCheck className="h-4 w-4 sm:h-5 sm:w-5" />
                       Backed by The Society Standard
                     </div>
@@ -310,24 +309,24 @@ export default function ServicesPage() {
         </section>
 
         {/* Executive Coaching Section */}
-        <section id="executive-coaching" className="py-12 sm:py-16 lg:py-20">
+        <section id="executive-coaching" className="py-12 sm:py-16 lg:py-20 bg-white dark:bg-gray-800 transition-colors duration-300">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
               <div className="order-2 lg:order-1 relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl transform -rotate-3"></div>
-                <div className="relative bg-white rounded-2xl p-6 sm:p-8 shadow-xl">
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-200 dark:from-gray-700 to-gray-300 dark:to-gray-600 rounded-2xl transform -rotate-3"></div>
+                <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 shadow-xl">
                   <div className="text-center">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black rounded-2xl mx-auto mb-4 sm:mb-6 flex items-center justify-center">
-                      <FiUser className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-black dark:bg-white rounded-2xl mx-auto mb-4 sm:mb-6 flex items-center justify-center">
+                      <FiUser className="h-8 w-8 sm:h-10 sm:w-10 text-white dark:text-black" />
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
                       1-on-1 Mentorship
                     </h3>
-                    <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
+                    <p className="text-gray-600 dark:text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">
                       Career-aligned support from experienced project leaders to
                       help you grow with clarity, connection, and confidence.
                     </p>
-                    <div className="flex items-center justify-center gap-2 text-black font-semibold text-sm sm:text-base">
+                    <div className="flex items-center justify-center gap-2 text-black dark:text-white font-semibold text-sm sm:text-base">
                       <FiTarget className="h-4 w-4 sm:h-5 sm:w-5" />
                       Tailored Approach
                     </div>
@@ -336,16 +335,16 @@ export default function ServicesPage() {
               </div>
 
               <div className="order-1 lg:order-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-black text-white rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-black dark:bg-white text-white dark:text-black rounded-full text-xs sm:text-sm font-medium mb-4 sm:mb-6">
                   <FiUsers className="h-3 w-3 sm:h-4 sm:w-4" />
                   Executive Level
                 </div>
                 <h2
-                  className={`${bonVivant.className} text-2xl sm:text-3xl lg:text-4xl font-black text-black mb-3 sm:mb-4`}
+                  className={`${bonVivant.className} text-2xl sm:text-3xl lg:text-4xl font-black text-black dark:text-white mb-3 sm:mb-4`}
                 >
                   Executive Coaching
                 </h2>
-                <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 leading-relaxed">
+                <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 leading-relaxed">
                   Personalized leadership support designed to elevate how you
                   think, lead, and deliver impact.
                 </p>
@@ -358,10 +357,10 @@ export default function ServicesPage() {
                     "Built to support bold leadership through change, complexity, and growth",
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
-                        <FiCheck className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-gray-700" />
+                      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <FiCheck className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-gray-700 dark:text-gray-300" />
                       </div>
-                      <span className="text-gray-700 text-sm sm:text-base">
+                      <span className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
                         {item}
                       </span>
                     </div>
@@ -370,7 +369,7 @@ export default function ServicesPage() {
 
                 <Link
                   href="enroll"
-                  className="group bg-gray-900 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-gray-800 transition-all duration-200 inline-flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="group bg-black dark:bg-white text-white dark:text-black px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 inline-flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   Enroll Now
                 </Link>

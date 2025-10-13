@@ -1,9 +1,3 @@
-import localFont from "next/font/local";
-
-const bonVivant = localFont({
-  src: "../../../public/fonts/BonVivantSerifBold.ttf",
-});
-
 const Planning = () => {
   const process = [
     {
@@ -41,16 +35,17 @@ const Planning = () => {
   return (
     <div>
       {/* Process Section */}
-      <section className="py-16 bg-[#ECE8E1]">
+      <section className="py-16 bg-[#ECE8E1] dark:bg-gray-900 transition-colors duration-300">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
-              <h2
-                className={`${bonVivant.className} text-2xl md:text-4xl font-black text-black mb-4`}
-              >
+              <span className="inline-block px-3 py-1 mb-4 text-sm font-semibold uppercase tracking-wider text-black dark:text-white bg-gray-200 dark:bg-gray-800 rounded-full">
+                Our Process
+              </span>
+              <h2 className="text-2xl md:text-4xl font-black text-black dark:text-white mb-4">
                 The Society Lifecycle
               </h2>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
                 Our framework mirrors the PMI project lifecycle—so members not
                 only prepare for certification but also experience the
                 discipline in action.
@@ -59,16 +54,16 @@ const Planning = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
               {process.map((item, index) => (
-                <div key={index} className="text-center relative">
-                  <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
+                <div key={index} className="text-center relative group">
+                  <div className="w-16 h-16 bg-black dark:bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-white dark:text-black font-bold text-xl shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:rotate-5">
                     {item.step}
                   </div>
-                  <h3 className="text-xl font-semibold text-slate-900 mb-3">
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-gray-600">{item.description}</p>
+                  <p className="text-gray-600 dark:text-gray-400">{item.description}</p>
                   {index < process.length - 1 && (
-                    <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-black transform -translate-x-20"></div>
+                    <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-black dark:bg-white transform -translate-x-20"></div>
                   )}
                 </div>
               ))}

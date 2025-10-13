@@ -11,10 +11,10 @@ const bonVivant = localFont({
 
 export default function VideoSection() {
   return (
-    <section className="py-16 relative overflow-hidden">
+    <section className="py-16 relative overflow-hidden dark:bg-gray-900 transition-colors duration-300">
       {/* Subtle Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.1),transparent_70%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_70%)]" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -25,8 +25,17 @@ export default function VideoSection() {
           transition={{ duration: 0.6, ease: [0.42, 0, 0.58, 1] as [number, number, number, number] }}
           viewport={{ once: true }}
         >
+          <motion.span
+            className="inline-block px-3 py-1 mb-4 text-sm font-semibold uppercase tracking-wider text-gray-900 dark:text-white bg-gray-200 dark:bg-gray-800 rounded-full"
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05, ease: [0.42, 0, 0.58, 1] as [number, number, number, number] }}
+            viewport={{ once: true }}
+          >
+            Video
+          </motion.span>
           <motion.h2
-            className={`${bonVivant.className} text-2xl md:text-5xl font-bold text-gray-900 mb-4`}
+            className={`${bonVivant.className} text-2xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4`}
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.42, 0, 0.58, 1] as [number, number, number, number] }}
@@ -35,7 +44,7 @@ export default function VideoSection() {
             See How TPMS Supports the
           </motion.h2>
           <motion.h2
-            className={`${bonVivant.className} text-3xl md:text-5xl font-bold text-gray-900 mb-4`}
+            className={`${bonVivant.className} text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4`}
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.42, 0, 0.58, 1] as [number, number, number, number] }}
@@ -45,7 +54,7 @@ export default function VideoSection() {
           </motion.h2>
 
           <motion.p
-            className="text-base text-gray-600 leading-relaxed"
+            className="text-base text-gray-600 dark:text-gray-400 leading-relaxed"
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.42, 0, 0.58, 1] as [number, number, number, number] }}
@@ -92,9 +101,9 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
       transition={{ duration: 0.3 }}
     >
       {/* Subtle Shadow */}
-      <div className="absolute -inset-2 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500" />
+      <div className="absolute -inset-2 bg-gradient-to-r from-gray-900/10 via-gray-500/10 to-gray-900/10 dark:from-white/10 dark:via-gray-300/10 dark:to-white/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition duration-500" />
 
-      <div className="relative overflow-hidden rounded-xl bg-white shadow-lg border border-gray-100 group-hover:shadow-xl transition-shadow duration-300">
+      <div className="relative overflow-hidden rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 group-hover:shadow-xl transition-shadow duration-300">
         <AnimatePresence mode="wait">
           {isPlaying ? (
             <motion.div
@@ -157,7 +166,7 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
 
                 {/* Play Icon */}
                 <motion.div
-                  className="relative z-10 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg group-hover/btn:shadow-xl transition-shadow duration-300"
+                  className="relative z-10 w-16 h-16 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-lg group-hover/btn:shadow-xl transition-shadow duration-300 border-2 border-gray-900 dark:border-white"
                   whileHover={{ scale: 1.1 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -166,7 +175,7 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
                     height="24"
                     viewBox="0 0 24 24"
                     fill="none"
-                    className="text-blue-600 ml-0.5"
+                    className="text-gray-900 dark:text-white ml-0.5"
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.5, duration: 0.3, ease: [0.42, 0, 0.58, 1] as [number, number, number, number] }}

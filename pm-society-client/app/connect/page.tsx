@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-
   Mail,
   Phone,
   Send,
@@ -11,7 +10,6 @@ import {
   User,
   MessageCircle,
   Sparkles,
- 
 } from "lucide-react";
 
 // shadcn/ui components
@@ -36,8 +34,6 @@ export interface ContactData {
   message: string;
 }
 
-
-
 // Animation variants
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -56,7 +52,7 @@ const staggerContainer = {
 const scaleIn = {
   initial: { opacity: 0, scale: 0.8 },
   animate: { opacity: 1, scale: 1 },
-  transition: { duration: 0.5, ease: [0.42, 0, 0.58, 1]},
+  transition: { duration: 0.5, ease: [0.42, 0, 0.58, 1] },
 };
 
 const FloatingParticles = () => (
@@ -64,7 +60,7 @@ const FloatingParticles = () => (
     {[...Array(6)].map((_, i) => (
       <motion.div
         key={i}
-        className="absolute w-2 h-2 bg-white/20 rounded-full"
+        className="absolute w-2 h-2 bg-white/20 dark:bg-black/20 rounded-full"
         initial={{
           x:
             Math.random() *
@@ -92,7 +88,7 @@ const FloatingParticles = () => (
 );
 
 export default function ContactPage() {
-const [submitContactForm] = useSubmitContactFormMutation();
+  const [submitContactForm] = useSubmitContactFormMutation();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -102,7 +98,6 @@ const [submitContactForm] = useSubmitContactFormMutation();
     formState: { errors },
     reset,
   } = useForm<ContactData>();
-
 
   const onSubmit = async (data: ContactData) => {
     setIsLoading(true);
@@ -118,44 +113,39 @@ const [submitContactForm] = useSubmitContactFormMutation();
     }
   };
 
-
   return (
     <>
       <Header />
-      <div
-        className="min-h-screen relative overflow-hidden"
-        style={{ backgroundColor: "#333333" }}
-      >
+      <div className="min-h-screen relative overflow-hidden bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
         <FloatingParticles />
 
         {/* Animated Background */}
-      <motion.div
-  className="absolute inset-0 z-0"
-  initial={{ scale: 1.15 }}
-  animate={{ scale: 1 }}
-  transition={{
-    duration: 25,
-    repeat: Infinity,
-    repeatType: "reverse",
-    ease: "easeInOut",
-  }}
->
-  {/* Soft pastel gradient overlay for depth */}
-  <div className="absolute inset-0 bg-gradient-to-br from-blue-200/30 via-purple-200/20 to-pink-200/30" />
+        <motion.div
+          className="absolute inset-0 z-0"
+          initial={{ scale: 1.15 }}
+          animate={{ scale: 1 }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut",
+          }}
+        >
+          {/* Soft gradient overlay for depth */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-200/30 dark:from-gray-800/30 via-gray-300/20 dark:via-gray-700/20 to-gray-200/30 dark:to-gray-800/30" />
 
-  {/* Background Image with better scaling */}
-  <div
-    className="absolute inset-0 bg-contain md:bg-cover bg-center opacity-70"
-    style={{
-      backgroundImage: "url('/image/connect.webp')",
-    }}
-  />
+          {/* Background Image with better scaling */}
+          <div
+            className="absolute inset-0 bg-contain md:bg-cover bg-center opacity-70"
+            style={{
+              backgroundImage: "url('/image/connect.webp')",
+            }}
+          />
 
-  {/* Top + Bottom Gradient Overlays for readability */}
-  <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/30" />
-  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
-</motion.div>
-
+          {/* Top + Bottom Gradient Overlays for readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 dark:from-black/60 via-transparent to-black/30 dark:to-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 dark:from-black/40 via-transparent to-black/10 dark:to-black/30" />
+        </motion.div>
 
         {/* Hero Section */}
         <section className="relative pt-16 pb-12 z-10">
@@ -169,7 +159,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
               <motion.div variants={fadeInUp}>
                 <Badge
                   variant="outline"
-                  className="my-6  bg-white/20 backdrop-blur-sm border-black/20 text-black hover:bg-white/30 transition-all duration-300 text-xs sm:text-sm py-1 sm:py-2 px-3 sm:px-4"
+                  className="my-6 bg-white/20 dark:bg-gray-800/20 backdrop-blur-sm border-black/20 dark:border-white/20 text-black dark:text-white hover:bg-white/30 dark:hover:bg-gray-700/30 transition-all duration-300 text-xs sm:text-sm py-1 sm:py-2 px-3 sm:px-4"
                 >
                   <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                   Get in Touch
@@ -177,14 +167,14 @@ const [submitContactForm] = useSubmitContactFormMutation();
               </motion.div>
 
               <motion.h1
-                className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-300 mb-4 sm:mb-6 leading-tight"
+                className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 leading-tight"
                 variants={fadeInUp}
               >
                 Let&apos;s Create Something Amazing Together
               </motion.h1>
 
               <motion.p
-                className="  md:text-xl text-gray-300 max-w-xl sm:max-w-2xl mx-auto leading-relaxed"
+                className="md:text-xl text-gray-700 dark:text-gray-300 max-w-xl sm:max-w-2xl mx-auto leading-relaxed"
                 variants={fadeInUp}
               >
                 Ready to transform your project management journey? Our expert
@@ -194,7 +184,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
           </div>
         </section>
 
-       <section className="relative py-5 z-10">
+        <section className="relative py-5 z-10">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 max-w-7xl mx-auto"
@@ -204,7 +194,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
             >
               {/* Contact Form */}
               <motion.div variants={fadeInUp}>
-                <Card className="bg-white/70 backdrop-blur-xl border-white/30 shadow-2xl w-full">
+                <Card className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl border-white/30 dark:border-gray-700 shadow-2xl w-full">
                   <CardContent className="p-6">
                     <AnimatePresence mode="wait">
                       {isSubmitted ? (
@@ -216,7 +206,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
                           exit={{ opacity: 0, scale: 0.8 }}
                         >
                           <motion.div
-                            className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black mb-6 sm:mb-8"
+                            className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black dark:bg-white mb-6 sm:mb-8"
                             animate={{
                               scale: [1, 1.2, 1],
                               rotate: [0, 360],
@@ -227,18 +217,18 @@ const [submitContactForm] = useSubmitContactFormMutation();
                               repeatDelay: 2,
                             }}
                           >
-                            <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                            <CheckCircle className="h-8 w-8 sm:h-10 sm:w-10 text-white dark:text-black" />
                           </motion.div>
-                          <h3 className="text-2xl sm:text-3xl font-bold text-black mb-4">
+                          <h3 className="text-2xl sm:text-3xl font-bold text-black dark:text-white mb-4">
                             Message Sent! 🚀
                           </h3>
-                          <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-lg">
+                          <p className="text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 text-sm sm:text-lg">
                             Thanks for reaching out! We&apos;ll get back to you
                             within 24 hours.
                           </p>
                           <Button
                             onClick={() => setIsSubmitted(false)}
-                            className="bg-black hover:bg-gray-800 text-white text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
+                            className="bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-black text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
                             size="lg"
                           >
                             Send Another Message
@@ -254,15 +244,15 @@ const [submitContactForm] = useSubmitContactFormMutation();
                           className="space-y-1"
                         >
                           <CardHeader className="px-0 pt-0">
-                            <CardTitle className="text-xl sm:text-3xl font-bold text-black flex items-center py-3.5">
-                              <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-black mr-2 sm:mr-3" />
+                            <CardTitle className="text-xl sm:text-3xl font-bold text-black dark:text-white flex items-center py-3.5">
+                              <MessageCircle className="h-6 w-6 sm:h-8 sm:w-8 text-black dark:text-white mr-2 sm:mr-3" />
                               Step into the Society
                             </CardTitle>
                           </CardHeader>
 
                           {/* Name */}
                           <div>
-                            <Label className="text-black flex items-center font-medium text-sm sm:text-base">
+                            <Label className="text-black dark:text-white flex items-center font-medium text-sm sm:text-base">
                               <User className="h-4 w-4 mr-2" />
                               Full Name *
                             </Label>
@@ -271,7 +261,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
                               {...register("name", {
                                 required: "Name is required",
                               })}
-                              className={`bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base ${
+                              className={`bg-white/50 dark:bg-gray-800/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 dark:border-gray-600 focus:border-black dark:focus:border-white focus:ring-black/20 dark:focus:ring-white/20 focus:bg-white/70 dark:focus:bg-gray-800/70 transition-all text-sm sm:text-base ${
                                 errors.name ? "border-red-500" : ""
                               }`}
                               placeholder="John Doe"
@@ -287,7 +277,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
 
                           {/* Email */}
                           <div>
-                            <Label className="text-black flex items-center font-medium text-sm sm:text-base">
+                            <Label className="text-black dark:text-white flex items-center font-medium text-sm sm:text-base">
                               <Mail className="h-4 w-4 mr-2" />
                               Email Address *
                             </Label>
@@ -300,7 +290,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
                                   message: "Invalid email address",
                                 },
                               })}
-                              className={`bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base ${
+                              className={`bg-white/50 dark:bg-gray-800/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 dark:border-gray-600 focus:border-black dark:focus:border-white focus:ring-black/20 dark:focus:ring-white/20 focus:bg-white/70 dark:focus:bg-gray-800/70 transition-all text-sm sm:text-base ${
                                 errors.email ? "border-red-500" : ""
                               }`}
                               placeholder="john@example.com"
@@ -316,21 +306,21 @@ const [submitContactForm] = useSubmitContactFormMutation();
 
                           {/* Phone (optional) */}
                           <div>
-                            <Label className="text-black flex items-center font-medium text-sm sm:text-base">
+                            <Label className="text-black dark:text-white flex items-center font-medium text-sm sm:text-base">
                               <Phone className="h-4 w-4 mr-2" />
                               Phone Number
                             </Label>
                             <Input
                               type="tel"
                               {...register("phone")}
-                              className="bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base"
+                              className="bg-white/50 dark:bg-gray-800/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 dark:border-gray-600 focus:border-black dark:focus:border-white focus:ring-black/20 dark:focus:ring-white/20 focus:bg-white/70 dark:focus:bg-gray-800/70 transition-all text-sm sm:text-base"
                               placeholder="+1 (555) 123-4567"
                             />
                           </div>
 
                           {/* Message */}
                           <div>
-                            <Label className="text-black flex items-center font-medium text-sm sm:text-base">
+                            <Label className="text-black dark:text-white flex items-center font-medium text-sm sm:text-base">
                               <MessageCircle className="h-4 w-4 mr-2" />
                               Message *
                             </Label>
@@ -339,7 +329,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
                               {...register("message", {
                                 required: "Message is required",
                               })}
-                              className={`resize-none bg-white/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 focus:border-black focus:ring-black/20 focus:bg-white/70 transition-all text-sm sm:text-base ${
+                              className={`resize-none bg-white/50 dark:bg-gray-800/50 py-4 sm:py-5 backdrop-blur-sm border-white/30 dark:border-gray-600 focus:border-black dark:focus:border-white focus:ring-black/20 dark:focus:ring-white/20 focus:bg-white/70 dark:focus:bg-gray-800/70 transition-all text-sm sm:text-base ${
                                 errors.message ? "border-red-500" : ""
                               }`}
                               placeholder="Tell us about your project or how we can help you..."
@@ -357,13 +347,13 @@ const [submitContactForm] = useSubmitContactFormMutation();
                           <Button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-black hover:bg-gray-800 text-white text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
+                            className="w-full bg-black dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-black text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
                             size="lg"
                           >
                             {isLoading ? (
                               <>
                                 <motion.div
-                                  className="h-4 w-4 sm:h-5 sm:w-5 border-2 border-white border-t-transparent rounded-full mr-2"
+                                  className="h-4 w-4 sm:h-5 sm:w-5 border-2 border-white dark:border-black border-t-transparent rounded-full mr-2"
                                   animate={{ rotate: 360 }}
                                   transition={{
                                     duration: 1,
@@ -391,7 +381,7 @@ const [submitContactForm] = useSubmitContactFormMutation();
             </motion.div>
           </div>
         </section>
-        <BookWithCalendly/>
+        <BookWithCalendly />
       </div>
       <Footer />
     </>
