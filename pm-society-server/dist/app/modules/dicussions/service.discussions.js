@@ -24,6 +24,7 @@ const createTopic = (payload, userEmail) => __awaiter(void 0, void 0, void 0, fu
 });
 const getAllTopics = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield model_discussions_1.ForumTopic.find()
+        .sort({ createdAt: -1 })
         .populate("author", "name username email")
         .populate("reactions", "name username email")
         .populate("replies.author", "name username email");

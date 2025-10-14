@@ -18,10 +18,12 @@ const createTopic = async (payload: IForumTopic, userEmail: string) => {
 
 const getAllTopics = async () => {
   return await ForumTopic.find()
+    .sort({ createdAt: -1 }) 
     .populate("author", "name username email")
     .populate("reactions", "name username email")
     .populate("replies.author", "name username email");
 };
+
 
 const getTopicById = async (topicId: string) => {
   return await ForumTopic.findOne({ topicId })
