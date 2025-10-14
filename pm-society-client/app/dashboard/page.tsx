@@ -11,7 +11,7 @@ const TheExchangePage = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black">
-      <div className=" ">
+      <div className=" px-4 sm:px-6 lg:px-8 py-6 ">
         
        
          

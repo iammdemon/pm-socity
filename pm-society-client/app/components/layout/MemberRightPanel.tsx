@@ -16,6 +16,7 @@ import {
 import { format } from "date-fns";
 import Loading from "@/app/components/functions/Loading";
 import { Card, CardContent } from "@/components/ui/card";
+import { ModeToggle } from "./ModeToggle";
 
 export default function MemberRightPanel() {
   const { data: userData, isLoading: isUserLoading } = useGetMeQuery({});
@@ -30,9 +31,12 @@ export default function MemberRightPanel() {
     <aside className="hidden lg:flex h-screen lg:w-80  flex-shrink-0 bg-white dark:bg-black text-black dark:text-white flex-col border-l border-gray-200 dark:border-gray-800 transition-colors duration-300">
       {/* Profile Header */}
       <div className="relative h-56 w-full dark:bg-black bg-white">
-        <button className="absolute top-4 right-4 w-10 h-10 bg-white/10 dark:bg-black/10 rounded-full flex items-center justify-center hover:bg-white/20 dark:hover:bg-black/20 transition-colors">
-          <Settings className="w-5 h-5 dark:text-white text-black" />
-        </button>
+        <div className="absolute top-4 right-4 flex gap-2">
+          <ModeToggle />
+          <button className="w-10 h-10 bg-white/10 dark:bg-black/10 rounded-full flex items-center justify-center hover:bg-white/20 dark:hover:bg-black/20 transition-colors">
+            <Settings className="w-5 h-5 dark:text-white text-black" />
+          </button>
+        </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-6">
           <div className="flex items-end gap-4">

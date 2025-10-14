@@ -1,14 +1,8 @@
-
-
-
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import {
- 
- 
   TrendingUp,
   Search,
   Trophy,
- 
   Bell,
   AtSign,
   Heart,
@@ -18,6 +12,12 @@ import {
   Zap,
   Target,
   Activity,
+  BookOpen,
+  Calendar,
+  Users,
+  Video,
+ 
+  ExternalLink,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -121,14 +121,14 @@ LogoHeader.displayName = "LogoHeader";
 const ProgressSection = () => {
   const completedCount = modules.filter(m => m.status === "completed").length;
   const inProgressCount = modules.filter(m => m.status === "in-progress").length;
-  const upcomingCount = modules.filter(m => m.status === "upcoming").length;
+
 
   return (
     <section className="mb-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
-          My Progress
+          My Journey
         </h2>
         <div className="flex items-center gap-1">
           <Trophy className="w-4 h-4 text-yellow-500" />
@@ -147,8 +147,8 @@ const ProgressSection = () => {
                   data={progressData}
                   cx="50%"
                   cy="50%"
-                  outerRadius={50}
-                  innerRadius={35}
+                  outerRadius={60}
+                  innerRadius={50}
                   dataKey="value"
                   startAngle={90}
                   endAngle={-270}
@@ -161,8 +161,8 @@ const ProgressSection = () => {
             </ResponsiveContainer>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <span className="text-3xl font-bold text-green-500 block">75%</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">Complete</span>
+                <span className="text-2xl font-bold text-green-500 block">75%</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400 px-2">Complete</span>
               </div>
             </div>
           </div>
@@ -200,7 +200,7 @@ const ProgressSection = () => {
           ))}
         </div>
         
-        <div className="flex justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex justify-evenly gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
           <div className="text-center p-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-600/20 dark:to-purple-600/20">
             <div className="text-lg font-bold text-green-600 dark:text-green-400">{completedCount}</div>
             <div className="text-xs text-gray-500 dark:text-gray-400">Completed</div>
@@ -209,10 +209,6 @@ const ProgressSection = () => {
             <div className="text-lg font-bold text-blue-600 dark:text-blue-400">{inProgressCount}</div>
             <div className="text-xs text-gray-500 dark:text-gray-400">In Progress</div>
           </div>
-          <div className="text-center p-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-600/20 dark:to-purple-600/20">
-            <div className="text-lg font-bold text-gray-500 dark:text-gray-400">{upcomingCount}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">Upcoming</div>
-          </div>
         </div>
       </div>
     </section>
@@ -220,6 +216,111 @@ const ProgressSection = () => {
 }
 
 ProgressSection.displayName = "ProgressSection";
+
+const LearningResources = () => {
+  return (
+    <section className="mb-6">
+      <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
+        Learning Resources
+      </h2>
+      
+      <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-4 shadow-xl">
+        <div className="space-y-3">
+          <Link 
+            href="https://thepmsociety.pmtraining.com/partner-login" 
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-600/20 dark:to-purple-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500">
+                <BookOpen className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">PM LMS Platform</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Course materials & recordings</p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-blue-500 transition-colors" />
+          </Link>
+          
+          <Link 
+            href="https://teams.microsoft.com/l/meetup-join/1234567890" 
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-600/20 dark:to-emerald-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500">
+                <Video className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Live Sessions</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Join instructor-led sessions</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              
+              <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-green-500 transition-colors" />
+            </div>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+LearningResources.displayName = "LearningResources";
+
+const MentorBooking = () => {
+  return (
+    <section className="mb-6">
+      <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
+        One-on-One Sessions
+      </h2>
+      
+      <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-4 shadow-xl">
+        <div className="space-y-3">
+          <Link 
+            href="https://calendly.com/olivia-mcglothen-thepmsociety/30min" 
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-600/20 dark:to-pink-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                <Users className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Olivia McGlothen</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Schedule a coaching session</p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
+          </Link>
+          
+          <Link 
+            href="https://calendly.com/angela-ward-thepmsociety/30min" 
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-orange-100 to-yellow-100 dark:from-orange-600/20 dark:to-yellow-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-orange-500 to-yellow-500">
+                <Calendar className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Angela Ward</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Schedule a mentorship session</p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-orange-500 transition-colors" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+MentorBooking.displayName = "MentorBooking";
 
 const NotificationsSection = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -359,23 +460,6 @@ ActivityCard.displayName = "ActivityCard";
 
 // ---------- Main Component ----------
 export default function MemberLeftPanel({ className = "" }: PanelProps) {
- 
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
   const panelContent = (
     <div className="h-full flex flex-col relative overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-900 dark:to-black">
       {/* Background Effects */}
@@ -387,6 +471,8 @@ export default function MemberLeftPanel({ className = "" }: PanelProps) {
       
       <div className="flex-1 overflow-y-auto p-4 space-y-6 relative z-10">
         <ProgressSection />
+        <LearningResources />
+        <MentorBooking />
         <NotificationsSection />
         <QuickLinks />
         <ActivityCard />
@@ -394,7 +480,6 @@ export default function MemberLeftPanel({ className = "" }: PanelProps) {
     </div>
   );
 
- 
   // Desktop: Always visible sidebar
   return (
     <div className={className}>

@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { ModeToggle } from "./ModeToggle";
+
+
 
 interface NavigationItem {
   name: string;
@@ -91,7 +92,7 @@ const ExchangeHeader: React.FC = () => {
                 isActive={isActive(item.href)}
               />
             ))}
-            <ModeToggle />
+       
           </div>
         </div>
       </div>
