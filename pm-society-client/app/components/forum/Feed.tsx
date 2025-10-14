@@ -48,7 +48,7 @@ const PostFeed = ({
   const [toggleReaction] = useToggleReactionOnTopicMutation();
   const [reactingPostId, setReactingPostId] = useState<string | null>(null);
 
-  // Apply filter if provided
+ 
   const allPosts = forumResponse?.data || [];
   const posts = dataFilter ? dataFilter(allPosts) : allPosts;
 

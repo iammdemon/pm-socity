@@ -13,7 +13,7 @@ import {
   Target,
   Activity,
   BookOpen,
-  Calendar,
+
   Users,
   Video,
  
@@ -298,22 +298,7 @@ const MentorBooking = () => {
             <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
           </Link>
           
-          <Link 
-            href="https://calendly.com/angela-ward-thepmsociety/30min" 
-            target="_blank"
-            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-orange-100 to-yellow-100 dark:from-orange-600/20 dark:to-yellow-600/20 hover:shadow-md transition-all duration-300 group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-orange-500 to-yellow-500">
-                <Calendar className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Angela Ward</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Schedule a mentorship session</p>
-              </div>
-            </div>
-            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-orange-500 transition-colors" />
-          </Link>
+      
         </div>
       </div>
     </section>

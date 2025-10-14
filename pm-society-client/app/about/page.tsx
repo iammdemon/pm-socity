@@ -59,14 +59,7 @@ const teamMembers = [
     image: "/image/olivia.webp",
     achievements: "Strategic Leadership & Delivery",
   },
-  {
-    name: "Angela Ward",
-    credentials: ["PMP®", "CSM", "ATI"],
-    role: "VP, Instructional Operations",
-    bio: "Leading instructional operations, Angela ensures The PM Society's programs are PMI-aligned and scalable. She develops learning experiences that equip project professionals with confidence and clarity.",
-    image: "/image/angela.webp",
-    achievements: "Instructional Operations Development",
-  },
+
   {
     name: "Toni Merrill",
     credentials: ["MBA", "ACC", "Prosci®"],
@@ -406,7 +399,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {teamMembers.map((member, index) => (
                 <div key={index} className="group relative">
                   <div className="absolute inset-0 bg-gray-900/20 dark:bg-white/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-60 transition-all duration-500"></div>
