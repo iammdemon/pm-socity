@@ -62,7 +62,7 @@ ForumTopicSchema.virtual("reactionCount").get(function () {
 ForumTopicSchema.virtual("replyCount").get(function () {
     return this.replies.length;
 });
-ForumTopicSchema.index({ createdAt: 1 });
+ForumTopicSchema.index({ createdAt: -1 });
 exports.ForumTopic = (0, mongoose_1.model)("ForumTopic", ForumTopicSchema);
 exports.Reply = (0, mongoose_1.model)("Reply", ReplySchema);
 exports.Counter = (0, mongoose_1.model)("Counter", CounterSchema);

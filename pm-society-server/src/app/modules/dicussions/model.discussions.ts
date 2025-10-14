@@ -67,7 +67,7 @@ ForumTopicSchema.virtual("replyCount").get(function () {
   return this.replies.length;
 });
 
-ForumTopicSchema.index({ createdAt: 1 });
+ForumTopicSchema.index({ createdAt: -1 });
 
 export const ForumTopic = model<IForumTopic>("ForumTopic", ForumTopicSchema);
 export const Reply = model<IReply>("Reply", ReplySchema);
