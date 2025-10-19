@@ -9,13 +9,17 @@ const loginUser = async (payload: IAuth) => {
   const user = await User.isUserExistsByEmail(payload.email);
   if (!user) throw new Error('User not found');
 
+  console.log(user.password)
+  console.log(payload.password)
+
   const isPasswordValid = await User.isPasswordMatched(payload.password, user.password);
+  console.log(isPasswordValid)
   if (!isPasswordValid) throw new Error('Invalid password');
 
   const jwtPayload = {
     email: user.email,
     role: user.role as string,
-    id: user._id,
+   
   };
 
   const accessToken = createToken(

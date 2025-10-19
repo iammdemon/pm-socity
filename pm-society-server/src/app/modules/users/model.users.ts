@@ -58,11 +58,15 @@ UserSchema.virtual("linkedUsersCount").get(function () {
 // This middleware will run before saving a user document
 UserSchema.pre("save", async function (next) {
   const user = this as IUser;
-  // Hash the password before saving
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(process.env.BCRYPT_SALT_ROUNDS)
-  );
+
+  //  Only hash if the password was changed
+  if (this.isModified("password")) {
+    user.password = await bcrypt.hash(
+      user.password,
+      Number(process.env.BCRYPT_SALT_ROUNDS)
+    );
+  }
+
   next();
 });
 

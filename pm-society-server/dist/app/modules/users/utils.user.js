@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateUsernameFromEmail = void 0;
+exports.resetAllPasswords = exports.generateUsernameFromEmail = void 0;
 const model_users_1 = require("./model.users");
+const DEFAULT_PASSWORD = "NewDefault123";
 // Generate a random string of given length
 const randomString = (length) => {
     const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -33,3 +34,11 @@ const generateUsernameFromEmail = (email) => __awaiter(void 0, void 0, void 0, f
     return username;
 });
 exports.generateUsernameFromEmail = generateUsernameFromEmail;
+const resetAllPasswords = () => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield model_users_1.User.find();
+    for (const user of users) {
+        user.password = DEFAULT_PASSWORD; // raw password
+        yield user.save(); // pre('save') will hash it once
+    }
+});
+exports.resetAllPasswords = resetAllPasswords;

@@ -4,7 +4,7 @@ import catchAsync from "../../utils/catchAsync";
 import { User } from "../users/model.users";
 
 interface AuthRequest extends Request {
-  user?: { id: string; email: string; role: string };
+  user?: { email: string; role: string };
 }
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {

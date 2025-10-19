@@ -2,6 +2,7 @@ import express from "express";
 import { PaymentController } from "./controller.payment";
 import { userController } from "./controller.users";
 import { authenticateJWT } from "../../middlewares/auth";
+import { resetAllPasswords } from "./utils.user";
 
 const router = express.Router();
 
@@ -30,6 +31,15 @@ router.patch("/link/:id", authenticateJWT, userController.toggleLink);
 
 // Utility routes
 router.get("/generate", userController.generateLink);
-router.get("/:userName",authenticateJWT, userController.getUserByUserName);
+router.get("/:userName",authenticateJWT, userController.getUserByUserName)
+router.post("/reset-passwords", async (req, res) => {
+  try {
+    await resetAllPasswords();
+    res.json({ message: "Passwords reset successfully" });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 export const UserRoutes = router;

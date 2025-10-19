@@ -82,7 +82,7 @@ interface User {
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const { data: userData, isLoading: isUserLoading } = useGetMeQuery({});
+  const { data: userData, isLoading: isUserLoading, refetch } = useGetMeQuery({});
   const [updateProfile, { isLoading: isUpdatingProfile }] =
     useUpdateProfileMutation();
   const { data: goalsData, isLoading: isGoalsLoading } = useGetGoalsQuery({});
@@ -153,6 +153,7 @@ export default function EditProfilePage() {
     
     try {
       await updateProfile(profileForm).unwrap();
+      refetch();
       toast.success("Profile updated successfully");
     } catch (error: unknown) {
       // Type guard to check if error has the expected structure

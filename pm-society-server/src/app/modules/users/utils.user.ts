@@ -1,4 +1,8 @@
 import { User } from "./model.users";
+import bcrypt from "bcrypt";
+
+const DEFAULT_PASSWORD = "NewDefault123";
+
 
 
 // Generate a random string of given length
@@ -24,4 +28,14 @@ export const generateUsernameFromEmail = async (email: string) => {
   }
 
   return username;
+};
+
+
+
+export const resetAllPasswords = async () => {
+  const users = await User.find();
+  for (const user of users) {
+    user.password = DEFAULT_PASSWORD; // raw password
+    await user.save(); // pre('save') will hash it once
+  }
 };

@@ -81,11 +81,17 @@ const toggleLink = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     const updatedUser = yield service_users_1.userService.toggleLink(new mongoose_1.Types.ObjectId(linkedUserId), userEmail);
     res.status(200).json({ message: "Link toggled successfully", data: updatedUser });
 }));
+const resetPasswords = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Resetting passwords...");
+    yield (0, utils_user_1.resetAllPasswords)();
+    res.status(200).json({ message: "Passwords reset successfully" });
+}));
 exports.userController = {
     createUser,
     getAllUsers,
     updateUserProfile,
     toggleLink,
     generateLink,
-    getUserByUserName
+    getUserByUserName,
+    resetPasswords
 };

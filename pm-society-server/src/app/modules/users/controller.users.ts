@@ -3,7 +3,7 @@ import { userService } from "./service.users";
 import catchAsync from "../../utils/catchAsync";
 import { JwtPayload } from "jsonwebtoken";
 import { User } from "./model.users";
-import { generateUsernameFromEmail } from "./utils.user";
+import { generateUsernameFromEmail, resetAllPasswords } from "./utils.user";
 import { Types } from "mongoose";
 
 
@@ -82,6 +82,13 @@ const toggleLink = catchAsync(async (req: AuthRequest, res: Response) => {
   res.status(200).json({ message: "Link toggled successfully", data: updatedUser });
 });
 
+const resetPasswords= catchAsync(async (req, res) => {
+
+  console.log("Resetting passwords...");
+  await resetAllPasswords();
+  res.status(200).json({ message: "Passwords reset successfully" });
+});
+
 
 export const userController = {
   createUser,
@@ -89,5 +96,6 @@ export const userController = {
   updateUserProfile,
   toggleLink,
   generateLink,
-  getUserByUserName
+  getUserByUserName,
+  resetPasswords
 };

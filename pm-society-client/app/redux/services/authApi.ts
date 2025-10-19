@@ -15,11 +15,12 @@ const baseQuery = fetchBaseQuery({
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery,
-  tagTypes: ["Goal", "Achievement"], // tags for cache invalidation
+  tagTypes: ["Goal", "Achievement", "User"], // tags for cache invalidation
   endpoints: (builder) => ({
     // 🔒 Authenticated route using token
     getMe: builder.query({
       query: () => ({ url: "/auth/me", method: "GET" }),
+      providesTags: [{ type: "User", id: "ME" }],
     }),
 
     // 🔒 Change password
@@ -40,6 +41,7 @@ export const authApi = createApi({
     // 🔒 Update profile
     updateProfile: builder.mutation({
       query: (body) => ({ url: "/users/profile", method: "PUT", body }),
+      invalidatesTags:[{type:"User", id:"ME"}]
     }),
 
     // 🎯 Goals CRUD

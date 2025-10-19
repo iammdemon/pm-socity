@@ -68,8 +68,10 @@ UserSchema.virtual("linkedUsersCount").get(function () {
 UserSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
         const user = this;
-        // Hash the password before saving
-        user.password = yield bcrypt_1.default.hash(user.password, Number(process.env.BCRYPT_SALT_ROUNDS));
+        //  Only hash if the password was changed
+        if (this.isModified("password")) {
+            user.password = yield bcrypt_1.default.hash(user.password, Number(process.env.BCRYPT_SALT_ROUNDS));
+        }
         next();
     });
 });
