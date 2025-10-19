@@ -83,7 +83,7 @@ console.log(credentials)
       if (token && session.user) {
         session.user.id = token.id as string
         session.user.role = token.role as string
-        
+       
         session.accessToken = token.accessToken as string // Make backend token available
       }
       return session
