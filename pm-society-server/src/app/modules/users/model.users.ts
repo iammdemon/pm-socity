@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import IUser, { UserModel } from "./interface.users";
 
@@ -7,30 +7,52 @@ const UserSchema: Schema<IUser> = new Schema(
     name: { type: String, required: true },
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true },
-    phoneNumber: String,
-    course: String,
-    amount: Number,
+    userName: { type: String, unique: true },
+    title: { type: String },
+    phoneNumber: { type: String },
+    course: { type: String },
+    amount: { type: Number },
     role: { type: String, enum: ["member", "admin"], default: "member" },
     packageType: {
       type: String,
-      enum: ["IGNITE", "ELEVATE", "ASCEND", "THE_SOCIETY", "THE_SOCIETY_PLUS", "BUILD_YOUR_OWN_PATH", "ELEVATE_PILOT"]
+      enum: [
+        "IGNITE",
+        "ELEVATE",
+        "ASCEND",
+        "THE_SOCIETY",
+        "THE_SOCIETY_PLUS",
+        "BUILD_YOUR_OWN_PATH",
+        "ELEVATE_PILOT",
+      ],
     },
     subscriptionType: {
       type: String,
-      enum: ["monthly", "yearly", "one_time"]
+      enum: ["monthly", "yearly", "one_time"],
     },
     subscriptionId: String,
     subscriptionStatus: {
       type: String,
-      enum: ["active", "canceled", "past_due", "unpaid"]
+      enum: ["active", "canceled", "past_due", "unpaid"],
     },
     subscriptionEndDate: Date,
     bio: String,
     avatar: String,
-    linkedUsers: [String],
+    linkedUsers: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
+  }
 );
+
+UserSchema.virtual("linkedUsersCount").get(function () {
+  return this.linkedUsers?.length || 0;
+});
 
 // hash the password before saving
 // This middleware will run before saving a user document
@@ -63,14 +85,13 @@ UserSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(plainTextPassword, hashedPassword);
 };
 
-
 UserSchema.statics.isJWTIssuedBeforePasswordChanged = function (
   passwordChangedTimestamp: Date,
-  jwtIssuedTimestamp: number,
+  jwtIssuedTimestamp: number
 ) {
   const passwordChangedTime =
     new Date(passwordChangedTimestamp).getTime() / 1000;
   return passwordChangedTime > jwtIssuedTimestamp;
 };
 
-export const User = mongoose.model<IUser, UserModel>("User", UserSchema);
+export const User = model<IUser, UserModel>("User", UserSchema);

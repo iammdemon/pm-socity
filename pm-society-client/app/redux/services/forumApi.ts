@@ -6,7 +6,7 @@ import { getSession } from "next-auth/react";
 export interface IUser {
   _id: string;
   name: string;
-  username: string;
+  userName: string;
   email: string;
   avatar: string;
   bio: string;
@@ -25,7 +25,7 @@ export interface IReply {
 export interface IAuthor {
   _id: string;
   name: string;
-  username: string;
+  userName: string;
   avatar: string;
   bio: string;
   email: string;

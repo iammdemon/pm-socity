@@ -1,31 +1,55 @@
-"use client"
+"use client";
 
 import { useGetMeQuery } from "@/app/redux/services/authApi";
 import Image from "next/image";
-import { 
-  Check, 
-  TrendingUp, 
-  Settings, 
+import {
+  Check,
+  TrendingUp,
+  Settings,
   Camera,
   MapPin,
   Mail,
   Phone,
   Globe,
-  Building
+  Building,
+  User,
+  Key,
+  LogOut,
 } from "lucide-react";
 import { format } from "date-fns";
 import Loading from "@/app/components/functions/Loading";
 import { Card, CardContent } from "@/components/ui/card";
 import { ModeToggle } from "./ModeToggle";
+import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { signOut } from "next-auth/react";
 
 export default function MemberRightPanel() {
   const { data: userData, isLoading: isUserLoading } = useGetMeQuery({});
-  
-  if(isUserLoading) {
+  const router = useRouter();
+
+  if (isUserLoading) {
     return <Loading />;
   }
 
   const user = userData?.data || userData;
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await signOut({
+        callbackUrl: "/",
+        redirect: true,
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <aside className="hidden lg:flex h-screen lg:w-80  flex-shrink-0 bg-white dark:bg-black text-black dark:text-white flex-col border-l border-gray-200 dark:border-gray-800 transition-colors duration-300">
@@ -33,9 +57,41 @@ export default function MemberRightPanel() {
       <div className="relative h-56 w-full dark:bg-black bg-white">
         <div className="absolute top-4 right-4 flex gap-2">
           <ModeToggle />
-          <button className="w-10 h-10 bg-white/10 dark:bg-black/10 rounded-full flex items-center justify-center hover:bg-white/20 dark:hover:bg-black/20 transition-colors">
-            <Settings className="w-5 h-5 dark:text-white text-black" />
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-10 h-10 bg-white/10 dark:bg-black/10 rounded-full flex items-center justify-center hover:bg-white/20 dark:hover:bg-black/20 transition-colors">
+                <Settings className="w-5 h-5 dark:text-white text-black" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800"
+            >
+              <DropdownMenuItem
+                onClick={() => router.push("/dashboard/profile")}
+                className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                <User className="w-4 h-4" />
+                <span>Edit Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  router.push("/dashboard/profile/change-password")
+                }
+                className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                <Key className="w-4 h-4" />
+                <span>Change Password</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="flex items-center gap-2 cursor-pointer text-red-500 dark:text-red-400hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-6">
@@ -69,16 +125,18 @@ export default function MemberRightPanel() {
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold dark:text-white text-black">{user?.name || "User"}</h2>
+                <h2 className="text-xl font-bold dark:text-white text-black">
+                  {user?.name || "User"}
+                </h2>
               </div>
-              
+
               <p className="text-sm dark:text-white/80 text-black/80 truncate mt-1">
                 {user?.role || "Member"}
               </p>
               <div className="flex items-center gap-2 flex-wrap mt-2">
                 <div className="flex items-center gap-1 dark:bg-white/10 bg-black/10 px-3 py-1 rounded-full border border-white/20 dark:border-black/20">
                   <span className="text-sm dark:text-white text-black font-medium whitespace-nowrap">
-                    Best Employee
+                    {user?.title || "Not provided"}
                   </span>
                 </div>
               </div>
@@ -94,49 +152,61 @@ export default function MemberRightPanel() {
             <div className="flex items-center gap-3">
               <Mail className="w-4 h-4 text-gray-500 dark:text-gray-400" />
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-gray-500 dark:text-gray-400">Email</p>
-                <p className="text-sm truncate">{user?.email || "Not provided"}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Email
+                </p>
+                <p className="text-sm truncate">
+                  {user?.email || "Not provided"}
+                </p>
               </div>
             </div>
-            
+
             {user?.phone && (
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Phone</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Phone
+                  </p>
                   <p className="text-sm truncate">{user.phone}</p>
                 </div>
               </div>
             )}
-            
+
             {user?.location && (
               <div className="flex items-center gap-3">
                 <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Location</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Location
+                  </p>
                   <p className="text-sm truncate">{user.location}</p>
                 </div>
               </div>
             )}
-            
+
             {user?.company && (
               <div className="flex items-center gap-3">
                 <Building className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Company</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Company
+                  </p>
                   <p className="text-sm truncate">{user.company}</p>
                 </div>
               </div>
             )}
-            
+
             {user?.website && (
               <div className="flex items-center gap-3">
                 <Globe className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Website</p>
-                  <a 
-                    href={user.website} 
-                    target="_blank" 
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Website
+                  </p>
+                  <a
+                    href={user.website}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm truncate underline"
                   >
@@ -187,7 +257,10 @@ export default function MemberRightPanel() {
           <div className="flex items-center gap-2 flex-shrink-0">
             <TrendingUp className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             <span className="whitespace-nowrap text-gray-600 dark:text-gray-400">
-              Member since {user?.createdAt ? format(new Date(user.createdAt), "MMM yyyy") : "Unknown"}
+              Member since{" "}
+              {user?.createdAt
+                ? format(new Date(user.createdAt), "MMM yyyy")
+                : "Unknown"}
             </span>
           </div>
         </div>

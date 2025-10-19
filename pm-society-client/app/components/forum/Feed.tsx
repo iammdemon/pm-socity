@@ -1,4 +1,3 @@
-
 "use client";
 
 import { IForumTopic, IUser } from "@/app/redux/services/forumApi";
@@ -6,13 +5,7 @@ import {
   useGetForumTopicsQuery,
   useToggleReactionOnTopicMutation,
 } from "@/app/redux/services/forumApi";
-import {
-  Heart,
-  MessageCircle,
-
-  RefreshCw,
-
-} from "lucide-react";
+import { Heart, MessageCircle, RefreshCw } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -48,7 +41,6 @@ const PostFeed = ({
   const [toggleReaction] = useToggleReactionOnTopicMutation();
   const [reactingPostId, setReactingPostId] = useState<string | null>(null);
 
- 
   const allPosts = forumResponse?.data || [];
   const posts = dataFilter ? dataFilter(allPosts) : allPosts;
 
@@ -201,12 +193,14 @@ const PostFeed = ({
               </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1 flex-wrap">
-                  <span className="font-bold text-black dark:text-white text-sm sm:text-base">
-                    {post.author?.name || "Anonymous User"}
-                  </span>
-                  <span className="text-gray-500 dark:text-gray-400 text-sm">
-                    @{post.author?.email?.split("@")[0] || "user"}
-                  </span>
+                  <Link href={`/dashboard/profile/${post.author?.userName}`}>
+                    <span className="font-bold text-black dark:text-white text-sm sm:text-base">
+                      {post.author?.name || "Anonymous User"}
+                    </span>
+                    <span className="text-gray-500 dark:text-gray-400 text-sm">
+                      @{post.author?.userName}
+                    </span>
+                  </Link>
                   <span className="text-gray-500 dark:text-gray-400 text-sm">
                     ·
                   </span>
@@ -226,9 +220,8 @@ const PostFeed = ({
                     disabled={isReactingThisPost}
                   >
                     <Heart
-                      className={`w-4 h-4 ${reacted ? "fill-current" : ""} ${
-                        isReactingThisPost ? "animate-pulse" : ""
-                      }`}
+                      className={`w-4 h-4 ${reacted ? "fill-current" : ""} 
+                      `}
                     />
                     <span className="text-xs sm:text-sm">
                       {post.reactionCount || 0}

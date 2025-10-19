@@ -11,7 +11,7 @@ import {
   X,
   User,
   Users,
-  MessageCircleDashed,
+
   LayoutDashboardIcon,
   UploadCloud,
   CalendarDays,
@@ -103,11 +103,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
       label: "Event Management",
       href: "/admin/events-management",
     },
-    {
-      icon: MessageCircleDashed,
-      label: "Forum Management",
-      href: "/admin/forum-management",
-    },
+  
     {
       icon: UploadCloud,
       label: "Resources Management",

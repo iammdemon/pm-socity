@@ -1,7 +1,7 @@
-"use client";
+
 
 import Link from "next/link";
-import { Home, Sparkle, Users, Calendar, BookOpen } from "lucide-react";
+import { Home, Users, Calendar, BookOpen } from "lucide-react";
 
 const MobileNav = () => {
   return (
@@ -15,12 +15,6 @@ const MobileNav = () => {
           className="flex flex-col items-center text-sm"
         >
           <Users className="w-6 h-6" />
-        </Link>
-        <Link
-          href="/dashboard/sia"
-          className="flex flex-col items-center text-sm"
-        >
-          <Sparkle className="w-6 h-6" />
         </Link>
 
         <Link

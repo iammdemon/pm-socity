@@ -27,6 +27,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const jwtPayload = {
         email: user.email,
         role: user.role,
+        id: user._id,
     };
     const accessToken = (0, utils_auth_1.createToken)(jwtPayload, config_1.default.JWT_SECRET, config_1.default.JWT_EXPIRES_IN);
     return { accessToken, userRole: user.role };

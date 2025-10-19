@@ -12,8 +12,6 @@ const AddPost = () => {
   const [text, setText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const maxLength = 280;
-  const remaining = maxLength - text.length;
   const user = session?.user;
 
   // Auto-resize textarea based on content
@@ -65,8 +63,16 @@ const AddPost = () => {
     }
   };
 
+  const handleCancel = () => {
+    setText("");
+    setIsFocused(false);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
+  };
+
   return (
-    <div className="bg-white mb-4 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200">
       <div className="p-4">
         <div className="flex space-x-3">
           {/* User avatar */}
@@ -90,10 +96,9 @@ const AddPost = () => {
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               onKeyDown={handleKeyDown}
-              placeholder={user ? "What do you want to talk about?" : "Sign in to post"}
+              placeholder="Add your voice to The Exchange — shared wisdom elevates us all." 
               className="w-full resize-none border-none outline-none bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 text-base leading-6"
               rows={2}
-              maxLength={maxLength}
               disabled={!user || isLoading}
               style={{ minHeight: "60px" }}
             />
@@ -101,33 +106,38 @@ const AddPost = () => {
             {/* Action buttons - only show when focused or has text */}
             {(isFocused || text.length > 0) && (
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {remaining} characters remaining
-                  </div>
+                <div className="flex items-center justify-end">
+                
                   
-                  {/* Post button */}
-                  <button
-                    onClick={handlePost}
-                    disabled={text.trim() === "" || !user || isLoading}
-                    className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                      text.trim() === "" || !user || isLoading
-                        ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                        : "bg-blue-600 hover:bg-blue-700 text-white"
-                    }`}
-                  >
-                    {isLoading ? (
-                      <div className="flex items-center space-x-1">
-                        <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span>Posting...</span>
-                      </div>
-                    ) : (
-                      "Post"
-                    )}
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={handleCancel}
+                      className="px-4 py-1.5 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handlePost}
+                      disabled={text.trim() === "" || !user || isLoading}
+                      className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                        text.trim() === "" || !user || isLoading
+                          ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                          : "bg-blue-600 hover:bg-blue-700 text-white"
+                      }`}
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center space-x-1">
+                          <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          <span>Posting...</span>
+                        </div>
+                      ) : (
+                        "Post"
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}

@@ -2,6 +2,10 @@ import { Request, Response } from "express";
 import { userService } from "./service.users";
 import catchAsync from "../../utils/catchAsync";
 import { JwtPayload } from "jsonwebtoken";
+import { User } from "./model.users";
+import { generateUsernameFromEmail } from "./utils.user";
+import { Types } from "mongoose";
+
 
 interface AuthRequest extends Request {
   user?: JwtPayload;
@@ -22,44 +26,68 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUserProfile = catchAsync(async (req: AuthRequest, res: Response) => {
+  const email = req?.user?.email;
+  if (!email)  res.status(401).json({ message: "Unauthorized" });
 
- const email = req?.user?.email
- console.log(email)
+  try {
+    const updatedUser = await userService.updateUser(email, req.body);
+    res.status(200).json({
+      message: "Profile updated successfully",
+      data: updatedUser,
+    });
+  } catch (error: any) {
+    // Handle specific errors
+    if (error.message === "Username already taken") {
+       res.status(409).json({ message: "Username already taken" });
+    }
+    if (error.message === "User not found") {
+       res.status(404).json({ message: "User not found" });
+    }
+    
+    // Generic error
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+});
 
-  if (!email) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
+
+
+const generateLink = catchAsync(async (req: Request, res: Response) => {
+  // Find all users without a username
+  const usersWithoutUsername = await User.find({ username: { $exists: false } });
+
+  for (const user of usersWithoutUsername) {
+    const username = await generateUsernameFromEmail(user.email); // use your helper
+    user.userName = username;
+    await user.save();
   }
 
-  const updatedUser = await userService.updateUser(email, req.body);
   res.status(200).json({
-    message: "Profile updated successfully",
-    data: updatedUser,
+    status: "success",
+    message: `${usersWithoutUsername.length} users updated with usernames`,
   });
 });
 
-const linkUserController = catchAsync(async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  const { targetUserId } = req.body;
-  const updatedUser = await userService.linkUser(userId, targetUserId);
-  res
-    .status(200)
-    .json({ message: "User linked successfully", data: updatedUser });
+const getUserByUserName = catchAsync(async (req: AuthRequest, res: Response) => {
+  const { userName } = req.params;
+  const user = await userService.getUserByUserName(userName);
+  res.status(200).json({ status: "success", data: user });
 });
 
-const unlinkUserController = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.body.id;
-  const { targetUserId } = req.body;
-  const updatedUser = await userService.unlinkUser(userId, targetUserId);
-  res
-    .status(200)
-    .json({ message: "User unlinked successfully", data: updatedUser });
+const toggleLink = catchAsync(async (req: AuthRequest, res: Response) => {
+  const { id: linkedUserId } = req.params;
+  const userEmail = req.user?.email;
+  if (!userEmail)  res.status(401).json({ message: "Unauthorized" });
+
+  const updatedUser = await userService.toggleLink(new Types.ObjectId(linkedUserId), userEmail);
+  res.status(200).json({ message: "Link toggled successfully", data: updatedUser });
 });
+
 
 export const userController = {
   createUser,
   getAllUsers,
   updateUserProfile,
-  linkUserController,
-  unlinkUserController,
+  toggleLink,
+  generateLink,
+  getUserByUserName
 };

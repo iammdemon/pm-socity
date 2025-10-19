@@ -3,6 +3,7 @@ import { User } from "./model.users";
 import { PaymentService, PACKAGE_PRICES } from "./service.payment";
 import catchAsync from "../../utils/catchAsync";
 import { sendWelcomeEmail } from "../../utils/sendWelcomeEmail";
+import { generateUsernameFromEmail } from "./utils.user";
 
 // your existing type guard
 function isOneTimePackage(
@@ -170,11 +171,15 @@ const completeSubscriptionRegistration = catchAsync(
       subscriptionEndDate.setFullYear(subscriptionEndDate.getFullYear() + 1);
     }
 
+    const userName = await generateUsernameFromEmail(customer.email);
+
+
     // Create user with subscription details
     const user = await User.create({
       email: customer.email,
       name: customer.name,
       phoneNumber: customer.phone,
+      userName: userName,
       password,
       packageType,
       subscriptionType,
@@ -259,9 +264,14 @@ const verifyPayment = catchAsync(async (req: Request, res: Response) => {
       break;
   }
 
+  const userName = await generateUsernameFromEmail(email);
+
+  // Create user with subscription details
+
   const user = await User.create({
     email,
     name,
+    userName: userName,
     password,
     packageType,
     subscriptionType: "one_time",
@@ -273,13 +283,13 @@ const verifyPayment = catchAsync(async (req: Request, res: Response) => {
   console.log("User created:", user);
 
   // Send welcome email
-  await sendWelcomeEmail({
-    to: user.email,
-    userName: user.name,
-    packageType: user.packageType!,
-    email: user.email,
+  // await sendWelcomeEmail({
+  //   to: user.email,
+  //   userName: user.name,
+  //   packageType: user.packageType!,
+  //   email: user.email,
    
-  });
+  // });
  
 
 

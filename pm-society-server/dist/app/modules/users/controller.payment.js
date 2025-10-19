@@ -16,7 +16,7 @@ exports.PaymentController = void 0;
 const model_users_1 = require("./model.users");
 const service_payment_1 = require("./service.payment");
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
-const sendWelcomeEmail_1 = require("../../utils/sendWelcomeEmail");
+const utils_user_1 = require("./utils.user");
 // your existing type guard
 function isOneTimePackage(pkg) {
     return pkg && pkg.type === "one_time";
@@ -139,11 +139,13 @@ const completeSubscriptionRegistration = (0, catchAsync_1.default)((req, res) =>
     else {
         subscriptionEndDate.setFullYear(subscriptionEndDate.getFullYear() + 1);
     }
+    const userName = yield (0, utils_user_1.generateUsernameFromEmail)(customer.email);
     // Create user with subscription details
     const user = yield model_users_1.User.create({
         email: customer.email,
         name: customer.name,
         phoneNumber: customer.phone,
+        userName: userName,
         password,
         packageType,
         subscriptionType,
@@ -218,9 +220,12 @@ const verifyPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         default:
             break;
     }
+    const userName = yield (0, utils_user_1.generateUsernameFromEmail)(email);
+    // Create user with subscription details
     const user = yield model_users_1.User.create({
         email,
         name,
+        userName: userName,
         password,
         packageType,
         subscriptionType: "one_time",
@@ -230,12 +235,12 @@ const verifyPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     });
     console.log("User created:", user);
     // Send welcome email
-    yield (0, sendWelcomeEmail_1.sendWelcomeEmail)({
-        to: user.email,
-        userName: user.name,
-        packageType: user.packageType,
-        email: user.email,
-    });
+    // await sendWelcomeEmail({
+    //   to: user.email,
+    //   userName: user.name,
+    //   packageType: user.packageType!,
+    //   email: user.email,
+    // });
     res.json({
         message: "Registration complete",
         user: {

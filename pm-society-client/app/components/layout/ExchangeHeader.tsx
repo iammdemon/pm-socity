@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   Users,
-  Sparkles,
+ 
   Calendar,
   BookOpen,
  
@@ -30,7 +30,7 @@ interface NavLinkProps {
 const NAVIGATION_ITEMS: NavigationItem[] = [
   { name: "The Exchange", href: "/dashboard", icon: Home },
   { name: "Society Circles", href: "/dashboard/circles", icon: Users },
-  { name: "SIA AI", href: "/dashboard/sia", icon: Sparkles },
+  // { name: "SIA AI", href: "/dashboard/sia", icon: Sparkles },
   { name: "Upcoming Events", href: "/dashboard/events", icon: Calendar },
   { name: "Resources", href: "/dashboard/resources", icon: BookOpen },
   

@@ -131,26 +131,27 @@ export const packages: Package[] = [
   //   gradient: "bg-gradient-to-br from-gray-50 to-indigo-50",
   // },
   {
-    id: "ELEVATE_PILOT",
-    name: "ELEVATE (Pilot Cohort)",
-    tagline: "Special Pilot Pricing",
-    description:
-      "Guide professionals through PMP certification, mentoring & leadership roles. For experienced PMs ready for growth.",
-    whoItsFor: "Professionals seeking PMP with pilot program pricing",
-    features: [
-      "35 hours of virtual instructor-led PMP® training",
-      "PMP application support",
-      "3 executive coaching sessions",
-      "2 months access to PM learning materials",
-      "2 mentorship sessions",
-      "2 months access to Society+ portal",
-      
-    ],
-    pricing: { oneTime: 3500 },
-    discountPricing: { oneTime: 558 },
-    icon: <FiSettings className="w-8 h-8" />,
-    color: "from-pink-500 to-red-500",
-    gradient: "bg-gradient-to-br from-pink-50 to-red-50",
-  },
+  id: "ELEVATE_PILOT",
+  name: "ELEVATE (Pilot Cohort)",
+  tagline: "Special Pilot Pricing",
+  description:
+    "Guide professionals through PMP certification, mentoring & leadership roles. For experienced PMs ready for growth.",
+  whoItsFor: "Professionals seeking PMP with pilot program pricing",
+  features: [
+    "35 hours of virtual instructor-led PMP® training",
+    "90 days of on-demand PM learning material access",
+    "PMP application support",
+    "1 project management mentorship session",
+    "3 executive coaching sessions",
+    "1 professionally crafted resume",
+  ],
+  pricing: { oneTime: 3500 },
+  discountPricing: { oneTime: 558 },
+  
+  icon: <FiSettings className="w-8 h-8" />,
+  color: "from-pink-500 to-red-500",
+  gradient: "bg-gradient-to-br from-pink-50 to-red-50",
+},
+
 ];
 

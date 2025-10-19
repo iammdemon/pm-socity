@@ -2,7 +2,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import {
   TrendingUp,
   Search,
-  Trophy,
+
   Bell,
   AtSign,
   Heart,
@@ -51,10 +51,10 @@ const progressData = [
 ];
 
 const modules: ProgressModule[] = [
-  { name: "Fundamentals", progress: 100, status: "completed" },
-  { name: "Advanced Topics", progress: 80, status: "in-progress" },
-  { name: "Case Studies", progress: 60, status: "in-progress" },
-  { name: "Final Project", progress: 20, status: "upcoming" },
+  { name: "PM Certification Course", progress: 100, status: "completed" },
+  { name: "Executive Coaching ", progress: 80, status: "in-progress" },
+  { name: "Resume", progress: 60, status: "in-progress" },
+  { name: "Completion Status", progress: 20, status: "upcoming" },
 ];
 
 const notifications: NotificationItem[] = [
@@ -125,15 +125,12 @@ const ProgressSection = () => {
 
   return (
     <section className="mb-6">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-center mb-4">
         <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
+        
           My Journey
         </h2>
-        <div className="flex items-center gap-1">
-          <Trophy className="w-4 h-4 text-yellow-500" />
-          <span className="text-xs text-gray-500 dark:text-gray-400">Level 5</span>
-        </div>
+       
       </div>
       
       <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-5 border border-gray-200/50 dark:border-gray-700/50 shadow-xl relative overflow-hidden">
@@ -222,7 +219,7 @@ const LearningResources = () => {
     <section className="mb-6">
       <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
-        Learning Resources
+       The Learning Suite
       </h2>
       
       <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-4 shadow-xl">
@@ -237,7 +234,7 @@ const LearningResources = () => {
                 <BookOpen className="w-4 h-4 text-white" />
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">PM LMS Platform</p>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Training Pathway</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">Course materials & recordings</p>
               </div>
             </div>
@@ -245,7 +242,7 @@ const LearningResources = () => {
           </Link>
           
           <Link 
-            href="https://teams.microsoft.com/l/meetup-join/1234567890" 
+            href="https://calendly.com/toni-merrill-thepmsociety/50-minute-coaching-session" 
             target="_blank"
             className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-600/20 dark:to-emerald-600/20 hover:shadow-md transition-all duration-300 group"
           >
@@ -276,7 +273,7 @@ const MentorBooking = () => {
     <section className="mb-6">
       <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
-        One-on-One Sessions
+        Training Pathway
       </h2>
       
       <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-4 shadow-xl">
@@ -292,6 +289,54 @@ const MentorBooking = () => {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Olivia McGlothen</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Schedule a coaching session</p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
+          </Link>
+          <Link 
+            href="https://calendly.com/toni-merrill-thepmsociety/30min" 
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-600/20 dark:to-pink-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                <Users className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Toni Merrill</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Schedule a coaching session</p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
+          </Link>
+          <Link 
+            href="#" 
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-600/20 dark:to-pink-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                <Users className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Alana Captain</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Schedule a coaching session</p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
+          </Link>
+          <Link 
+            href="#" 
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-600/20 dark:to-pink-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                <Users className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Erin</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">Schedule a coaching session</p>
               </div>
             </div>

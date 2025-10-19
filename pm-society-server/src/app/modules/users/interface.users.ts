@@ -1,9 +1,12 @@
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 export default interface IUser {
+  _id?: Types.ObjectId;
   name: string;
   email: string;
   password: string;
+  userName: string;
+  title: string;
   phoneNumber?: string;
   course?: string;
   amount?: number;
@@ -24,9 +27,12 @@ export default interface IUser {
   createdAt?: Date;
   bio?: string;
   avatar?: string;
-  linkedUsers?: string[];
+  linkedUsers?: Types.ObjectId[];
   updatedAt?: Date;
 }
+
+
+
 
 export interface UserModel extends Model<IUser> {
   isUserExistsByEmail(email: string): Promise<IUser | null>;

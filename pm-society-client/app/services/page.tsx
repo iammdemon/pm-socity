@@ -132,26 +132,30 @@ export default function ServicesPage() {
       featured: false,
     },
     {
-      icon: <FiSettings className="h-8 w-8 sm:h-10 sm:w-10" />,
-      title: "ELEVATE (Pilot Cohort)",
-      description:
-        "Guide professionals through PMP certification, mentoring & leadership roles. For experienced PMs ready for growth.",
-      features: [
-        "35 hours of virtual instructor-led PMP® training",
-        "PMP application support",
-        "3 executive coaching sessions",
-        "2 months access to PM learning materials",
-        "2 mentorship sessions",
-        "2 months access to Society+ portal",
-      ],
-      price: "$3500",
-      discountPrice: "$558",
-      discountText:
-        <>Use discount code <strong>PILOT2025</strong> at checkout to unlock this special pricing. </>,
-      cta: "Enroll Now",
-      ctaLink: "enroll",
-      featured: true,
-    },
+  icon: <FiSettings className="h-8 w-8 sm:h-10 sm:w-10" />,
+  title: "ELEVATE (Pilot Cohort)",
+  description:
+    "Guide professionals through PMP certification, mentoring & leadership roles. For experienced PMs ready for growth.",
+  features: [
+    "35 hours of virtual instructor-led PMP® training",
+    "90 days of on-demand PM learning material access",
+    "PMP application support",
+    "1 project management mentorship session",
+    "3 executive coaching sessions",
+    "1 professionally crafted resume",
+  ],
+  price: "$3500",
+  discountPrice: "$558",
+  discountText: (
+    <>
+      Use discount code <strong>PILOT2025</strong> at checkout to unlock this special pricing.
+    </>
+  ),
+  cta: "Enroll Now",
+  ctaLink: "enroll",
+  featured: true,
+}
+
   ];
 
   return (
@@ -368,10 +372,10 @@ export default function ServicesPage() {
                 </div>
 
                 <Link
-                  href="enroll"
+                  href="executive-coaching"
                   className="group bg-black dark:bg-white text-white dark:text-black px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-200 inline-flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
-                  Enroll Now
+                 Learn More
                 </Link>
               </div>
             </div>

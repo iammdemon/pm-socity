@@ -25,15 +25,15 @@ const createTopic = (payload, userEmail) => __awaiter(void 0, void 0, void 0, fu
 const getAllTopics = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield model_discussions_1.ForumTopic.find()
         .sort({ createdAt: -1 })
-        .populate("author", "name username email")
-        .populate("reactions", "name username email")
-        .populate("replies.author", "name username email");
+        .populate("author", "name userName avatar")
+        .populate("reactions", "name userName avatar")
+        .populate("replies.author", "name userName avatar ");
 });
 const getTopicById = (topicId) => __awaiter(void 0, void 0, void 0, function* () {
     return yield model_discussions_1.ForumTopic.findOne({ topicId })
-        .populate("author", "name username email")
-        .populate("reactions.author", "name username email")
-        .populate("replies.author", "name username email");
+        .populate("author", "name userName avatar")
+        .populate("reactions.author", "name userName avatar ")
+        .populate("replies.author", "name userName avatar ");
 });
 const addReplyToTopic = (topicId, reply, userEmail) => __awaiter(void 0, void 0, void 0, function* () {
     // Find user by email
@@ -42,7 +42,7 @@ const addReplyToTopic = (topicId, reply, userEmail) => __awaiter(void 0, void 0,
         throw new Error("User not found");
     // Set author to user's ID
     reply.author = user._id;
-    return yield model_discussions_1.ForumTopic.findOneAndUpdate({ topicId }, { $push: { replies: reply } }, { new: true }).populate("replies.author", "name username email");
+    return yield model_discussions_1.ForumTopic.findOneAndUpdate({ topicId }, { $push: { replies: reply } }, { new: true }).populate("replies.author", "name userName avatar");
 });
 const toggleReactionOnTopic = (topicId, userEmail) => __awaiter(void 0, void 0, void 0, function* () {
     // Find user by email

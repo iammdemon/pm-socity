@@ -177,7 +177,7 @@ export default function Event() {
       {/* Stats */}
       <div className="border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg">
               <div className="text-2xl font-bold">{events.length}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Total Events</div>
@@ -226,7 +226,7 @@ export default function Event() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <Card key={i} className="border border-gray-200 dark:border-gray-800">
                   <CardContent className="p-0">
@@ -295,7 +295,7 @@ export default function Event() {
                     {upcomingEvents.length}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2  gap-6">
                   {upcomingEvents.filter((event: Event) => !event.featured).map((event: Event) => (
                     <EventCard key={event.slug} event={event} isPast={false} />
                   ))}

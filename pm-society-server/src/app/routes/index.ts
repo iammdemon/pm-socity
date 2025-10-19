@@ -8,7 +8,8 @@ import { chatRoutes } from "../modules/chat/route.chat";
 import { AuthRoutes } from "../modules/auth/route.auth";
 import { ContactRoutes } from "../modules/contact/route.contact";
 import { mailchimpRoutes } from "../modules/mailchimp/route";
-
+import { GoalRoutes } from "../modules/goal/route.goal";
+import { AchievementRoutes } from "../modules/achievement/route.achievement";
 
 const router: Router = Router();
 
@@ -22,7 +23,8 @@ const moduleRoutes = [
   { path: "/chat", route: chatRoutes },
   { path: "/contact", route: ContactRoutes },
   { path: "/subscribe", route: mailchimpRoutes },
-
+  { path: "/goals", route: GoalRoutes },
+  { path: "/achievements", route: AchievementRoutes },
 ];
 
 moduleRoutes.forEach((route) => {

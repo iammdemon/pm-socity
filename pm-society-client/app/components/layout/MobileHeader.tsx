@@ -2,20 +2,33 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Search, User, Moon, Sun,  LogOut, Settings, Bookmark, HelpCircle, ChevronDown, GraduationCap } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Search, User, LogOut, Settings,  ChevronDown, GraduationCap } from "lucide-react";
+
 import { useState, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
+import { ModeToggle } from "./ModeToggle";
+
+// Type definitions for better type safety
+interface User {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  avatar?: string;
+}
+
+
 
 const MobileHeader = () => {
-  const { theme, setTheme } = useTheme();
+
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
- 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -35,23 +48,45 @@ const MobileHeader = () => {
     };
   }, []);
 
+  // Close menu on escape key
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent): void => {
+      if (event.key === "Escape") {
+        setIsProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscapeKey);
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, []);
+
   // Avoid SSR mismatch by not rendering until mounted
   if (!mounted) return null;
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+
+  // Handle search
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
   };
-
-
 
   // Handle logout
   const handleLogout = async () => {
-    await signOut({ 
-      callbackUrl: "/",
-      redirect: true 
-    });
-    setIsProfileMenuOpen(false);
-   
+    try {
+      await signOut({ 
+        callbackUrl: "/",
+        redirect: true 
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsProfileMenuOpen(false);
+    }
   };
 
   // Get user initials for avatar fallback
@@ -90,42 +125,32 @@ const MobileHeader = () => {
           </Link>
 
           {/* Search */}
-          <div className="flex-1 mx-2 relative">
+          <form onSubmit={handleSearch} className="flex-1 mx-2 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400 pointer-events-none" />
             <input
               type="text"
               placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-gray-200/50 dark:border-neutral-700/50 bg-white/60 dark:bg-neutral-800/60 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-500/50 transition-all duration-300"
               aria-label="Search"
             />
-          </div>
+          </form>
 
           {/* Right icons */}
           <div className="flex items-center space-x-1">
-            {/* Theme toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="h-9 w-9 rounded-full"
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5 text-yellow-400" />
-              ) : (
-                <Moon className="h-5 w-5 text-gray-600" />
-              )}
-            </Button>
-
+          <ModeToggle/>
             {/* Profile Dropdown */}
             <div className="relative" ref={profileMenuRef}>
               <button
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                 className="flex items-center space-x-1 p-2.5 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-800"
                 aria-label="Profile"
+                aria-expanded={isProfileMenuOpen}
+                aria-haspopup="true"
               >
                 <Avatar className="h-7 w-7">
-                  <AvatarImage src={session?.user?.avatar || ""} alt={session?.user?.name || ""} />
+                  <AvatarImage src={ session?.user?.avatar || ""} alt={session?.user?.name || ""} />
                   <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-xs">
                     {getUserInitials()}
                   </AvatarFallback>
@@ -139,7 +164,7 @@ const MobileHeader = () => {
                   <div className="px-4 py-4 border-b border-gray-200 dark:border-neutral-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src={session?.user?.avatar || ""} alt={session?.user?.name || ""} />
+                        <AvatarImage src={ session?.user?.avatar || ""} alt={session?.user?.name || ""} />
                         <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
                           {getUserInitials()}
                         </AvatarFallback>
@@ -148,7 +173,7 @@ const MobileHeader = () => {
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">
                           {session?.user?.name || "User"}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                           {session?.user?.email || "user@example.com"}
                         </p>
                       </div>
@@ -163,24 +188,17 @@ const MobileHeader = () => {
                       onClick={() => setIsProfileMenuOpen(false)}
                     >
                       <User className="w-4 h-4 mr-3" />
-                      Profile
+                      Edit Profile
                     </Link>
                     <Link
-                      href="#"
-                      className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors duration-200"
-                      onClick={() => setIsProfileMenuOpen(false)}
-                    >
-                      <Bookmark className="w-4 h-4 mr-3" />
-                      Bookmarks
-                    </Link>
-                    <Link
-                      href="#"
+                      href="/dashboard/profile/change-password"
                       className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors duration-200"
                       onClick={() => setIsProfileMenuOpen(false)}
                     >
                       <Settings className="w-4 h-4 mr-3" />
-                      Settings
+                      Change Password
                     </Link>
+                
                     <Link
                       href="https://thepmsociety.pmtraining.com/partner-login"
                       target="_blank"
@@ -189,16 +207,9 @@ const MobileHeader = () => {
                       onClick={() => setIsProfileMenuOpen(false)}
                     >
                       <GraduationCap className="w-4 h-4 mr-3" />
-                      PM Training
+                      Training Pathway
                     </Link>
-                    <Link
-                      href="/dashboard/help"
-                      className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors duration-200"
-                      onClick={() => setIsProfileMenuOpen(false)}
-                    >
-                      <HelpCircle className="w-4 h-4 mr-3" />
-                      Help & Support
-                    </Link>
+                    
                     <div className="border-t border-gray-200 dark:border-neutral-700 my-2"></div>
                     <Button
                       onClick={handleLogout}

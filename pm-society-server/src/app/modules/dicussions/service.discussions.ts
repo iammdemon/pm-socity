@@ -19,17 +19,17 @@ const createTopic = async (payload: IForumTopic, userEmail: string) => {
 const getAllTopics = async () => {
   return await ForumTopic.find()
     .sort({ createdAt: -1 }) 
-    .populate("author", "name username email")
-    .populate("reactions", "name username email")
-    .populate("replies.author", "name username email");
+    .populate("author", "name userName avatar")
+    .populate("reactions", "name userName avatar")
+    .populate("replies.author", "name userName avatar ");
 };
 
 
 const getTopicById = async (topicId: string) => {
   return await ForumTopic.findOne({ topicId })
-    .populate("author", "name username email")
-    .populate("reactions.author", "name username email")
-    .populate("replies.author", "name username email");
+    .populate("author", "name userName avatar")
+    .populate("reactions.author", "name userName avatar ")
+    .populate("replies.author", "name userName avatar ");
 };
 
 const addReplyToTopic = async (topicId: string, reply: IReply, userEmail: string) => {
@@ -44,7 +44,7 @@ const addReplyToTopic = async (topicId: string, reply: IReply, userEmail: string
     { topicId },
     { $push: { replies: reply } },
     { new: true }
-  ).populate("replies.author", "name username email");
+  ).populate("replies.author", "name userName avatar");
 };
 
 const toggleReactionOnTopic = async (

@@ -5,6 +5,7 @@ import MobileHeader from "../components/layout/MobileHeader";
 import ExchangeHeader from "../components/layout/ExchangeHeader";
 import MemberLeftPanel from "../components/layout/MemberLeftPanel";
 import MemberRightPanel from "../components/layout/MemberRightPanel";
+import SiaAI from "../components/ai/SiaAI";
 
 export default function DashboardLayout({
   children,
@@ -17,48 +18,39 @@ export default function DashboardLayout({
       <div className="hidden lg:flex h-screen">
         {/* Three Column Layout */}
         <div className="flex flex-1 h-full w-full">
-          {/* Left Panel - Fixed width */}
+          {/* Left Panel */}
           <div className="w-80 flex-shrink-0 overflow-hidden">
             <MemberLeftPanel />
           </div>
-          
-          {/* Main Content Area - Flexible width */}
+
+          {/* Main Content */}
           <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-            {/* Header */}
             <div className="flex-shrink-0">
               <ExchangeHeader />
             </div>
-            
-            {/* Main Content - Scrollable */}
-            <div className="flex-1 overflow-y-auto">
-              {children}
-            </div>
+            <div className="flex-1 overflow-y-auto">{children}</div>
           </div>
-          
-          {/* Right Panel - Fixed width */}
+
+          {/* Right Panel */}
           <div className="w-80 flex-shrink-0 overflow-hidden">
             <MemberRightPanel />
           </div>
         </div>
       </div>
-      
+
       {/* Mobile Layout */}
       <div className="lg:hidden flex flex-col h-screen">
-        {/* Mobile Header */}
         <div className="sticky top-0 z-40">
           <MobileHeader />
         </div>
-        
-        {/* Mobile Content Area */}
-        <main className="flex-1 overflow-y-auto pb-16">
-          {children}
-        </main>
-        
-        {/* Mobile Navigation */}
+        <main className="flex-1 overflow-y-auto pb-16">{children}</main>
         <div className="fixed bottom-0 left-0 right-0 z-40">
           <MobileNav />
         </div>
       </div>
+
+      {/* Global SIA AI assistant (loads once, floats bottom-right) */}
+      <SiaAI />
     </div>
   );
 }

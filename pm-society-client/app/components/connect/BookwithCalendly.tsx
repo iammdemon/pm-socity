@@ -26,8 +26,8 @@ const consultants = [
     title: "Executive Coaching",
     description:
       "High-level coaching to elevate your leadership in project management.",
-    bookingLink: "",
-    isAvailable: false,
+    bookingLink: "https://calendly.com/toni-merrill-thepmsociety/30min",
+    isAvailable: true,
     specialties: ["Leadership", "Strategy", "Executive Coaching"],
     sessionDuration: "45 minutes",
     avatar: "/image/toni.webp",
