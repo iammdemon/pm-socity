@@ -20,10 +20,14 @@ const utils_user_1 = require("./utils.user");
 const mongoose_1 = require("mongoose");
 const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const role = "admin";
-    yield (0, utils_user_1.generateUsernameFromEmail)(req.body.email);
-    const result = yield service_users_1.userService.createUserIntoDB(Object.assign(Object.assign({}, req.body), { role }));
+    if (!req.body.email) {
+        res.status(400).json({ message: "Email is required" });
+        return;
+    }
+    const username = yield (0, utils_user_1.generateUsernameFromEmail)(req.body.email);
+    const result = yield service_users_1.userService.createUserIntoDB(Object.assign(Object.assign({}, req.body), { role,
+        username }));
     res.status(201).json({ message: "User created successfully", data: result });
-    return;
 }));
 const getAllUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield service_users_1.userService.getAllUsers();
@@ -57,7 +61,9 @@ const updateUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void
 }));
 const generateLink = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Find all users without a username
-    const usersWithoutUsername = yield model_users_1.User.find({ username: { $exists: false } });
+    const usersWithoutUsername = yield model_users_1.User.find({
+        username: { $exists: false },
+    });
     for (const user of usersWithoutUsername) {
         const username = yield (0, utils_user_1.generateUsernameFromEmail)(user.email); // use your helper
         user.userName = username;
@@ -80,7 +86,9 @@ const toggleLink = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     if (!userEmail)
         res.status(401).json({ message: "Unauthorized" });
     const updatedUser = yield service_users_1.userService.toggleLink(new mongoose_1.Types.ObjectId(linkedUserId), userEmail);
-    res.status(200).json({ message: "Link toggled successfully", data: updatedUser });
+    res
+        .status(200)
+        .json({ message: "Link toggled successfully", data: updatedUser });
 }));
 const resetPasswords = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Resetting passwords...");
@@ -94,5 +102,5 @@ exports.userController = {
     toggleLink,
     generateLink,
     getUserByUserName,
-    resetPasswords
+    resetPasswords,
 };
