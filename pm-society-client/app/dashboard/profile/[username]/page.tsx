@@ -608,29 +608,30 @@ export default function ProfilePage() {
 
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-800">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full ">
           <TabsList className="bg-transparent h-12 w-full justify-start px-4 sm:px-6 lg:px-8 ">
+            {/* bg-black dark:bg-white text-white dark:text-black */}
             <TabsTrigger
               value="posts"
-              className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-black dark:data-[state=active]:text-white rounded-none px-3 sm:px-6 h-12 font-normal text-sm whitespace-nowrap`}
+              className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-3 sm:px-6 h-12  text-sm whitespace-nowrap`}
             >
               Posts
             </TabsTrigger>
             <TabsTrigger
               value="goals"
-              className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-black dark:data-[state=active]:text-white rounded-none px-3 sm:px-6 h-12 font-normal text-sm whitespace-nowrap`}
+              className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-3 sm:px-6 h-12  text-sm whitespace-nowrap`}
             >
               Goals
             </TabsTrigger>
             <TabsTrigger
               value="achievements"
-              className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-black dark:data-[state=active]:text-white rounded-none px-3 sm:px-6 h-12 font-normal text-sm whitespace-nowrap`}
+              className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-3 sm:px-6 h-12  text-sm whitespace-nowrap`}
             >
               Achievements
             </TabsTrigger>
             <TabsTrigger
               value="inner-circle"
-              className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-black dark:data-[state=active]:text-white rounded-none px-3 sm:px-6 h-12 font-normal text-sm whitespace-nowrap`}
+              className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-3 sm:px-6 h-12  text-sm whitespace-nowrap`}
             >
               Inner Circle
             </TabsTrigger>

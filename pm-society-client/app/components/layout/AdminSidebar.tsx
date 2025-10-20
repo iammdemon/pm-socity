@@ -17,6 +17,7 @@ import {
   CalendarDays,
   MessageCircleQuestion,
   Shield,
+  Grid3x3,
 } from "lucide-react";
 import { CgPassword } from "react-icons/cg";
 
@@ -87,6 +88,12 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
   // Admin menu configuration
   const adminMenu: MenuItem[] = [
     { icon: Home, label: "Dashboard", href: "/admin" },
+     { 
+      icon: Grid3x3, 
+      label: "Go to Dashboard", 
+      href: "/dashboard", 
+      
+    },
     {
       icon: MessageCircleQuestion,
       label: "Contact Submissions",

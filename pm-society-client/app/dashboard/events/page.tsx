@@ -1,3 +1,4 @@
+// Event component
 'use client';
 
 import React, { useState } from 'react';
@@ -21,25 +22,32 @@ import {
   Search, 
   ExternalLink,
   Clock,
-  Tag
+  Tag,
+  Users
 } from 'lucide-react';
 import { useGetEventsQuery } from '@/app/redux/services/eventApi';
 
-interface Event {
-  slug: string;
+export interface Event {
   title: string;
+  slug: string;
   description: string;
+  image: string;
   date: string;
   location: string;
-  image: string;
+  joinedUser?: string[];
   category?: string;
   tags?: string[];
   featured?: boolean;
+  joinedUserCount?: number;
 }
 
+
+
 export default function Event() {
-  const { data: eventResponse, isLoading, error } = useGetEventsQuery();
+  const { data: eventResponse, isLoading, error, refetch } = useGetEventsQuery();
   const events = eventResponse?.data || [];
+ 
+
 
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date');
@@ -58,19 +66,24 @@ export default function Event() {
       return a.title.localeCompare(b.title);
     });
 
-  // Check if event is upcoming
+  // Check if event is upcoming (US timezone)
   const isUpcoming = (dateString: string) => {
-    return new Date(dateString) > new Date();
+    const eventDate = new Date(dateString);
+    const today = new Date();
+    // Set both dates to the same timezone for comparison
+    eventDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    return eventDate >= today;
   };
 
-  // Format date
+  // Format date for display (US timezone) - consistent with AdminEventsPage
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "America/New_York"
     });
   };
 
@@ -95,13 +108,13 @@ export default function Event() {
 
   // Event Card Component
   const EventCard = ({ event, isPast = false }: { event: Event; isPast?: boolean }) => (
-    <Card className={`border border-gray-200 dark:border-gray-800 overflow-hidden bg-white dark:bg-black hover:shadow-md transition-all duration-200 ${isPast ? 'opacity-75' : ''}`}>
+    <Card className={`border border-gray-200 dark:border-gray-800 overflow-hidden bg-white dark:bg-black hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${isPast ? 'opacity-75' : ''}`}>
       <div className="relative h-48 w-full overflow-hidden">
         <Image
           src={event.image}
           alt={event.title}
           fill
-          className={`object-cover transition-transform duration-300 ${isPast ? 'grayscale' : ''}`}
+          className={`object-cover transition-transform duration-500 ${isPast ? 'grayscale' : ''} hover:scale-105`}
         />
         {event.featured && (
           <div className="absolute top-4 left-4">
@@ -109,7 +122,7 @@ export default function Event() {
           </div>
         )}
         <div className="absolute top-4 right-4">
-          <Badge variant="outline" className="bg-white dark:bg-black text-black dark:text-white border-black dark:border-white">
+          <Badge variant="outline" className="bg-white/90 dark:bg-black/90 text-black dark:text-white border-black dark:border-white backdrop-blur-sm">
             {isPast ? 'Past Event' : getTimeUntilEvent(event.date)}
           </Badge>
         </div>
@@ -140,9 +153,15 @@ export default function Event() {
             <MapPin className="w-4 h-4" />
             <span className="line-clamp-1">{event.location}</span>
           </div>
+          {event.joinedUser && (
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              <Users className="w-4 h-4" />
+              <span>{event.joinedUserCount} attending</span>
+            </div>
+          )}
         </div>
-        <Button asChild variant="outline" className="w-full border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black">
-          <Link href={`/events/${event.slug}`} className="flex items-center justify-center gap-2">
+        <Button asChild variant="outline" className="w-full border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-200">
+          <Link href={`/dashboard/events/${event.slug}`} className="flex items-center justify-center gap-2">
             View Details <ExternalLink className="w-4 h-4" />
           </Link>
         </Button>
@@ -177,18 +196,18 @@ export default function Event() {
       {/* Stats */}
       <div className="border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-900">
               <div className="text-2xl font-bold">{events.length}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Total Events</div>
             </div>
-            <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg">
+            <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-900">
               <div className="text-2xl font-bold">{upcomingEvents.length}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Upcoming</div>
             </div>
-            <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg">
-              <div className="text-2xl font-bold">{featuredEvents.length}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Featured</div>
+            <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-900">
+              <div className="text-2xl font-bold">{pastEvents.length}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Past Events</div>
             </div>
           </div>
         </div>
@@ -226,7 +245,7 @@ export default function Event() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <Card key={i} className="border border-gray-200 dark:border-gray-800">
                   <CardContent className="p-0">
@@ -251,7 +270,11 @@ export default function Event() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Please try again later or contact support if the issue persists.
             </p>
-            <Button variant="outline" className="border-black dark:border-white">
+            <Button 
+              variant="outline" 
+              className="border-black dark:border-white"
+              onClick={() => refetch()}
+            >
               Try Again
             </Button>
           </div>
@@ -267,7 +290,7 @@ export default function Event() {
           </div>
         ) : (
           <div className="space-y-12">
-            {/* Featured Events */}
+            {/* Featured Events - Only show if there are featured events */}
             {featuredEvents.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-6">
@@ -277,7 +300,7 @@ export default function Event() {
                     {featuredEvents.length}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
                   {featuredEvents.map((event: Event) => (
                     <EventCard key={event.slug} event={event} isPast={false} />
                   ))}
@@ -285,20 +308,28 @@ export default function Event() {
               </div>
             )}
 
-            {/* Upcoming Events */}
+            {/* Upcoming Events - Show all upcoming events if no featured events */}
             {upcomingEvents.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-6">
                   <Clock className="w-5 h-5" />
-                  <h2 className="text-xl font-semibold">Upcoming Events</h2>
+                  <h2 className="text-xl font-semibold">
+                    {featuredEvents.length > 0 ? 'Other Upcoming Events' : 'Upcoming Events'}
+                  </h2>
                   <Badge variant="outline" className="border-black dark:border-white">
-                    {upcomingEvents.length}
+                    {featuredEvents.length > 0 
+                      ? upcomingEvents.filter((event: Event) => !event.featured).length 
+                      : upcomingEvents.length}
                   </Badge>
                 </div>
-                <div className="grid md:grid-cols-2  gap-6">
-                  {upcomingEvents.filter((event: Event) => !event.featured).map((event: Event) => (
-                    <EventCard key={event.slug} event={event} isPast={false} />
-                  ))}
+                <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
+                  {featuredEvents.length > 0 
+                    ? upcomingEvents.filter((event: Event) => !event.featured).map((event: Event) => (
+                        <EventCard key={event.slug} event={event} isPast={false} />
+                      ))
+                    : upcomingEvents.map((event: Event) => (
+                        <EventCard key={event.slug} event={event} isPast={false} />
+                      ))}
                 </div>
               </div>
             )}
@@ -313,7 +344,7 @@ export default function Event() {
                     {pastEvents.length}
                   </Badge>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
                   {pastEvents.map((event: Event) => (
                     <EventCard key={event.slug} event={event} isPast={true} />
                   ))}

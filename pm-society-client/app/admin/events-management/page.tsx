@@ -1,4 +1,5 @@
-"use client";
+
+'use client';
 
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -62,30 +63,29 @@ const eventSchema = z.object({
 });
 
 type FormData = z.infer<typeof eventSchema>;
-  interface ErrorWithMessage {
-        data?: {
-          message?: string;
-        };
-      }
+interface ErrorWithMessage {
+  data?: {
+    message?: string;
+  };
+}
 
 // Cloudinary upload configuration
 const CLOUDINARY_CLOUD_NAME = "dggotjc19"
 const CLOUDINARY_UPLOAD_PRESET = "raiyanrimon2"
 
- type Event = {
-    title: string;
-    slug: string;
-    description: string;
-    image: string;
-    date: string;
-    location: string;
-    // Add other fields if needed
-  };
+type Event = {
+  title: string;
+  slug: string;
+  description: string;
+  image: string;
+  date: string;
+  location: string;
+  // Add other fields if needed
+};
 
 export default function AdminEventsPage() {
   const { data: eventResponse, isLoading, refetch } = useGetEventsQuery();
  
-
   const events: Event[] = eventResponse?.data || [];
 
   const [addEvent] = useAddEventMutation();
@@ -193,7 +193,6 @@ export default function AdminEventsPage() {
   };
 
   // Handle save event
-  // Handle save event
   const handleSave = async (data: FormData) => {
     try {
       if (editEventSlug) {
@@ -208,7 +207,6 @@ export default function AdminEventsPage() {
       setImagePreview(null);
       refetch();
     } catch (err: unknown) {
-    
       if (
         typeof err === "object" &&
         err !== null &&
@@ -223,8 +221,6 @@ export default function AdminEventsPage() {
       }
     }
   };
-
-
 
   // Handle edit event
   const handleEdit = (event: Event) => {
@@ -258,30 +254,38 @@ export default function AdminEventsPage() {
     }
   };
 
-  // Format date for display
+  // Format date for display (US timezone) - consistent with Event component
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
+      timeZone: "America/New_York"
     });
   };
 
-  // Check if event is upcoming
+  // Check if event is upcoming (US timezone) - consistent with Event component
   const isUpcoming = (dateString: string) => {
-    return new Date(dateString) > new Date();
+    const eventDate = new Date(dateString);
+    const today = new Date();
+    // Set both dates to the same timezone for comparison
+    eventDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    return eventDate >= today;
   };
 
+  
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-6">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-slate-900 mb-2">Event Management</h1>
-              <p className="text-slate-600">Create and manage your events with ease</p>
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">Event Management</h1>
+              <p className="text-gray-600">Create and manage your events with ease</p>
             </div>
             <Button
               onClick={() => {
@@ -290,7 +294,7 @@ export default function AdminEventsPage() {
                 setImagePreview(null);
                 setIsDialogOpen(true);
               }}
-              className="bg-black text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              className="bg-black text-white shadow-lg hover:bg-gray-800 transition-all duration-200"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add New Event
@@ -300,29 +304,29 @@ export default function AdminEventsPage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <Card className="bg-white border border-gray-200 shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Calendar className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-gray-100 rounded-lg">
+                  <Calendar className="w-6 h-6 text-gray-700" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">Total Events</p>
-                  <p className="text-2xl font-bold text-slate-900">{events.length}</p>
+                  <p className="text-sm text-gray-600">Total Events</p>
+                  <p className="text-2xl font-bold text-gray-900">{events.length}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <Card className="bg-white border border-gray-200 shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <Clock className="w-6 h-6 text-green-600" />
+                <div className="p-3 bg-gray-100 rounded-lg">
+                  <Clock className="w-6 h-6 text-gray-700" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">Upcoming</p>
-                  <p className="text-2xl font-bold text-slate-900">
+                  <p className="text-sm text-gray-600">Upcoming</p>
+                  <p className="text-2xl font-bold text-gray-900">
                     {events.filter(event => isUpcoming(event.date)).length}
                   </p>
                 </div>
@@ -330,15 +334,15 @@ export default function AdminEventsPage() {
             </CardContent>
           </Card>
           
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <Card className="bg-white border border-gray-200 shadow-lg">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-purple-100 rounded-lg">
-                  <Users className="w-6 h-6 text-purple-600" />
+                <div className="p-3 bg-gray-100 rounded-lg">
+                  <Users className="w-6 h-6 text-gray-700" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">Past Events</p>
-                  <p className="text-2xl font-bold text-slate-900">
+                  <p className="text-sm text-gray-600">Past Events</p>
+                  <p className="text-2xl font-bold text-gray-900">
                     {events.filter(event => !isUpcoming(event.date)).length}
                   </p>
                 </div>
@@ -348,9 +352,9 @@ export default function AdminEventsPage() {
         </div>
 
         {/* Events List */}
-        <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-          <CardHeader className="border-b border-slate-200">
-            <CardTitle className="text-xl font-semibold text-slate-900">
+        <Card className="bg-white border border-gray-200 shadow-lg">
+          <CardHeader className="border-b border-gray-200">
+            <CardTitle className="text-xl font-semibold text-gray-900">
               Events List
             </CardTitle>
           </CardHeader>
@@ -358,7 +362,7 @@ export default function AdminEventsPage() {
             {isLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center gap-4 p-4 border border-slate-200 rounded-lg">
+                  <div key={i} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
                     <Skeleton className="w-16 h-16 rounded-lg" />
                     <div className="flex-1 space-y-2">
                       <Skeleton className="h-5 w-1/3" />
@@ -374,9 +378,9 @@ export default function AdminEventsPage() {
               </div>
             ) : events.length === 0 ? (
               <div className="text-center py-12">
-                <Calendar className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-900 mb-2">No events yet</h3>
-                <p className="text-slate-600 mb-4">Get started by creating your first event</p>
+                <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No events yet</h3>
+                <p className="text-gray-600 mb-4">Get started by creating your first event</p>
                 <Button
                   onClick={() => {
                     setEditEventSlug(null);
@@ -384,7 +388,7 @@ export default function AdminEventsPage() {
                     setImagePreview(null);
                     setIsDialogOpen(true);
                   }}
-                  className="bg-black text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="bg-black text-white shadow-lg hover:bg-gray-800 transition-all duration-200"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Create Event
@@ -395,7 +399,7 @@ export default function AdminEventsPage() {
                 {events.map((event: Event) => (
                   <div
                     key={event.slug}
-                    className="flex items-center gap-4 p-4 border border-slate-200 rounded-lg hover:shadow-md transition-shadow duration-200"
+                    className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200"
                   >
                     <div className="relative">
                       {event.image ? (
@@ -407,21 +411,21 @@ export default function AdminEventsPage() {
                           className="w-16 h-16 object-cover rounded-lg"
                         />
                       ) : (
-                        <div className="w-16 h-16 bg-slate-200 rounded-lg flex items-center justify-center">
-                          <ImageIcon className="w-6 h-6 text-slate-400" />
+                        <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                          <ImageIcon className="w-6 h-6 text-gray-400" />
                         </div>
                       )}
                       {isUpcoming(event.date) && (
-                        <Badge className="absolute -top-2 -right-2 bg-green-500 text-white text-xs">
+                        <Badge className="absolute -top-2 -right-2 bg-gray-800 text-white text-xs">
                           Upcoming
                         </Badge>
                       )}
                     </div>
                     
                     <div className="flex-1">
-                      <h3 className="font-semibold text-slate-900 mb-1">{event.title}</h3>
-                      <p className="text-sm text-slate-600 mb-2 line-clamp-2">{event.description}</p>
-                      <div className="flex items-center gap-4 text-sm text-slate-500">
+                      <h3 className="font-semibold text-gray-900 mb-1">{event.title}</h3>
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">{event.description}</p>
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
                         <div className="flex items-center gap-1">
                           <MapPin className="w-4 h-4" />
                           <span>{event.location}</span>
@@ -438,7 +442,7 @@ export default function AdminEventsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => handleEdit(event)}
-                        className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300"
+                        className="hover:bg-gray-100 hover:text-gray-900 border-gray-300"
                       >
                         <Edit3 className="w-4 h-4 mr-1" />
                         Edit
@@ -447,7 +451,7 @@ export default function AdminEventsPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => setDeleteEventSlug(event.slug)}
-                        className="hover:bg-red-50 hover:text-red-600 hover:border-red-300"
+                        className="hover:bg-gray-100 hover:text-gray-900 border-gray-300"
                       >
                         <Trash2 className="w-4 h-4 mr-1" />
                         Delete
@@ -463,9 +467,9 @@ export default function AdminEventsPage() {
 
       {/* Add/Edit Event Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="bg-white border-0 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-white border border-gray-200 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-slate-900">
+            <DialogTitle className="text-2xl font-bold text-gray-900">
               {editEventSlug ? "Edit Event" : "Create New Event"}
             </DialogTitle>
           </DialogHeader>
@@ -473,13 +477,13 @@ export default function AdminEventsPage() {
           <form onSubmit={handleSubmit(handleSave)} className="space-y-6">
             {/* Title */}
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="title" className="text-sm font-medium text-gray-700">
                 Event Title *
               </Label>
               <Input
                 id="title"
                 placeholder="Enter event title"
-                className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                 {...register("title")}
                 onChange={handleTitleChange}
               />
@@ -490,13 +494,13 @@ export default function AdminEventsPage() {
 
             {/* Slug */}
             <div className="space-y-2">
-              <Label htmlFor="slug" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="slug" className="text-sm font-medium text-gray-700">
                 URL Slug *
               </Label>
               <Input
                 id="slug"
                 placeholder="event-url-slug"
-                className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                 {...register("slug")}
                 disabled={!!editEventSlug}
               />
@@ -507,14 +511,14 @@ export default function AdminEventsPage() {
 
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-sm font-medium text-slate-700">
+              <Label htmlFor="description" className="text-sm font-medium text-gray-700">
                 Description *
               </Label>
               <Textarea
                 id="description"
                 placeholder="Enter event description"
                 rows={4}
-                className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                 {...register("description")}
               />
               {errors.description && (
@@ -524,7 +528,7 @@ export default function AdminEventsPage() {
 
             {/* Image Upload */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-slate-700">
+              <Label className="text-sm font-medium text-gray-700">
                 Event Image *
               </Label>
               <div className="space-y-4">
@@ -532,17 +536,17 @@ export default function AdminEventsPage() {
                 {(imagePreview || watchedImage) && (
                   <div className="relative">
                     <Image
-                    width={64}
-                    height={64}
+                      width={64}
+                      height={64}
                       src={imagePreview || watchedImage}
                       alt="Preview"
-                      className="w-full h-48 object-cover rounded-lg border border-slate-300"
+                      className="w-full h-48 object-cover rounded-lg border border-gray-300"
                     />
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                      className="absolute top-2 right-2 bg-white/80 hover:bg-white border-gray-300"
                       onClick={() => {
                         setImagePreview(null);
                         setValue("image", "");
@@ -560,7 +564,7 @@ export default function AdminEventsPage() {
                     variant="outline"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={imageUploading}
-                    className="flex-1"
+                    className="flex-1 border-gray-300 hover:bg-gray-100"
                   >
                     {imageUploading ? (
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -569,8 +573,6 @@ export default function AdminEventsPage() {
                     )}
                     Upload Image
                   </Button>
-                  
-                 
                 </div>
                 
                 <input
@@ -589,13 +591,13 @@ export default function AdminEventsPage() {
             {/* Date and Location */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="date" className="text-sm font-medium text-slate-700">
+                <Label htmlFor="date" className="text-sm font-medium text-gray-700">
                   Event Date *
                 </Label>
                 <Input
                   id="date"
                   type="date"
-                  className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                   {...register("date")}
                 />
                 {errors.date && (
@@ -604,13 +606,13 @@ export default function AdminEventsPage() {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="location" className="text-sm font-medium text-slate-700">
+                <Label htmlFor="location" className="text-sm font-medium text-gray-700">
                   Location *
                 </Label>
                 <Input
                   id="location"
                   placeholder="Enter event location"
-                  className="border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                   {...register("location")}
                 />
                 {errors.location && (
@@ -623,7 +625,7 @@ export default function AdminEventsPage() {
             <Button
               type="submit"
               disabled={isSubmitting || imageUploading}
-              className="w-full bg-black text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              className="w-full bg-black text-white shadow-lg hover:bg-gray-800 transition-all duration-200"
             >
               {isSubmitting ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -636,22 +638,22 @@ export default function AdminEventsPage() {
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={!!deleteEventSlug} onOpenChange={() => setDeleteEventSlug(null)}>
-        <AlertDialogContent className="bg-white border-0 shadow-2xl">
+        <AlertDialogContent className="bg-white border border-gray-200 shadow-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold text-slate-900">
+            <AlertDialogTitle className="text-xl font-bold text-gray-900">
               Delete Event
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-600">
+            <AlertDialogDescription className="text-gray-600">
               Are you sure you want to delete this event? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-slate-300 hover:bg-slate-50">
+            <AlertDialogCancel className="border-gray-300 hover:bg-gray-50">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => deleteEventSlug && handleDelete(deleteEventSlug)}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-gray-800 hover:bg-black text-white"
             >
               Delete
             </AlertDialogAction>

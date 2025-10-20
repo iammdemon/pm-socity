@@ -57,8 +57,9 @@ export default function MemberRightPanel() {
       {/* Profile Header */}
       <div className="relative h-56 w-full dark:bg-black bg-white">
         <div className="absolute top-4 right-4 flex gap-2">
-          <ModeToggle />
+        
           <DropdownMenu>
+             
             <DropdownMenuTrigger asChild>
               <button className="w-10 h-10 bg-white/10 dark:bg-black/10 rounded-full flex items-center justify-center hover:bg-white/20 dark:hover:bg-black/20 transition-colors">
                 <Settings className="w-5 h-5 dark:text-white text-black" />
@@ -68,6 +69,9 @@ export default function MemberRightPanel() {
               align="end"
               className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800"
             >
+              <DropdownMenuItem>
+                <ModeToggle />
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link
                   href={`/dashboard/profile/${user?.userName}`}
