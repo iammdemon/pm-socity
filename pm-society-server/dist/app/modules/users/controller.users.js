@@ -20,6 +20,7 @@ const utils_user_1 = require("./utils.user");
 const mongoose_1 = require("mongoose");
 const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const role = "admin";
+    yield (0, utils_user_1.generateUsernameFromEmail)(req.body.email);
     const result = yield service_users_1.userService.createUserIntoDB(Object.assign(Object.assign({}, req.body), { role }));
     res.status(201).json({ message: "User created successfully", data: result });
     return;

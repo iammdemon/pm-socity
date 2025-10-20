@@ -1,5 +1,5 @@
 import { User } from "./model.users";
-import bcrypt from "bcrypt";
+
 
 const DEFAULT_PASSWORD = "NewDefault123";
 

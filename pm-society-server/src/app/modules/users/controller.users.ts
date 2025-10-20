@@ -13,6 +13,7 @@ interface AuthRequest extends Request {
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const role = "admin";
+  await generateUsernameFromEmail(req.body.email);
   const result = await userService.createUserIntoDB({ ...req.body, role });
   res.status(201).json({ message: "User created successfully", data: result });
   return;
