@@ -62,7 +62,7 @@ const updateUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void
 const generateLink = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Find all users without a username
     const usersWithoutUsername = yield model_users_1.User.find({
-        username: { $exists: false },
+        userName: { $exists: false },
     });
     for (const user of usersWithoutUsername) {
         const username = yield (0, utils_user_1.generateUsernameFromEmail)(user.email); // use your helper

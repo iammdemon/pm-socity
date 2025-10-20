@@ -21,12 +21,18 @@ const randomString = (length) => {
     }
     return result;
 };
-// Generate a unique username from email
+// ✅ Generate a unique username from email (only if needed)
 const generateUsernameFromEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    // 1️⃣ Check if the user already exists with that email
+    const existingUser = yield model_users_1.User.findOne({ email });
+    if (existingUser && existingUser.userName) {
+        // Already has username — don’t regenerate
+        return existingUser.userName;
+    }
+    // 2️⃣ Otherwise, generate a new unique username
     const base = email.split("@")[0].toLowerCase(); // use part before @
     let username = base + randomString(4); // add random 4 chars
     let exists = yield model_users_1.User.exists({ username });
-    // Keep generating until unique
     while (exists) {
         username = base + randomString(4);
         exists = yield model_users_1.User.exists({ username });
@@ -34,11 +40,13 @@ const generateUsernameFromEmail = (email) => __awaiter(void 0, void 0, void 0, f
     return username;
 });
 exports.generateUsernameFromEmail = generateUsernameFromEmail;
+// ✅ Reset all passwords without changing usernames
 const resetAllPasswords = () => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield model_users_1.User.find();
     for (const user of users) {
-        user.password = DEFAULT_PASSWORD; // raw password
-        yield user.save(); // pre('save') will hash it once
+        // Only reset password, keep username unchanged
+        user.password = DEFAULT_PASSWORD; // raw password, pre('save') will hash it
+        yield user.save();
     }
 });
 exports.resetAllPasswords = resetAllPasswords;

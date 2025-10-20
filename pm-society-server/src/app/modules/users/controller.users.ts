@@ -63,7 +63,7 @@ const updateUserProfile = catchAsync(
 const generateLink = catchAsync(async (req: Request, res: Response) => {
   // Find all users without a username
   const usersWithoutUsername = await User.find({
-    username: { $exists: false },
+    userName: { $exists: false },
   });
 
   for (const user of usersWithoutUsername) {

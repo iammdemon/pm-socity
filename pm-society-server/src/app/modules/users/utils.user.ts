@@ -1,9 +1,6 @@
 import { User } from "./model.users";
 
-
 const DEFAULT_PASSWORD = "NewDefault123";
-
-
 
 // Generate a random string of given length
 const randomString = (length: number) => {
@@ -15,13 +12,21 @@ const randomString = (length: number) => {
   return result;
 };
 
-// Generate a unique username from email
+// ✅ Generate a unique username from email (only if needed)
 export const generateUsernameFromEmail = async (email: string) => {
+  // 1️⃣ Check if the user already exists with that email
+  const existingUser = await User.findOne({ email });
+
+  if (existingUser && existingUser.userName) {
+    // Already has username — don’t regenerate
+    return existingUser.userName;
+  }
+
+  // 2️⃣ Otherwise, generate a new unique username
   const base = email.split("@")[0].toLowerCase(); // use part before @
   let username = base + randomString(4); // add random 4 chars
   let exists = await User.exists({ username });
 
-  // Keep generating until unique
   while (exists) {
     username = base + randomString(4);
     exists = await User.exists({ username });
@@ -30,12 +35,12 @@ export const generateUsernameFromEmail = async (email: string) => {
   return username;
 };
 
-
-
+// ✅ Reset all passwords without changing usernames
 export const resetAllPasswords = async () => {
   const users = await User.find();
   for (const user of users) {
-    user.password = DEFAULT_PASSWORD; // raw password
-    await user.save(); // pre('save') will hash it once
+    // Only reset password, keep username unchanged
+    user.password = DEFAULT_PASSWORD; // raw password, pre('save') will hash it
+    await user.save();
   }
 };
