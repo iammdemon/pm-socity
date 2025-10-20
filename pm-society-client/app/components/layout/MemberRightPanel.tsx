@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import Loading from "@/app/components/functions/Loading";
 import { Card, CardContent } from "@/components/ui/card";
 import { ModeToggle } from "./ModeToggle";
-import { useRouter } from "next/navigation";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +32,7 @@ import Link from "next/link";
 
 export default function MemberRightPanel() {
   const { data: userData, isLoading: isUserLoading } = useGetMeQuery({});
-  const router = useRouter();
+  
 
   if (isUserLoading) {
     return <Loading />;
