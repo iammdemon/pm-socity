@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 export default function MemberRightPanel() {
   const { data: userData, isLoading: isUserLoading } = useGetMeQuery({});
@@ -67,21 +68,23 @@ export default function MemberRightPanel() {
               align="end"
               className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800"
             >
-              <DropdownMenuItem
-                onClick={() => router.push("/dashboard/profile")}
-                className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                <User className="w-4 h-4" />
-                <span>Edit Profile</span>
+              <DropdownMenuItem>
+                <Link
+                  href={`/dashboard/profile/${user?.userName}`}
+                  className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <User className="w-4 h-4" />
+                  <span>View Profile</span>
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  router.push("/dashboard/profile/change-password")
-                }
-                className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                <Key className="w-4 h-4" />
-                <span>Change Password</span>
+              <DropdownMenuItem>
+                <Link
+                  href="/dashboard/profile/change-password"
+                  className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <Key className="w-4 h-4" />
+                  <span>Change Password</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleLogout}

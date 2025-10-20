@@ -41,6 +41,17 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Force dark input for n8n chat */
+html.dark #n8n-chat input {
+  background-color: #1f2937 !important; /* Tailwind's neutral-800 */
+  color: #f9fafb !important; /* text-gray-50 */
+}
+
+html.dark #n8n-chat textarea {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -118,4 +129,3 @@
     @apply bg-background text-foreground;
   }
 }
-

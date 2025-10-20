@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Search, User, LogOut, Settings,  ChevronDown, GraduationCap } from "lucide-react";
+import {
+  Search,
+  User,
+  LogOut,
+  Settings,
+  ChevronDown,
+  GraduationCap,
+} from "lucide-react";
 
 import { useState, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
@@ -19,10 +26,7 @@ interface User {
   avatar?: string;
 }
 
-
-
 const MobileHeader = () => {
-
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -37,7 +41,10 @@ const MobileHeader = () => {
   // Close profile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node)
+      ) {
         setIsProfileMenuOpen(false);
       }
     };
@@ -65,12 +72,13 @@ const MobileHeader = () => {
   // Avoid SSR mismatch by not rendering until mounted
   if (!mounted) return null;
 
-
   // Handle search
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(
+        `/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`
+      );
       setSearchQuery("");
     }
   };
@@ -78,9 +86,9 @@ const MobileHeader = () => {
   // Handle logout
   const handleLogout = async () => {
     try {
-      await signOut({ 
+      await signOut({
         callbackUrl: "/",
-        redirect: true 
+        redirect: true,
       });
     } catch (error) {
       console.error("Logout error:", error);
@@ -94,7 +102,7 @@ const MobileHeader = () => {
     if (!session?.user?.name) return "U";
     return session.user.name
       .split(" ")
-      .map(n => n[0])
+      .map((n) => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
@@ -102,8 +110,8 @@ const MobileHeader = () => {
 
   return (
     <>
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 border-b bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md shadow-lg dark:border-neutral-800/50">
-        <div className="flex items-center justify-between max-w-7xl mx-auto p-3">
+      <header className="lg:hidden sticky  top-0 left-0 right-0 z-50 border-b bg-white/95 dark:bg-neutral-950/95  dark:border-neutral-800/50">
+        <div className="flex items-center justify-between max-w-7xl mx-auto p-1">
           {/* Logo */}
           <Link href="/dashboard" className="relative h-10 w-16">
             <Image
@@ -139,7 +147,7 @@ const MobileHeader = () => {
 
           {/* Right icons */}
           <div className="flex items-center space-x-1">
-          <ModeToggle/>
+            <ModeToggle />
             {/* Profile Dropdown */}
             <div className="relative" ref={profileMenuRef}>
               <button
@@ -150,21 +158,31 @@ const MobileHeader = () => {
                 aria-haspopup="true"
               >
                 <Avatar className="h-7 w-7">
-                  <AvatarImage src={ session?.user?.avatar || ""} alt={session?.user?.name || ""} />
+                  <AvatarImage
+                    src={session?.user?.avatar || ""}
+                    alt={session?.user?.name || ""}
+                  />
                   <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-xs">
                     {getUserInitials()}
                   </AvatarFallback>
                 </Avatar>
-                <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isProfileMenuOpen ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`w-3 h-3 transition-transform duration-200 ${
+                    isProfileMenuOpen ? "rotate-180" : ""
+                  }`}
+                />
               </button>
-              
+
               {isProfileMenuOpen && (
                 <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-neutral-800 rounded-xl shadow-xl border border-gray-200 dark:border-neutral-700 overflow-hidden z-50">
                   {/* Profile Header */}
                   <div className="px-4 py-4 border-b border-gray-200 dark:border-neutral-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src={ session?.user?.avatar || ""} alt={session?.user?.name || ""} />
+                        <AvatarImage
+                          src={session?.user?.avatar || ""}
+                          alt={session?.user?.name || ""}
+                        />
                         <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
                           {getUserInitials()}
                         </AvatarFallback>
@@ -179,7 +197,7 @@ const MobileHeader = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Menu Items */}
                   <div className="py-2">
                     <Link
@@ -198,7 +216,7 @@ const MobileHeader = () => {
                       <Settings className="w-4 h-4 mr-3" />
                       Change Password
                     </Link>
-                
+
                     <Link
                       href="https://thepmsociety.pmtraining.com/partner-login"
                       target="_blank"
@@ -209,7 +227,7 @@ const MobileHeader = () => {
                       <GraduationCap className="w-4 h-4 mr-3" />
                       Training Pathway
                     </Link>
-                    
+
                     <div className="border-t border-gray-200 dark:border-neutral-700 my-2"></div>
                     <Button
                       onClick={handleLogout}

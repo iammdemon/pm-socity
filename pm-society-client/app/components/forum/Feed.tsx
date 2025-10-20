@@ -193,12 +193,12 @@ const PostFeed = ({
               </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1 flex-wrap">
-                  <Link href={`/dashboard/profile/${post.author?.userName}`}>
+                  <Link href={`/dashboard/profile/${post.author?.userName}`} className="space-x-0.5">
                     <span className="font-bold text-black dark:text-white text-sm sm:text-base">
                       {post.author?.name || "Anonymous User"}
                     </span>
                     <span className="text-gray-500 dark:text-gray-400 text-sm">
-                      @{post.author?.userName}
+                       @{post.author?.userName}
                     </span>
                   </Link>
                   <span className="text-gray-500 dark:text-gray-400 text-sm">
