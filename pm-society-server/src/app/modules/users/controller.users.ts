@@ -17,11 +17,11 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
      return
   }
 
-  const username = await generateUsernameFromEmail(req.body.email);
+  const userName = await generateUsernameFromEmail(req.body.email);
   const result = await userService.createUserIntoDB({
     ...req.body,
     role,
-    username,
+    userName,
   });
 
   res.status(201).json({ message: "User created successfully", data: result });

@@ -24,9 +24,9 @@ const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         res.status(400).json({ message: "Email is required" });
         return;
     }
-    const username = yield (0, utils_user_1.generateUsernameFromEmail)(req.body.email);
+    const userName = yield (0, utils_user_1.generateUsernameFromEmail)(req.body.email);
     const result = yield service_users_1.userService.createUserIntoDB(Object.assign(Object.assign({}, req.body), { role,
-        username }));
+        userName }));
     res.status(201).json({ message: "User created successfully", data: result });
 }));
 const getAllUsers = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
