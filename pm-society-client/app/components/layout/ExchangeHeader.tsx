@@ -4,17 +4,14 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   Users,
- 
   Calendar,
   BookOpen,
- 
   Search,
   LucideIcon,
+  UserCheck,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-
-
 
 interface NavigationItem {
   name: string;
@@ -30,10 +27,10 @@ interface NavLinkProps {
 const NAVIGATION_ITEMS: NavigationItem[] = [
   { name: "The Exchange", href: "/dashboard", icon: Home },
   { name: "Society Circles", href: "/dashboard/circles", icon: Users },
+  { name: "Members", href: "/dashboard/members", icon: UserCheck },
   // { name: "SIA AI", href: "/dashboard/sia", icon: Sparkles },
   { name: "Upcoming Events", href: "/dashboard/events", icon: Calendar },
   { name: "Resources", href: "/dashboard/resources", icon: BookOpen },
-  
 ];
 
 // Clean Search Bar with black/white styling
@@ -53,9 +50,11 @@ const NavLink: React.FC<NavLinkProps> = ({ item, isActive }) => (
     href={item.href}
     className={`
       flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
-      ${isActive
-        ? "bg-black text-white dark:bg-white dark:text-black"
-        : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"}
+      ${
+        isActive
+          ? "bg-black text-white dark:bg-white dark:text-black"
+          : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+      }
     `}
   >
     <item.icon className="h-4 w-4" />
@@ -68,7 +67,8 @@ const ExchangeHeader: React.FC = () => {
   const pathname = usePathname();
 
   const isActive = (href: string): boolean => {
-    if (href === "/dashboard") return pathname === "/dashboard" || pathname === "/";
+    if (href === "/dashboard")
+      return pathname === "/dashboard" || pathname === "/";
     return pathname === href;
   };
 
@@ -92,7 +92,6 @@ const ExchangeHeader: React.FC = () => {
                 isActive={isActive(item.href)}
               />
             ))}
-       
           </div>
         </div>
       </div>

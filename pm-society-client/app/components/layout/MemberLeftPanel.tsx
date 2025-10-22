@@ -252,7 +252,7 @@ const LearningResources = () => {
                   Training Pathway
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Course materials & recordings
+                  Practice Exams & On Demand Content
                 </p>
               </div>
             </div>
@@ -294,7 +294,7 @@ const MentorBooking = () => {
     <section className="mb-6">
       <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
-        Training Pathway
+       Society Success Sessions
       </h2>
 
       <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-4 shadow-xl">
@@ -313,7 +313,7 @@ const MentorBooking = () => {
                   Olivia McGlothen
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Schedule a coaching session
+                  Schedule a mentorship session
                 </p>
               </div>
             </div>
@@ -333,7 +333,7 @@ const MentorBooking = () => {
                   Toni Merrill
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Schedule a coaching session
+                 Schedule a coaching session
                 </p>
               </div>
             </div>
@@ -353,7 +353,7 @@ const MentorBooking = () => {
                   Alana Captain
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Schedule a coaching session
+                 Schedule a resume consultation
                 </p>
               </div>
             </div>
@@ -373,7 +373,7 @@ const MentorBooking = () => {
                   Erin
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Schedule a coaching session
+                  Schedule a resume consultation
                 </p>
               </div>
             </div>
