@@ -8,7 +8,7 @@ import {
   BookOpen,
   Search,
   LucideIcon,
-  UserCheck,
+  
   Sparkles,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,7 @@ interface NavLinkProps {
 const NAVIGATION_ITEMS: NavigationItem[] = [
   { name: "The Exchange", href: "/dashboard", icon: Home },
   { name: "Society Circles", href: "/dashboard/circles", icon: Users },
-  { name: "Members", href: "/dashboard/members", icon: UserCheck },
+ 
   { name: "SIA AI", href: "/dashboard/sia", icon: Sparkles },
   { name: "Upcoming Events", href: "/dashboard/events", icon: Calendar },
   { name: "Resources", href: "/dashboard/resources", icon: BookOpen },

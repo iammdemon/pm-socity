@@ -1,15 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {  useSearchParams } from "next/navigation";
-import { Search } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Search, Heart, MessageCircle } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow } from "date-fns";
 
@@ -17,18 +16,26 @@ import { useSearchQuery } from "@/app/redux/services/authApi";
 import { IForumTopic, IUser } from "@/app/redux/services/forumApi";
 import { IResource } from "@/app/redux/services/resourceApi";
 import { IEvent } from "@/app/redux/services/eventApi";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { toast } from "sonner";
+import { useToggleReactionOnTopicMutation } from "@/app/redux/services/forumApi";
 
 const SearchPage: React.FC = () => {
-
   const searchParams = useSearchParams();
   const q = searchParams.get("q") || "";
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
 
   const [query, setQuery] = useState(q);
   const [activeTab, setActiveTab] = useState("all");
+  const [reactingPostId, setReactingPostId] = useState<string | null>(null);
 
   const { data, isLoading, error } = useSearchQuery(query, {
     skip: !query.trim(),
   });
+
+  const [toggleReaction] = useToggleReactionOnTopicMutation();
 
   // Fix: Extract the actual search results from the nested data structure
   const searchResults = data?.data || {
@@ -45,7 +52,38 @@ const SearchPage: React.FC = () => {
     }
   }, [q, query]);
 
+  const handleReact = async (topicId: string) => {
+    if (!userId) {
+      toast.error("You must be logged in to react");
+      return;
+    }
 
+    setReactingPostId(topicId);
+    try {
+      await toggleReaction({ topicId, userId }).unwrap();
+    } catch (err) {
+      console.error("Failed to toggle reaction:", err);
+      toast.error("Failed to react. Please try again.");
+    } finally {
+      setReactingPostId(null);
+    }
+  };
+
+  const hasReacted = (post: IForumTopic) => {
+    return (
+      post.reactions?.some((u: string | IUser) =>
+        typeof u === "string" ? u === userId : u._id === userId
+      ) || false
+    );
+  };
+
+  const formatRelativeTime = (dateStr: string) => {
+    try {
+      return formatDistanceToNow(new Date(dateStr), { addSuffix: true });
+    } catch {
+      return "some time ago";
+    }
+  };
 
   const UserCard = ({ user }: { user: IUser }) => (
     <Card className="border-0 shadow-none hover:bg-accent/50 transition-colors cursor-pointer">
@@ -75,63 +113,76 @@ const SearchPage: React.FC = () => {
     </Card>
   );
 
-  const PostCard = ({ post }: { post: IForumTopic }) => (
-    <Card className="border-0 shadow-none hover:bg-accent/50 transition-colors cursor-pointer">
-      <CardContent className="p-4">
-        <div className="flex items-start space-x-3">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={post.author?.avatar} alt={post.author?.name} />
+  const PostCard = ({ post }: { post: IForumTopic }) => {
+    const reacted = hasReacted(post);
+    console.log(post);
+    const isReactingThisPost = reactingPostId === post.topicId;
+
+    return (
+      <article className="border-b border-gray-200 dark:border-gray-800 p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+        <div className="flex gap-3">
+          <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
+            <AvatarImage
+              src={post.author?.avatar || ""}
+              alt={post.author?.name || ""}
+            />
             <AvatarFallback>
-              {post.author?.name?.charAt(0).toUpperCase()}
+              {post.author?.name
+                ?.split(" ")
+                .map((n: string) => n[0])
+                .join("") || "U"}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-1">
-              <p className="font-semibold text-foreground truncate">
-                {post.author?.name}
-              </p>
-              <p className="text-muted-foreground">@{post.author?.userName}</p>
-              <span className="text-muted-foreground">·</span>
-              <p className="text-muted-foreground text-sm">
-                {post.createdAt &&
-                  formatDistanceToNow(new Date(post.createdAt), {
-                    addSuffix: true,
-                  })}
-              </p>
+            <div className="flex items-center gap-1 flex-wrap">
+              <Link href={`/dashboard/profile/${post.author?.userName}`} className="space-x-0.5">
+                <span className="font-bold text-black dark:text-white text-sm sm:text-base">
+                  {post.author?.name || "Anonymous User"}
+                </span>
+                <span className="text-gray-500 dark:text-gray-400 text-sm">
+                   @{post.author?.userName}
+                </span>
+              </Link>
+              <span className="text-gray-500 dark:text-gray-400 text-sm">
+                ·
+              </span>
+              <span className="text-gray-500 dark:text-gray-400 text-sm">
+                {post.createdAt && formatRelativeTime(post.createdAt)}
+              </span>
             </div>
-            <p className="text-foreground mt-2 whitespace-pre-wrap">
+            <div className="mt-2 text-black dark:text-white text-sm sm:text-base break-words">
               {post.content}
-            </p>
-            <div className="flex items-center space-x-4 mt-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-2 text-muted-foreground hover:text-foreground"
+            </div>
+            <div className="flex items-center gap-4 sm:gap-6 mt-3 sm:mt-4 text-gray-500 dark:text-gray-400">
+              <button
+                onClick={() => handleReact(post.topicId)}
+                className={`flex items-center gap-1 sm:gap-2 transition-colors ${
+                  reacted ? "text-red-500" : "hover:text-red-500"
+                }`}
+                disabled={isReactingThisPost}
               >
-                <span className="mr-1">💬</span>
-                {post.replies?.length || 0}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-2 text-muted-foreground hover:text-foreground"
+                <Heart
+                  className={`w-4 h-4 ${reacted ? "fill-current" : ""}`}
+                />
+                <span className="text-xs sm:text-sm">
+                  {post.reactionCount || 0}
+                </span>
+              </button>
+              <Link
+                href={`/dashboard/forum/${post.topicId}`}
+                className="flex items-center gap-1 sm:gap-2 hover:text-black dark:hover:text-white transition-colors"
               >
-                <span className="mr-1">🔁</span>
-                {post.reactions?.length || 0}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-2 text-muted-foreground hover:text-foreground"
-              >
-                <span className="mr-1">❤️</span>
-              </Button>
+                <MessageCircle className="w-4 h-4" />
+                <span className="text-xs sm:text-sm">
+                  {post.replyCount || 0}
+                </span>
+              </Link>
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
-  );
+      </article>
+    );
+  };
 
   const ResourceCard = ({ resource }: { resource: IResource }) => (
     <Card className="border-0 shadow-none hover:bg-accent/50 transition-colors cursor-pointer">
@@ -237,7 +288,7 @@ const SearchPage: React.FC = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="mt-0 space-y-4">
+        <TabsContent value="all" className="mt-0">
           {users.length > 0 && (
             <div>
               <h3 className="font-semibold text-lg px-4 py-2">Users</h3>
@@ -301,7 +352,7 @@ const SearchPage: React.FC = () => {
           <div className="space-y-0">
             {posts.length > 0 ? (
               posts.map((post: IForumTopic) => (
-                <PostCard key={post._id?.toString()} post={post} />
+                <PostCard key={post.topicId} post={post} />
               ))
             ) : (
               <div className="text-center py-12">

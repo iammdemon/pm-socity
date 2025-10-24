@@ -1,4 +1,4 @@
-
+"use client"
 
 import MobileNav from "../components/layout/MobileNav";
 import MobileHeader from "../components/layout/MobileHeader";
