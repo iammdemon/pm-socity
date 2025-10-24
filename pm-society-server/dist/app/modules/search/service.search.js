@@ -18,34 +18,36 @@ const model_events_1 = __importDefault(require("../events/model.events"));
 const model_resources_1 = require("../resources/model.resources");
 const model_users_1 = require("../users/model.users");
 const searchAll = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!query || query.trim() === "") {
+    const trimmedQuery = query === null || query === void 0 ? void 0 : query.trim();
+    if (!trimmedQuery) {
         return { users: [], posts: [], resources: [], events: [] };
     }
-    const queryRegex = new RegExp(query, "i"); // case-insensitive search
+    const queryRegex = new RegExp(trimmedQuery, "i");
     const [users, posts, resources, events] = yield Promise.all([
+        // 👇 No .select() — returns full user docs
         model_users_1.User.find({
             $or: [{ name: queryRegex }, { userName: queryRegex }, { bio: queryRegex }],
         })
-            .select("name userName avatar bio")
-            .limit(5),
+            .limit(5)
+            .catch(() => []),
+        // 👇 Full forum topic (with populated author)
         model_discussions_1.ForumTopic.find({ content: queryRegex })
-            .populate("author", "name userName avatar")
-            .select("content createdAt")
-            .limit(5),
+            .populate("author", "name userName") // full author data
+            .limit(5)
+            .catch(() => []),
+        // 👇 Full resource documents
         model_resources_1.Resource.find({
             $or: [{ title: queryRegex }, { description: queryRegex }, { tags: queryRegex }],
         })
-            .select("title description link tags")
-            .limit(5),
+            .limit(5)
+            .catch(() => []),
+        // 👇 Full event documents
         model_events_1.default.find({
             $or: [{ title: queryRegex }, { description: queryRegex }],
         })
-            .select("title description date location")
             .limit(5)
-            .catch(() => []), // handles missing Event model gracefully
+            .catch(() => []),
     ]);
     return { users, posts, resources, events };
 });
-exports.searchService = {
-    searchAll,
-};
+exports.searchService = { searchAll };

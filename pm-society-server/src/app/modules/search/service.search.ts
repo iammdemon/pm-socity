@@ -4,41 +4,43 @@ import { Resource } from "../resources/model.resources";
 import { User } from "../users/model.users";
 
 const searchAll = async (query: string) => {
-  if (!query || query.trim() === "") {
+  const trimmedQuery = query?.trim();
+  if (!trimmedQuery) {
     return { users: [], posts: [], resources: [], events: [] };
   }
 
-  const queryRegex = new RegExp(query, "i"); // case-insensitive search
+  const queryRegex = new RegExp(trimmedQuery, "i");
 
   const [users, posts, resources, events] = await Promise.all([
+    // 👇 No .select() — returns full user docs
     User.find({
       $or: [{ name: queryRegex }, { userName: queryRegex }, { bio: queryRegex }],
     })
-      .select("name userName avatar bio")
-      .limit(5),
+      .limit(5)
+      .catch(() => []),
 
+    // 👇 Full forum topic (with populated author)
     ForumTopic.find({ content: queryRegex })
-      .populate("author", "name userName avatar")
-      .select("content createdAt")
-      .limit(5),
+      .populate("author", "name userName") // full author data
+      .limit(5)
+      .catch(() => []),
 
+    // 👇 Full resource documents
     Resource.find({
       $or: [{ title: queryRegex }, { description: queryRegex }, { tags: queryRegex }],
     })
-      .select("title description link tags")
-      .limit(5),
+      .limit(5)
+      .catch(() => []),
 
+    // 👇 Full event documents
     Event.find({
       $or: [{ title: queryRegex }, { description: queryRegex }],
     })
-      .select("title description date location")
       .limit(5)
-      .catch(() => []), // handles missing Event model gracefully
+      .catch(() => []),
   ]);
 
   return { users, posts, resources, events };
 };
 
-export const searchService = {
-  searchAll,
-};
+export const searchService = { searchAll };
