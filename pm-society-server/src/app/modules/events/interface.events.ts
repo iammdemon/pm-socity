@@ -1,3 +1,5 @@
+import { Types } from "mongoose"
+
 export interface IEvent{
     title: string
     slug: string
@@ -5,4 +7,6 @@ export interface IEvent{
     image: string
     date: string
     location: string
+    joinedUser?: Types.ObjectId[]
+
 }

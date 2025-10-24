@@ -29,7 +29,8 @@ const ReplySchema = new mongoose_1.Schema({
     },
 });
 ReplySchema.virtual("reactionCount").get(function () {
-    return this.reactions.length;
+    var _a;
+    return ((_a = this.reactions) === null || _a === void 0 ? void 0 : _a.length) || 0;
 });
 const ForumTopicSchema = new mongoose_1.Schema({
     author: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
@@ -57,10 +58,12 @@ ForumTopicSchema.pre("save", function (next) {
     });
 });
 ForumTopicSchema.virtual("reactionCount").get(function () {
-    return this.reactions.length;
+    var _a;
+    return ((_a = this.reactions) === null || _a === void 0 ? void 0 : _a.length) || 0;
 });
 ForumTopicSchema.virtual("replyCount").get(function () {
-    return this.replies.length;
+    var _a;
+    return ((_a = this.replies) === null || _a === void 0 ? void 0 : _a.length) || 0;
 });
 ForumTopicSchema.index({ createdAt: -1 });
 exports.ForumTopic = (0, mongoose_1.model)("ForumTopic", ForumTopicSchema);

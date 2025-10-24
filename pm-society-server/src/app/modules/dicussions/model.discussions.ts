@@ -24,7 +24,7 @@ const ReplySchema = new Schema<IReply>(
 );
 
 ReplySchema.virtual("reactionCount").get(function () {
-  return this.reactions.length;
+  return this.reactions?.length || 0
 });
 
 const ForumTopicSchema = new Schema<IForumTopic>(
@@ -60,11 +60,11 @@ ForumTopicSchema.pre("save", async function (next) {
 });
 
 ForumTopicSchema.virtual("reactionCount").get(function () {
-  return this.reactions.length;
+  return this.reactions?.length || 0
 });
 
 ForumTopicSchema.virtual("replyCount").get(function () {
-  return this.replies.length;
+  return this.replies?.length || 0
 });
 
 ForumTopicSchema.index({ createdAt: -1 });

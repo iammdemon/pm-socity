@@ -12,6 +12,7 @@ const route_contact_1 = require("../modules/contact/route.contact");
 const route_1 = require("../modules/mailchimp/route");
 const route_goal_1 = require("../modules/goal/route.goal");
 const route_achievement_1 = require("../modules/achievement/route.achievement");
+const route_search_1 = require("../modules/search/route.search");
 const router = (0, express_1.Router)();
 const moduleRoutes = [
     { path: "/users", route: route_users_1.UserRoutes },
@@ -25,6 +26,7 @@ const moduleRoutes = [
     { path: "/subscribe", route: route_1.mailchimpRoutes },
     { path: "/goals", route: route_goal_1.GoalRoutes },
     { path: "/achievements", route: route_achievement_1.AchievementRoutes },
+    { path: "/search", route: route_search_1.searchRoutes }
 ];
 moduleRoutes.forEach((route) => {
     router.use(route.path, route.route);

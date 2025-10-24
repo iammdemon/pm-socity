@@ -63,17 +63,14 @@ const toggleLink = (linkedUserId, currentUserEmail) => __awaiter(void 0, void 0,
     const user = yield model_users_1.User.findOne({ email: currentUserEmail });
     if (!user)
         throw new Error("User not found");
-    console.log(user);
     const targetUser = yield model_users_1.User.findById(linkedUserId);
     if (!targetUser)
         throw new Error("Target user not found");
-    console.log(targetUser);
     if (!user.linkedUsers)
         user.linkedUsers = [];
     if (!targetUser.linkedUsers)
         targetUser.linkedUsers = [];
     const isAlreadyLinked = user.linkedUsers.some(id => id.toString() === linkedUserId.toString());
-    console.log(isAlreadyLinked);
     if (isAlreadyLinked) {
         // 🔻 Remove link from both users
         user.linkedUsers = user.linkedUsers.filter(id => id.toString() !== linkedUserId.toString());

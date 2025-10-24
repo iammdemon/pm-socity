@@ -76,11 +76,11 @@ const getUserByUserName = async (userName: string) => {
 const toggleLink = async (linkedUserId: Types.ObjectId, currentUserEmail: string) => {
   const user = await User.findOne({ email: currentUserEmail });
   if (!user) throw new Error("User not found");
-  console.log(user)
+
 
   const targetUser = await User.findById(linkedUserId);
   if (!targetUser) throw new Error("Target user not found");
-  console.log(targetUser)
+
 
 
   if (!user.linkedUsers) user.linkedUsers = [];
@@ -88,7 +88,7 @@ const toggleLink = async (linkedUserId: Types.ObjectId, currentUserEmail: string
 
   const isAlreadyLinked = user.linkedUsers.some(id => id.toString() === linkedUserId.toString());
 
-  console.log(isAlreadyLinked)
+
 
   if (isAlreadyLinked) {
     // 🔻 Remove link from both users
