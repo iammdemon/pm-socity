@@ -1,11 +1,11 @@
-"use client";
+
 
 import MobileNav from "../components/layout/MobileNav";
 import MobileHeader from "../components/layout/MobileHeader";
 import ExchangeHeader from "../components/layout/ExchangeHeader";
 import MemberLeftPanel from "../components/layout/MemberLeftPanel";
 import MemberRightPanel from "../components/layout/MemberRightPanel";
-import SiaAI from "../components/ai/SiaAI";
+
 
 export default function DashboardLayout({
   children,
@@ -49,8 +49,8 @@ export default function DashboardLayout({
         </div>
       </div>
 
-      {/* Global SIA AI assistant (loads once, floats bottom-right) */}
-      <SiaAI />
+  
+     
     </div>
   );
 }

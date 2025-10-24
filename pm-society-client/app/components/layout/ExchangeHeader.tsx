@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
   Users,
@@ -9,9 +9,11 @@ import {
   Search,
   LucideIcon,
   UserCheck,
+  Sparkles,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useState } from "react";
 
 interface NavigationItem {
   name: string;
@@ -28,21 +30,36 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   { name: "The Exchange", href: "/dashboard", icon: Home },
   { name: "Society Circles", href: "/dashboard/circles", icon: Users },
   { name: "Members", href: "/dashboard/members", icon: UserCheck },
-  // { name: "SIA AI", href: "/dashboard/sia", icon: Sparkles },
+  { name: "SIA AI", href: "/dashboard/sia", icon: Sparkles },
   { name: "Upcoming Events", href: "/dashboard/events", icon: Calendar },
   { name: "Resources", href: "/dashboard/resources", icon: BookOpen },
 ];
 
 // Clean Search Bar with black/white styling
-const SearchBar = () => (
-  <div className="relative max-w-2xl w-full mx-auto">
-    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
-    <Input
-      placeholder="Search members, posts, events, resources"
-      className="w-full rounded-full pl-10 bg-gray-100 dark:bg-gray-800 border-0 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400"
-    />
-  </div>
-);
+const SearchBar = () => {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      router.push(
+        `/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`
+      );
+    }
+  };
+  return (
+    <div className="relative max-w-2xl w-full mx-auto">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
+      <Input
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Search members, posts, events, resources"
+        className="w-full rounded-full pl-10 bg-gray-100 dark:bg-gray-800 border-0 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400"
+      />
+    </div>
+  );
+};
 
 // NavLink with black/white active and hover states
 const NavLink: React.FC<NavLinkProps> = ({ item, isActive }) => (

@@ -79,6 +79,10 @@ export const authApi = createApi({
       query: (id) => ({ url: `/achievements/${id}`, method: "DELETE" }),
       invalidatesTags: ["Achievement"],
     }),
+    search: builder.query({
+      query: (query) => ({ url: `/search?q=${query}`, method: "GET" }),
+      providesTags: ["User"],
+    })
   }),
 });
 
@@ -98,4 +102,5 @@ export const {
   useCreateAchievementMutation,
   useUpdateAchievementMutation,
   useDeleteAchievementMutation,
+  useSearchQuery
 } = authApi;
