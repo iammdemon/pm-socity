@@ -25,6 +25,11 @@ const nextConfig: NextConfig = {
         hostname: '127.0.0.1',
         port: '9000', 
         pathname: "/**" // Replace with your actual hostname
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.thepmsociety.com', 
+        pathname: "/**" // Replace with your actual hostname
       }
     ],
   },
