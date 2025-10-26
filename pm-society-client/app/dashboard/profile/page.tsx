@@ -36,6 +36,7 @@ import {
   useCreateAchievementMutation,
   useUpdateAchievementMutation,
   useDeleteAchievementMutation,
+  useUpdateAvatarMutation,
 } from "@/app/redux/services/authApi";
 
 import {
@@ -48,10 +49,12 @@ import {
   Target,
   Trash2,
   Save,
+  Camera,
 } from "lucide-react";
 import { format } from "date-fns";
 import Loading from "@/app/components/functions/Loading";
 import { toast } from "sonner";
+import Image from "next/image";
 
 // Define proper types for Goal and Achievement
 interface Goal {
@@ -68,7 +71,7 @@ interface Achievement {
   title: string;
   description: string;
   date: string;
-  type: "certification" | "award" | "milestone" | "recognition";
+  type: "PMP" | "CAPM" | "ACP";
 }
 
 interface User {
@@ -78,11 +81,16 @@ interface User {
   bio: string;
   title: string;
   phoneNumber: string;
+  avatar?: string;
 }
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const { data: userData, isLoading: isUserLoading, refetch } = useGetMeQuery({});
+  const {
+    data: userData,
+    isLoading: isUserLoading,
+    refetch,
+  } = useGetMeQuery({});
   const [updateProfile, { isLoading: isUpdatingProfile }] =
     useUpdateProfileMutation();
   const { data: goalsData, isLoading: isGoalsLoading } = useGetGoalsQuery({});
@@ -92,6 +100,7 @@ export default function EditProfilePage() {
   const [createGoal] = useCreateGoalMutation();
   const [updateGoal] = useUpdateGoalMutation();
   const [deleteGoal] = useDeleteGoalMutation();
+  const [updateAvatar] = useUpdateAvatarMutation();
 
   const [createAchievement] = useCreateAchievementMutation();
   const [updateAchievement] = useUpdateAchievementMutation();
@@ -101,10 +110,12 @@ export default function EditProfilePage() {
   const [isGoalDialogOpen, setIsGoalDialogOpen] = useState(false);
   const [isAchievementDialogOpen, setIsAchievementDialogOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
-  const [editingAchievement, setEditingAchievement] = useState<Achievement | null>(null);
-  
+  const [editingAchievement, setEditingAchievement] =
+    useState<Achievement | null>(null);
+
   // Add state for username validation
   const [usernameError, setUsernameError] = useState("");
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   const [profileForm, setProfileForm] = useState({
     name: "",
@@ -127,7 +138,7 @@ export default function EditProfilePage() {
     title: "",
     description: "",
     date: "",
-    type: "milestone" as "certification" | "award" | "milestone" | "recognition",
+    type: "PMP" as "PMP" | "CAPM" | "ACP",
   });
 
   const user = userData?.data || userData;
@@ -150,18 +161,25 @@ export default function EditProfilePage() {
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUsernameError(""); // Reset error message
-    
+
     try {
       await updateProfile(profileForm).unwrap();
       refetch();
       toast.success("Profile updated successfully");
     } catch (error: unknown) {
       // Type guard to check if error has the expected structure
-      const errorObj = error as { data?: { message?: string }, message?: string };
+      const errorObj = error as {
+        data?: { message?: string };
+        message?: string;
+      };
       // Check if the error is specifically about username being taken
-      if (errorObj?.data?.message?.includes("Username already taken") || 
-          errorObj?.message?.includes("Username already taken")) {
-        setUsernameError("Username is already taken. Please choose another one.");
+      if (
+        errorObj?.data?.message?.includes("Username already taken") ||
+        errorObj?.message?.includes("Username already taken")
+      ) {
+        setUsernameError(
+          "Username is already taken. Please choose another one."
+        );
         toast.error("Username is already taken");
       } else {
         toast.error("Failed to update profile");
@@ -177,8 +195,10 @@ export default function EditProfilePage() {
         toast.success("Goal updated successfully");
       } else {
         await createGoal(goalForm).unwrap();
+
         toast.success("Goal created successfully");
       }
+      refetch();
       setIsGoalDialogOpen(false);
       setEditingGoal(null);
       setGoalForm({
@@ -206,13 +226,14 @@ export default function EditProfilePage() {
         await createAchievement(achievementForm).unwrap();
         toast.success("Achievement created successfully");
       }
+      refetch();
       setIsAchievementDialogOpen(false);
       setEditingAchievement(null);
       setAchievementForm({
         title: "",
         description: "",
         date: "",
-        type: "milestone",
+        type: "PMP",
       });
     } catch {
       toast.error("Failed to save achievement");
@@ -252,6 +273,7 @@ export default function EditProfilePage() {
     try {
       await deleteGoal(id).unwrap();
       toast.success("Goal deleted successfully");
+      refetch();
     } catch {
       toast.error("Failed to delete goal");
     }
@@ -261,8 +283,27 @@ export default function EditProfilePage() {
     try {
       await deleteAchievement(id).unwrap();
       toast.success("Achievement deleted successfully");
+      refetch();
     } catch {
       toast.error("Failed to delete achievement");
+    }
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.[0]) return;
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    try {
+      setIsUploadingAvatar(true);
+      await updateAvatar(formData).unwrap();
+      toast.success("Avatar updated successfully");
+      refetch(); // Refresh user data
+    } catch {
+      toast.error("Failed to upload avatar");
+    } finally {
+      setIsUploadingAvatar(false);
     }
   };
 
@@ -323,6 +364,45 @@ export default function EditProfilePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                {/* Avatar Upload */}
+                <div className="flex flex-col items-center mb-6">
+                  <div className="relative">
+                    {user?.avatar ? (
+                      <Image
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-24 h-24 rounded-full object-cover mb-2"
+                        width={200}
+                        height={200}
+                      />
+                    ) : (
+                      <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 mb-2 flex items-center justify-center">
+                        <User className="w-12 h-12 text-gray-400" />
+                      </div>
+                    )}
+                    <label
+                      htmlFor="avatar-upload"
+                      className="absolute bottom-2 right-0 bg-black dark:bg-white text-white dark:text-black rounded-full p-1.5 cursor-pointer hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                    >
+                      {isUploadingAvatar ? (
+                        <div className="w-4 h-4 border-2 border-white dark:border-black border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <Camera className="w-4 h-4" />
+                      )}
+                    </label>
+                    <input
+                      id="avatar-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                      className="hidden"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Click camera icon to update avatar
+                  </p>
+                </div>
+
                 <form onSubmit={handleProfileSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -352,10 +432,17 @@ export default function EditProfilePage() {
                           // Clear error when user starts typing
                           if (usernameError) setUsernameError("");
                         }}
-                        className={`mt-1 ${usernameError ? "border-red-500" : ""}`}
+                        className={`mt-1 ${
+                          usernameError
+                            ? "border-red-500 focus:border-red-500"
+                            : ""
+                        }`}
                       />
                       {usernameError && (
-                        <p className="text-red-500 text-sm mt-1">{usernameError}</p>
+                        <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                          <X className="w-3 h-3" />
+                          {usernameError}
+                        </p>
                       )}
                     </div>
                     <div>
@@ -464,6 +551,7 @@ export default function EditProfilePage() {
                             setGoalForm({ ...goalForm, title: e.target.value })
                           }
                           placeholder="Enter goal title"
+                          required
                         />
                       </div>
                       <div className="grid gap-2">
@@ -479,6 +567,7 @@ export default function EditProfilePage() {
                           }
                           placeholder="Describe your goal"
                           rows={3}
+                          required
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
@@ -494,6 +583,7 @@ export default function EditProfilePage() {
                                 startDate: e.target.value,
                               })
                             }
+                            required
                           />
                         </div>
                         <div className="grid gap-2">
@@ -508,6 +598,7 @@ export default function EditProfilePage() {
                                 endDate: e.target.value,
                               })
                             }
+                            required
                           />
                         </div>
                       </div>
@@ -516,7 +607,10 @@ export default function EditProfilePage() {
                         <Select
                           value={goalForm.status}
                           onValueChange={(value) =>
-                            setGoalForm({ ...goalForm, status: value as "in-progress" | "completed" })
+                            setGoalForm({
+                              ...goalForm,
+                              status: value as "in-progress" | "completed",
+                            })
                           }
                         >
                           <SelectTrigger>
@@ -548,7 +642,7 @@ export default function EditProfilePage() {
                 {goals.map((goal: Goal) => (
                   <Card
                     key={goal._id}
-                    className="border border-gray-200 dark:border-gray-800 shadow-sm"
+                    className="border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
                   >
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-start">
@@ -558,6 +652,11 @@ export default function EditProfilePage() {
                             goal.status === "completed"
                               ? "default"
                               : "secondary"
+                          }
+                          className={
+                            goal.status === "completed"
+                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                              : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                           }
                         >
                           {goal.status === "completed"
@@ -586,7 +685,7 @@ export default function EditProfilePage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleEditGoal(goal)}
-                            className="h-8 w-8 p-0"
+                            className="h-8 w-8 p-0 hover:bg-gray-100 dark:hover:bg-gray-800"
                           >
                             <Edit3 className="h-4 w-4" />
                           </Button>
@@ -594,7 +693,7 @@ export default function EditProfilePage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteGoal(goal._id)}
-                            className="h-8 w-8 p-0 text-red-500"
+                            className="h-8 w-8 p-0 text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -609,7 +708,7 @@ export default function EditProfilePage() {
                 <CardContent className="flex flex-col items-center justify-center py-12">
                   <Target className="w-12 h-12 text-gray-400 mb-4" />
                   <h3 className="text-lg font-medium mb-2">No goals yet</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-4">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-4 max-w-md">
                     Start tracking your progress by adding your first goal.
                   </p>
                   <Button
@@ -664,6 +763,7 @@ export default function EditProfilePage() {
                             })
                           }
                           placeholder="Enter achievement title"
+                          required
                         />
                       </div>
                       <div className="grid gap-2">
@@ -681,6 +781,7 @@ export default function EditProfilePage() {
                           }
                           placeholder="Describe your achievement"
                           rows={3}
+                          required
                         />
                       </div>
                       <div className="grid gap-2">
@@ -695,6 +796,7 @@ export default function EditProfilePage() {
                               date: e.target.value,
                             })
                           }
+                          required
                         />
                       </div>
                       <div className="grid gap-2">
@@ -704,7 +806,7 @@ export default function EditProfilePage() {
                           onValueChange={(value) =>
                             setAchievementForm({
                               ...achievementForm,
-                              type: value as "certification" | "award" | "milestone" | "recognition",
+                              type: value as "PMP" | "CAPM" | "ACP",
                             })
                           }
                         >
@@ -712,14 +814,9 @@ export default function EditProfilePage() {
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="certification">
-                              Certification
-                            </SelectItem>
-                            <SelectItem value="award">Award</SelectItem>
-                            <SelectItem value="milestone">Milestone</SelectItem>
-                            <SelectItem value="recognition">
-                              Recognition
-                            </SelectItem>
+                            <SelectItem value="PMP">PMP</SelectItem>
+                            <SelectItem value="CAPM">CAPM</SelectItem>
+                            <SelectItem value="ACP">ACP</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -741,14 +838,25 @@ export default function EditProfilePage() {
                 {achievements.map((achievement: Achievement) => (
                   <Card
                     key={achievement._id}
-                    className="border border-gray-200 dark:border-gray-800 shadow-sm"
+                    className="border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
                   >
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-start">
                         <CardTitle className="text-lg">
                           {achievement.title}
                         </CardTitle>
-                        <Badge variant="outline">{achievement.type}</Badge>
+                        <Badge
+                          variant="outline"
+                          className={
+                            achievement.type === "PMP"
+                              ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 border-purple-200 dark:border-purple-800"
+                              : achievement.type === "CAPM"
+                              ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-800"
+                              : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border-green-200 dark:border-green-800"
+                          }
+                        >
+                          {achievement.type}
+                        </Badge>
                       </div>
                     </CardHeader>
                     <CardContent>
@@ -766,7 +874,7 @@ export default function EditProfilePage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleEditAchievement(achievement)}
-                            className="h-8 w-8 p-0"
+                            className="h-8 w-8 p-0 hover:bg-gray-100 dark:hover:bg-gray-800"
                           >
                             <Edit3 className="h-4 w-4" />
                           </Button>
@@ -776,7 +884,7 @@ export default function EditProfilePage() {
                             onClick={() =>
                               handleDeleteAchievement(achievement._id)
                             }
-                            className="h-8 w-8 p-0 text-red-500"
+                            className="h-8 w-8 p-0 text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -793,7 +901,7 @@ export default function EditProfilePage() {
                   <h3 className="text-lg font-medium mb-2">
                     No achievements yet
                   </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-4">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center mb-4 max-w-md">
                     Start documenting your accomplishments by adding your first
                     achievement.
                   </p>

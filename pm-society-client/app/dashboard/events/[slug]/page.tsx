@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+import { IUser } from "@/app/redux/services/userApi";
 
 export default function EventPage() {
   const params = useParams();
@@ -52,12 +53,11 @@ export default function EventPage() {
         description: "You'll receive a confirmation email shortly.",
         duration: 5000,
       });
-    } catch (error) {
+    } catch  {
       toast.error("Failed to register for event", {
         description: "Please try again later.",
-        duration: 5000,
       });
-      console.error("Failed to register for event:", error);
+      console.error("Failed to register for event:");
     }
   };
 
@@ -105,7 +105,19 @@ export default function EventPage() {
     );
   }
 
-  const isRegistered = event?.joinedUser?.some((u: string) => u === userId);
+  // Fix: Properly check if user is registered
+  // The joinedUser array might contain either string IDs or populated user objects
+  const isRegistered = event?.joinedUser?.some((user: IUser | string) => {
+    // If it's a string, compare directly
+    if (typeof user === 'string') {
+      return user === userId;
+    }
+    // If it's an object, compare the _id property
+    if (user && typeof user === 'object' && user._id) {
+      return user._id.toString() === userId;
+    }
+    return false;
+  }) || false;
 
   // Format date for display (US timezone)
   const formatDate = (dateString: string) => {
@@ -163,7 +175,7 @@ export default function EventPage() {
             </div>
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
-              <span>{event.joinedUserCount || 0} registered</span>
+              <span>{event.joinedUserCount || event.joinedUser?.length || 0} registered</span>
             </div>
           </div>
         </div>
@@ -179,7 +191,7 @@ export default function EventPage() {
                 <div>
                   <CardTitle className="text-2xl">About this event</CardTitle>
                   <p className="text-muted-foreground mt-1">
-                    {event.joinedUserCount || 0} people{" "}
+                    {event.joinedUserCount || event.joinedUser?.length || 0} people{" "}
                     {isRegistered ? "are registered" : "have registered"} for
                     this event
                   </p>
@@ -265,6 +277,8 @@ export default function EventPage() {
               </div>
             </CardContent>
           </Card>
+
+        
         </div>
       </div>
     </div>

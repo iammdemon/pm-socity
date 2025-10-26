@@ -7,21 +7,14 @@ import {
   useToggleReactionOnReplyMutation,
   useAddReplyToTopicMutation,
 } from "@/app/redux/services/forumApi";
-import {
-  Heart,
-  MessageCircle,
-  ArrowLeft,
-  Share2,
-  Bookmark,
-  Send,
-  
-} from "lucide-react";
-import { useSession } from "next-auth/react";
+import { Heart, MessageCircle, ArrowLeft,} from "lucide-react";
+
 import { useParams, useRouter } from "next/navigation";
 import React, { useState, useRef, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import Image from "next/image";
+import { useGetMeQuery } from "@/app/redux/services/authApi";
 
 const ForumTopicPage = () => {
   const { topicId } = useParams();
@@ -29,6 +22,8 @@ const ForumTopicPage = () => {
   const [toggleReaction] = useToggleReactionOnTopicMutation();
   const [toggleReplyReaction] = useToggleReactionOnReplyMutation();
   const [createReply] = useAddReplyToTopicMutation();
+  const { data: userData } = useGetMeQuery({});
+  console.log("userData", userData);
 
   const {
     data: forumResponse,
@@ -42,13 +37,11 @@ const ForumTopicPage = () => {
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
   const [reactingToReply, setReactingToReply] = useState<string | null>(null);
   const [isReactingToTopic, setIsReactingToTopic] = useState(false);
- 
-  const [isBookmarked, setIsBookmarked] = useState(false);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const session = useSession();
-  const userId = session.data?.user?.id;
-  const user = session.data?.user;
+  const userId = userData?.data._id;
+  const user = userData?.data;
 
   const reacted =
     post?.reactions?.some((u: string | IUser) =>
@@ -136,56 +129,51 @@ const ForumTopicPage = () => {
     }
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: post?.content?.substring(0, 50) + "...",
-        text: post?.content,
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Link copied to clipboard!");
-    }
-  };
-
-  const handleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
-    toast.success(
-      isBookmarked ? "Removed from bookmarks" : "Added to bookmarks"
-    );
-  };
-
   // Loading skeleton
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-black">
-        <div className="max-w-4xl mx-auto py-8 px-4">
-          <div className="bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 p-6 animate-pulse">
-            <div className="flex space-x-4">
-              <div className="w-14 h-14 bg-gray-200 dark:bg-gray-800 rounded-full"></div>
+        <div className="max-w-2xl mx-auto border-x border-gray-200 dark:border-gray-800">
+          <div className="sticky top-0 bg-white dark:bg-black bg-opacity-90 backdrop-blur-md z-10 p-4 border-b border-gray-200 dark:border-gray-800">
+            <div className="flex items-center">
+              <div className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
+              <div className="ml-3 h-5 bg-gray-200 dark:bg-gray-800 rounded w-20 animate-pulse"></div>
+            </div>
+          </div>
+
+          <div className="p-4 border-b border-gray-200 dark:border-gray-800 animate-pulse">
+            <div className="flex space-x-3">
+              <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full"></div>
               <div className="flex-1 space-y-3">
-                <div className="h-5 bg-gray-200 dark:bg-gray-800 rounded w-1/4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/4"></div>
                 <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/6"></div>
                 <div className="space-y-2 mt-4">
                   <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded"></div>
                   <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
                 </div>
+                <div className="flex justify-between mt-4">
+                  <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded-full w-20"></div>
+                  <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded-full w-20"></div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 space-y-4">
+          <div className="space-y-0">
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 p-6 animate-pulse"
+                className="p-4 border-b border-gray-200 dark:border-gray-800 animate-pulse"
               >
-                <div className="flex space-x-4">
-                  <div className="w-12 h-12 bg-gray-200 dark:bg-gray-800 rounded-full"></div>
+                <div className="flex space-x-3">
+                  <div className="w-10 h-10 bg-gray-200 dark:bg-gray-800 rounded-full"></div>
                   <div className="flex-1 space-y-3">
                     <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-1/4"></div>
                     <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                    <div className="flex justify-between mt-3">
+                      <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded-full w-16"></div>
+                      <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded-full w-16"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -244,194 +232,162 @@ const ForumTopicPage = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black">
-      <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="max-w-4xl mx-auto border-x border-gray-200 dark:border-gray-800">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-900"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="hidden sm:inline">Back</span>
-          </button>
-
-          <div className="flex items-center space-x-2">
+        <div className="sticky top-0 bg-white dark:bg-black bg-opacity-90 backdrop-blur-md z-10 p-4 border-b border-gray-200 dark:border-gray-800">
+          <div className="flex items-center">
             <button
-              onClick={handleBookmark}
-              className={`p-2 rounded-full transition-all hover:scale-110 ${
-                isBookmarked
-                  ? "text-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900"
-              }`}
+              onClick={() => router.back()}
+              className="mr-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
             >
-              <Bookmark
-                className={`w-5 h-5 ${isBookmarked ? "fill-current" : ""}`}
-              />
+              <ArrowLeft className="w-5 h-5" />
             </button>
-            <button
-              onClick={handleShare}
-              className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 transition-all hover:scale-110"
-            >
-              <Share2 className="w-5 h-5" />
-            </button>
+            <h1 className="text-xl font-bold">Post</h1>
           </div>
         </div>
 
         {/* Topic Post */}
-        <div className="bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden mb-6">
-          <div className="p-6">
-            <div className="flex justify-between items-start">
-              <div className="flex space-x-4">
-                {/* User Avatar */}
-                <div className="flex-shrink-0">
-                  <div className="w-14 h-14 rounded-full overflow-hidden">
-                    {post?.author?.avatar ? (
-                      <Image
-                        src={post.author.avatar}
-                        alt={post.author.name || "Avatar"}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 font-medium text-xl bg-gray-200 dark:bg-gray-800">
-                        {post?.author?.name?.charAt(0).toUpperCase() || "U"}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  {/* Post Header */}
-                  <div className="flex items-center space-x-2">
-                    <h3 className="font-semibold text-gray-900 dark:text-white text-xl">
-                      {post?.author?.name || "Anonymous User"}
-                    </h3>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <span className="text-gray-500 dark:text-gray-400 text-sm">
-                        @{post?.author?.email?.split("@")[0] || "user"}
-                      </span>
-                      <span className="text-gray-400 dark:text-gray-500 text-sm">
-                        ·
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400 text-sm">
-                        {formatRelativeTime(post.createdAt)}
-                      </span>
+        <div className="border-b border-gray-200 dark:border-gray-800">
+          <div className="p-4">
+            <div className="flex space-x-3">
+              {/* User Avatar */}
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 rounded-full overflow-hidden">
+                  {post?.author?.avatar ? (
+                    <Image
+                      src={post.author.avatar}
+                      alt={post.author.name || "Avatar"}
+                      className="w-full h-full object-cover"
+                      height={48}
+                      width={48}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 font-medium text-xl bg-gray-200 dark:bg-gray-800">
+                      {post?.author?.name?.charAt(0).toUpperCase() || "U"}
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
-            </div>
 
-            {/* Post Content */}
-            <div className="mb-6">
-              <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap break-words leading-relaxed text-lg">
-                {post?.content}
-              </p>
-            </div>
-
-            {/* Post Actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-900">
-              <div className="flex items-center space-x-6">
-                {/* Like Button */}
-                <button
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 hover:scale-105 ${
-                    reacted
-                      ? "text-red-500 bg-red-50 dark:bg-red-900/20"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-red-500"
-                  }`}
-                  onClick={() => handleReact(post.topicId)}
-                  disabled={isReactingToTopic}
-                >
-                  <Heart
-                    className={`w-5 h-5 ${reacted ? "fill-current" : ""}`}
-                  />
-                  <span className="text-sm font-medium">
-                    {post.reactionCount || 0}
+              <div className="flex-1 min-w-0">
+                {/* Post Header */}
+                <div className="flex items-center space-x-1">
+                  <h3 className="font-bold text-gray-900 dark:text-white">
+                    {post?.author?.name || "Anonymous User"}
+                  </h3>
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    @{post?.author?.userName}
                   </span>
-                </button>
-
-                {/* Comment Button */}
-                <button className="flex items-center space-x-2 px-4 py-2 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-blue-500 transition-all duration-200 hover:scale-105">
-                  <MessageCircle className="w-5 h-5" />
-                  <span className="text-sm font-medium">
-                    {post.replyCount || 0}
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    ·
                   </span>
-                </button>
+                  <span className="text-gray-500 dark:text-gray-400 text-sm">
+                    {formatRelativeTime(post.createdAt)}
+                  </span>
+                </div>
+
+                {/* Post Content */}
+                <div className="mt-2">
+                  <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap break-words">
+                    {post?.content}
+                  </p>
+                </div>
+                 {/* Display image if available */}
+                {post.imageUrl && (
+                  <div className="mt-3 rounded-lg overflow-hidden max-w-md">
+                    <Image
+                      src={post.imageUrl} 
+                      alt="Post image" 
+                      className="w-full h-auto object-cover"
+                      width={1080}
+                      height={1080}
+                    />
+                  </div>
+                )}
+
+                {/* Post Actions */}
+                <div className="flex  mt-4 max-w-md">
+                  {/* Comment Button */}
+
+                  {/* Like Button */}
+                  <button
+                    className={`flex items-center space-x-2 p-2 rounded-full transition-all duration-200 ${
+                      reacted
+                        ? "text-red-500"
+                        : "text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500"
+                    }`}
+                    onClick={() => handleReact(post.topicId)}
+                    disabled={isReactingToTopic}
+                  >
+                    <Heart
+                      className={`w-5 h-5 ${reacted ? "fill-current" : ""}`}
+                    />
+                    <span className="text-sm">{post.reactionCount || 0}</span>
+                  </button>
+                  <button className="flex items-center space-x-2 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-500 transition-all duration-200">
+                    <MessageCircle className="w-5 h-5" />
+                    <span className="text-sm">{post.replyCount || 0}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Reply Box */}
-        <div className="bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden mb-6">
-          <form onSubmit={handleReplySubmit} className="p-6">
-            <div className="flex space-x-4">
-              {/* User Avatar */}
-              <div className="flex-shrink-0">
-                <div className="w-12 h-12 rounded-full overflow-hidden">
-                  {user?.avatar ? (
-                    <Image
-                      src={user.avatar}
-                      alt={user.name || "Avatar"}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 font-medium text-xl bg-gray-200 dark:bg-gray-800">
-                      {user?.name?.charAt(0).toUpperCase() || "U"}
-                    </div>
-                  )}
-                </div>
+        <div className="border-b border-gray-200 dark:border-gray-800 p-4">
+          <div className="flex space-x-3">
+            {/* User Avatar */}
+            <div className="flex-shrink-0">
+              <div className="w-12 h-12 rounded-full overflow-hidden">
+                {user?.avatar ? (
+                  <Image
+                    src={user.avatar}
+                    alt={user.name || "Avatar"}
+                    className="w-full h-full object-cover"
+                    width={48}
+                    height={48}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 font-medium text-xl bg-gray-200 dark:bg-gray-800">
+                    {user?.name?.charAt(0).toUpperCase() || "U"}
+                  </div>
+                )}
               </div>
+            </div>
 
-              <div className="flex-1">
+            <div className="flex-1">
+              <form onSubmit={handleReplySubmit}>
                 <textarea
                   ref={textareaRef}
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  placeholder="Share your thoughts..."
-                  className="w-full resize-none border border-gray-300 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-black text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
-                  rows={3}
-                  style={{ minHeight: "80px" }}
+                  placeholder="Post your reply"
+                  className="w-full resize-none border-none outline-none text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 bg-transparent"
+                  rows={2}
+                  style={{ minHeight: "60px" }}
                 />
                 <div className="flex justify-end mt-3">
                   <button
                     type="submit"
                     disabled={!replyText.trim() || isSubmittingReply}
-                    className={`flex items-center space-x-2 px-6 py-2.5 rounded-full font-medium dark:text-black text-white text-sm transition-all duration-200 ${
+                    className={`px-4 py-1.5 rounded-full font-medium text-sm transition-all duration-200 ${
                       !replyText.trim() || isSubmittingReply
-                        ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed"
-                        : "bg-black dark:bg-white hover:scale-105"
+                        ? "bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                        : "bg-black dark:bg-white text-white dark:text-black hover:opacity-90"
                     }`}
                   >
-                    {isSubmittingReply ? (
-                      <>
-                        <span>Posting...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        <span>Reply</span>
-                      </>
-                    )}
+                    Reply
                   </button>
                 </div>
-              </div>
+              </form>
             </div>
-          </form>
-        </div>
-
-        {/* Replies Header */}
-        {post.replies && post.replies.length > 0 && (
-          <div className="bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 p-4 mb-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white text-lg">
-              {post.replies.length}{" "}
-              {post.replies.length === 1 ? "Reply" : "Replies"}
-            </h3>
           </div>
-        )}
+        </div>
 
         {/* Replies */}
         {post.replies && post.replies.length > 0 && (
-          <div className="space-y-4">
+          <div className="divide-y divide-gray-200 dark:divide-gray-800">
             {post.replies.map((reply) => {
               const replyReacted = reply?.reactions?.some((u: string | IUser) =>
                 typeof u === "string" ? u === userId : u._id === userId
@@ -439,81 +395,76 @@ const ForumTopicPage = () => {
               const isReactingToThisReply = reactingToReply === reply._id;
 
               return (
-                <div
-                  key={reply._id}
-                  className="bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200"
-                >
-                  <div className="p-4">
-                    <div className="flex justify-between items-start">
-                      {/* Left side: Avatar, Name, Username */}
-                      <div className="flex items-center space-x-3">
-                        {/* User Avatar */}
-                        <div className="flex-shrink-0">
-                          <div className="w-10 h-10 rounded-full overflow-hidden">
-                            {reply?.author?.avatar ? (
-                              <Image
-                                src={reply.author.avatar}
-                                alt={reply.author.name || "Avatar"}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 font-medium text-lg bg-gray-200 dark:bg-gray-800">
-                                {reply?.author?.name?.charAt(0).toUpperCase() ||
-                                  "U"}
-                              </div>
-                            )}
+                <div key={reply._id} className="p-4">
+                  <div className="flex space-x-3">
+                    {/* User Avatar */}
+                    <div className="flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full overflow-hidden">
+                        {reply?.author?.avatar ? (
+                          <Image
+                            src={reply.author.avatar}
+                            alt={reply.author.name || "Avatar"}
+                            className="w-full h-full object-cover"
+                            width={40}
+                            height={40}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 font-medium text-lg bg-gray-200 dark:bg-gray-800">
+                            {reply?.author?.name?.charAt(0).toUpperCase() ||
+                              "U"}
                           </div>
-                        </div>
-
-                        {/* Name and Username */}
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-gray-900 dark:text-white text-sm">
-                            {reply.author?.name?.split(" ")[0] ||
-                              "Anonymous User"}
-                          </h3>
-                          <span className="text-gray-500 dark:text-gray-400 text-xs">
-                            @{reply.author?.email?.split("@")[0] || "user"}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Right side: Timestamp and Actions */}
-                      <div className="flex flex-col items-end space-y-2">
-                        {/* Timestamp */}
-                        <div className="text-gray-500 dark:text-gray-400 text-xs">
-                          {formatRelativeTime(reply.createdAt)}
-                        </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Reply Content */}
-                    <div className="mt-3">
-                      <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap break-words leading-relaxed text-sm">
-                        {reply.content}
-                      </p>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center mt-3">
-                      {/* Like Button */}
-                      <button
-                        className={`flex items-center space-x-1 px-3 py-1 rounded-full transition-all duration-200 hover:scale-105 ${
-                          replyReacted
-                            ? "text-red-500 bg-red-50 dark:bg-red-900/20"
-                            : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-red-500"
-                        }`}
-                        onClick={() => handleReplyReact(reply._id)}
-                        disabled={isReactingToThisReply}
-                      >
-                        <Heart
-                          className={`w-5 h-5 ${
-                            replyReacted ? "fill-current" : ""
-                          }`}
-                        />
-                        <span className="text-sm font-medium">
-                          {reply.reactionCount || 0}
+                    <div className="flex-1 min-w-0">
+                      {/* Reply Header */}
+                      <div className="flex items-center space-x-1">
+                        <h3 className="font-bold text-gray-900 dark:text-white text-sm">
+                          {reply.author?.name}
+                        </h3>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">
+                          @{reply.author?.userName}
                         </span>
-                      </button>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">
+                          ·
+                        </span>
+                        <span className="text-gray-500 dark:text-gray-400 text-sm">
+                          {formatRelativeTime(reply.createdAt)}
+                        </span>
+                      </div>
+
+                      {/* Reply Content */}
+                      <div className="mt-1">
+                        <p className="text-gray-900 dark:text-gray-100 whitespace-pre-wrap break-words">
+                          {reply.content}
+                        </p>
+                      </div>
+
+                      {/* Reply Actions */}
+                      <div className="flex justify-between mt-3 max-w-md">
+                        {/* Like Button */}
+                        <button
+                          className={`flex items-center space-x-2 p-2 rounded-full transition-all duration-200 ${
+                            replyReacted
+                              ? "text-red-500"
+                              : "text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500"
+                          }`}
+                          onClick={() => handleReplyReact(reply._id)}
+                          disabled={isReactingToThisReply}
+                        >
+                          <Heart
+                            className={`w-4 h-4 ${
+                              replyReacted ? "fill-current" : ""
+                            }`}
+                          />
+                          {reply.reactionCount! > 0 && (
+                            <span className="text-sm">
+                              {reply.reactionCount}
+                            </span>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -524,13 +475,13 @@ const ForumTopicPage = () => {
 
         {/* Empty state for replies */}
         {(!post.replies || post.replies.length === 0) && (
-          <div className="bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 p-12 text-center">
-            <MessageCircle className="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          <div className="p-8 text-center">
+            <MessageCircle className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
               No replies yet
             </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Be the first to share your thoughts on this topic!
+            <p className="text-gray-500 dark:text-gray-400">
+              Be the first to share your thoughts on this post!
             </p>
           </div>
         )}

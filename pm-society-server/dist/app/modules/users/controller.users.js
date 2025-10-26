@@ -95,6 +95,19 @@ const resetPasswords = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     yield (0, utils_user_1.resetAllPasswords)();
     res.status(200).json({ message: "Passwords reset successfully" });
 }));
+const updateAvatar = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const email = (_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.email;
+    if (!req.file) {
+        res.status(400).json({ message: "No file uploaded" });
+        return;
+    }
+    const updatedUser = yield service_users_1.userService.updateAvatar(email, req.file);
+    res.status(200).json({
+        message: "Avatar updated successfully",
+        data: updatedUser,
+    });
+}));
 exports.userController = {
     createUser,
     getAllUsers,
@@ -103,4 +116,5 @@ exports.userController = {
     generateLink,
     getUserByUserName,
     resetPasswords,
+    updateAvatar,
 };

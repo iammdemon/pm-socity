@@ -1,10 +1,6 @@
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+// import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import {
-  Bell,
-  AtSign,
-  Heart,
-  MessageCircle,
-  User,
+
   BookOpen,
   Users,
   Video,
@@ -14,74 +10,74 @@ import Image from "next/image";
 import Link from "next/link";
 
 // ---------- Types ----------
-interface ProgressModule {
-  name: string;
-  progress: number;
-  status: "completed" | "in-progress" | "upcoming";
-}
+// interface ProgressModule {
+//   name: string;
+//   progress: number;
+//   status: "completed" | "in-progress" | "upcoming";
+// }
 
-interface NotificationItem {
-  id: string;
-  type: "mention" | "like" | "comment" | "follow" | "system";
-  text: string;
-  time: string;
-  read: boolean;
-  user?: {
-    name: string;
-  };
-}
+// interface NotificationItem {
+//   id: string;
+//   type: "mention" | "like" | "comment" | "follow" | "system";
+//   text: string;
+//   time: string;
+//   read: boolean;
+//   user?: {
+//     name: string;
+//   };
+// }
 
 interface PanelProps {
   className?: string;
 }
 
 // ---------- Data ----------
-const progressData = [
-  { name: "Completed", value: 75 },
-  { name: "Remaining", value: 25 },
-];
+// const progressData = [
+//   { name: "Completed", value: 75 },
+//   { name: "Remaining", value: 25 },
+// ];
 
-const modules: ProgressModule[] = [
-  { name: "PM Certification Course", progress: 100, status: "completed" },
-  { name: "Executive Coaching ", progress: 80, status: "in-progress" },
-  { name: "Resume", progress: 60, status: "in-progress" },
-  { name: "Completion Status", progress: 20, status: "upcoming" },
-];
+// const modules: ProgressModule[] = [
+//   { name: "PM Certification Course", progress: 100, status: "completed" },
+//   { name: "Executive Coaching ", progress: 80, status: "in-progress" },
+//   { name: "Resume", progress: 60, status: "in-progress" },
+//   { name: "Completion Status", progress: 20, status: "upcoming" },
+// ];
 
-const notifications: NotificationItem[] = [
-  {
-    id: "1",
-    type: "mention",
-    text: "Sarah Chen mentioned you",
-    time: "2m ago",
-    read: false,
-    user: { name: "Sarah Chen" },
-  },
-  {
-    id: "2",
-    type: "like",
-    text: "David Kim liked your post",
-    time: "15m ago",
-    read: false,
-    user: { name: "David Kim" },
-  },
-  {
-    id: "3",
-    type: "comment",
-    text: "Emma Wilson commented",
-    time: "1h ago",
-    read: true,
-    user: { name: "Emma Wilson" },
-  },
-  {
-    id: "4",
-    type: "follow",
-    text: "Marcus Rodriguez started following you",
-    time: "2h ago",
-    read: true,
-    user: { name: "Marcus Rodriguez" },
-  },
-];
+// const notifications: NotificationItem[] = [
+//   {
+//     id: "1",
+//     type: "mention",
+//     text: "Sarah Chen mentioned you",
+//     time: "2m ago",
+//     read: false,
+//     user: { name: "Sarah Chen" },
+//   },
+//   {
+//     id: "2",
+//     type: "like",
+//     text: "David Kim liked your post",
+//     time: "15m ago",
+//     read: false,
+//     user: { name: "David Kim" },
+//   },
+//   {
+//     id: "3",
+//     type: "comment",
+//     text: "Emma Wilson commented",
+//     time: "1h ago",
+//     read: true,
+//     user: { name: "Emma Wilson" },
+//   },
+//   {
+//     id: "4",
+//     type: "follow",
+//     text: "Marcus Rodriguez started following you",
+//     time: "2h ago",
+//     read: true,
+//     user: { name: "Marcus Rodriguez" },
+//   },
+// ];
 
 // ---------- Components ----------
 const LogoHeader = () => (
@@ -109,124 +105,124 @@ const LogoHeader = () => (
 
 LogoHeader.displayName = "LogoHeader";
 
-const ProgressSection = () => {
-  const completedCount = modules.filter((m) => m.status === "completed").length;
-  const inProgressCount = modules.filter(
-    (m) => m.status === "in-progress"
-  ).length;
+// const ProgressSection = () => {
+//   const completedCount = modules.filter((m) => m.status === "completed").length;
+//   const inProgressCount = modules.filter(
+//     (m) => m.status === "in-progress"
+//   ).length;
 
-  return (
-    <section className="mb-6">
-      <div className="flex items-center justify-center mb-4">
-        <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-          My Journey
-        </h2>
-      </div>
+//   return (
+//     <section className="mb-6">
+//       <div className="flex items-center justify-center mb-4">
+//         <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+//           My Journey
+//         </h2>
+//       </div>
 
-      <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-5 border border-gray-200/50 dark:border-gray-700/50 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
+//       <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-5 border border-gray-200/50 dark:border-gray-700/50 shadow-xl relative overflow-hidden">
+//         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"></div>
 
-        <div className="flex justify-center mb-6 relative">
-          <div className="relative">
-            <ResponsiveContainer width={120} height={120}>
-              <PieChart>
-                <Pie
-                  data={progressData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={60}
-                  innerRadius={50}
-                  dataKey="value"
-                  startAngle={90}
-                  endAngle={-270}
-                  strokeWidth={0}
-                >
-                  <Cell fill="#10b981" />
-                  <Cell className="dark:fill-gray-700" fill="#e5e7eb" />
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <span className="text-2xl font-bold text-green-500 block">
-                  75%
-                </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400 px-2">
-                  Complete
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+//         <div className="flex justify-center mb-6 relative">
+//           <div className="relative">
+//             <ResponsiveContainer width={120} height={120}>
+//               <PieChart>
+//                 <Pie
+//                   data={progressData}
+//                   cx="50%"
+//                   cy="50%"
+//                   outerRadius={60}
+//                   innerRadius={50}
+//                   dataKey="value"
+//                   startAngle={90}
+//                   endAngle={-270}
+//                   strokeWidth={0}
+//                 >
+//                   <Cell fill="#10b981" />
+//                   <Cell className="dark:fill-gray-700" fill="#e5e7eb" />
+//                 </Pie>
+//               </PieChart>
+//             </ResponsiveContainer>
+//             <div className="absolute inset-0 flex items-center justify-center">
+//               <div className="text-center">
+//                 <span className="text-2xl font-bold text-green-500 block">
+//                   75%
+//                 </span>
+//                 <span className="text-sm text-gray-500 dark:text-gray-400 px-2">
+//                   Complete
+//                 </span>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
 
-        <div className="space-y-3 mb-4">
-          {modules.map((module, i) => (
-            <div key={i} className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {module.name}
-                </span>
-                <span
-                  className={`text-xs font-medium ${
-                    module.status === "completed"
-                      ? "text-green-600 dark:text-green-400"
-                      : module.status === "in-progress"
-                      ? "text-blue-600 dark:text-blue-400"
-                      : "text-gray-500 dark:text-gray-400"
-                  }`}
-                >
-                  {module.status === "completed"
-                    ? "✓"
-                    : module.status === "in-progress"
-                    ? "⏳"
-                    : "○"}{" "}
-                  {module.progress}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-200/50 dark:bg-gray-700/50 rounded-full h-2">
-                <div
-                  className={`h-2 rounded-full transition-all duration-700 ease-out relative overflow-hidden ${
-                    module.status === "completed"
-                      ? "bg-gradient-to-r from-green-500 to-emerald-500"
-                      : module.status === "in-progress"
-                      ? "bg-gradient-to-r from-blue-500 to-purple-500"
-                      : "bg-gray-500"
-                  }`}
-                  style={{ width: `${module.progress}%` }}
-                >
-                  {module.status === "in-progress" && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+//         <div className="space-y-3 mb-4">
+//           {modules.map((module, i) => (
+//             <div key={i} className="space-y-2">
+//               <div className="flex justify-between items-center">
+//                 <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+//                   {module.name}
+//                 </span>
+//                 <span
+//                   className={`text-xs font-medium ${
+//                     module.status === "completed"
+//                       ? "text-green-600 dark:text-green-400"
+//                       : module.status === "in-progress"
+//                       ? "text-blue-600 dark:text-blue-400"
+//                       : "text-gray-500 dark:text-gray-400"
+//                   }`}
+//                 >
+//                   {module.status === "completed"
+//                     ? "✓"
+//                     : module.status === "in-progress"
+//                     ? "⏳"
+//                     : "○"}{" "}
+//                   {module.progress}%
+//                 </span>
+//               </div>
+//               <div className="w-full bg-gray-200/50 dark:bg-gray-700/50 rounded-full h-2">
+//                 <div
+//                   className={`h-2 rounded-full transition-all duration-700 ease-out relative overflow-hidden ${
+//                     module.status === "completed"
+//                       ? "bg-gradient-to-r from-green-500 to-emerald-500"
+//                       : module.status === "in-progress"
+//                       ? "bg-gradient-to-r from-blue-500 to-purple-500"
+//                       : "bg-gray-500"
+//                   }`}
+//                   style={{ width: `${module.progress}%` }}
+//                 >
+//                   {module.status === "in-progress" && (
+//                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
 
-        <div className="flex justify-evenly gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-          <div className="text-center p-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-600/20 dark:to-purple-600/20">
-            <div className="text-lg font-bold text-green-600 dark:text-green-400">
-              {completedCount}
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              Completed
-            </div>
-          </div>
-          <div className="text-center p-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-600/20 dark:to-purple-600/20">
-            <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
-              {inProgressCount}
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">
-              In Progress
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
+//         <div className="flex justify-evenly gap-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+//           <div className="text-center p-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-600/20 dark:to-purple-600/20">
+//             <div className="text-lg font-bold text-green-600 dark:text-green-400">
+//               {completedCount}
+//             </div>
+//             <div className="text-xs text-gray-500 dark:text-gray-400">
+//               Completed
+//             </div>
+//           </div>
+//           <div className="text-center p-2 rounded-lg bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-600/20 dark:to-purple-600/20">
+//             <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+//               {inProgressCount}
+//             </div>
+//             <div className="text-xs text-gray-500 dark:text-gray-400">
+//               In Progress
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
 
-ProgressSection.displayName = "ProgressSection";
+// ProgressSection.displayName = "ProgressSection";
 
 const LearningResources = () => {
   return (
@@ -387,90 +383,90 @@ const MentorBooking = () => {
 
 MentorBooking.displayName = "MentorBooking";
 
-const NotificationsSection = () => {
-  const unreadCount = notifications.filter((n) => !n.read).length;
+// const NotificationsSection = () => {
+//   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  const getNotificationIcon = (type: string) => {
-    switch (type) {
-      case "mention":
-        return <AtSign className="w-4 h-4 text-blue-500" />;
-      case "like":
-        return <Heart className="w-4 h-4 text-red-500" />;
-      case "comment":
-        return <MessageCircle className="w-4 h-4 text-green-500" />;
-      case "follow":
-        return <User className="w-4 h-4 text-purple-500" />;
-      default:
-        return <Bell className="w-4 h-4 text-gray-500" />;
-    }
-  };
+//   const getNotificationIcon = (type: string) => {
+//     switch (type) {
+//       case "mention":
+//         return <AtSign className="w-4 h-4 text-blue-500" />;
+//       case "like":
+//         return <Heart className="w-4 h-4 text-red-500" />;
+//       case "comment":
+//         return <MessageCircle className="w-4 h-4 text-green-500" />;
+//       case "follow":
+//         return <User className="w-4 h-4 text-purple-500" />;
+//       default:
+//         return <Bell className="w-4 h-4 text-gray-500" />;
+//     }
+//   };
 
-  return (
-    <section className="mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
-          Notifications
-        </h2>
-        {unreadCount > 0 && (
-          <div className="relative">
-            <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs rounded-full px-2 py-1">
-              {unreadCount}
-            </span>
-            <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-          </div>
-        )}
-      </div>
+//   return (
+//     <section className="mb-6">
+//       <div className="flex items-center justify-between mb-4">
+//         <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+//           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
+//           Notifications
+//         </h2>
+//         {unreadCount > 0 && (
+//           <div className="relative">
+//             <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs rounded-full px-2 py-1">
+//               {unreadCount}
+//             </span>
+//             <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+//           </div>
+//         )}
+//       </div>
 
-      <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-hidden">
-        {notifications.map((item, index) => (
-          <div
-            key={item.id}
-            className={`p-3 flex items-start gap-3 transition-all duration-200 cursor-pointer hover:bg-gray-100/70 dark:hover:bg-gray-700/50 ${
-              !item.read
-                ? "bg-blue-50 dark:bg-blue-900/30 border-l-2 border-l-blue-500 dark:border-l-blue-600"
-                : ""
-            } ${
-              index !== notifications.length - 1
-                ? "border-b border-gray-200/50 dark:border-gray-700/50"
-                : ""
-            }`}
-          >
-            <div
-              className={`relative p-2 rounded-xl ${
-                !item.read
-                  ? "bg-gradient-to-br from-blue-500/20 to-purple-500/20"
-                  : "bg-white dark:bg-gray-800"
-              }`}
-            >
-              {getNotificationIcon(item.type)}
-              {!item.read && (
-                <div className="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded-full"></div>
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm text-gray-900 dark:text-gray-100 truncate">
-                {item.text}
-                {item.user && (
-                  <span className="font-medium"> {item.user.name}</span>
-                )}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                {item.time}
-              </p>
-            </div>
-          </div>
-        ))}
+//       <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl overflow-hidden">
+//         {notifications.map((item, index) => (
+//           <div
+//             key={item.id}
+//             className={`p-3 flex items-start gap-3 transition-all duration-200 cursor-pointer hover:bg-gray-100/70 dark:hover:bg-gray-700/50 ${
+//               !item.read
+//                 ? "bg-blue-50 dark:bg-blue-900/30 border-l-2 border-l-blue-500 dark:border-l-blue-600"
+//                 : ""
+//             } ${
+//               index !== notifications.length - 1
+//                 ? "border-b border-gray-200/50 dark:border-gray-700/50"
+//                 : ""
+//             }`}
+//           >
+//             <div
+//               className={`relative p-2 rounded-xl ${
+//                 !item.read
+//                   ? "bg-gradient-to-br from-blue-500/20 to-purple-500/20"
+//                   : "bg-white dark:bg-gray-800"
+//               }`}
+//             >
+//               {getNotificationIcon(item.type)}
+//               {!item.read && (
+//                 <div className="absolute top-0 right-0 w-2 h-2 bg-blue-500 rounded-full"></div>
+//               )}
+//             </div>
+//             <div className="flex-1 min-w-0">
+//               <p className="text-sm text-gray-900 dark:text-gray-100 truncate">
+//                 {item.text}
+//                 {item.user && (
+//                   <span className="font-medium"> {item.user.name}</span>
+//                 )}
+//               </p>
+//               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+//                 {item.time}
+//               </p>
+//             </div>
+//           </div>
+//         ))}
 
-        <button className="w-full p-3 text-center text-sm font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100/70 dark:hover:bg-gray-700/50 transition-colors border-t border-gray-200/50 dark:border-gray-700/50">
-          View all notifications
-        </button>
-      </div>
-    </section>
-  );
-};
+//         <button className="w-full p-3 text-center text-sm font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100/70 dark:hover:bg-gray-700/50 transition-colors border-t border-gray-200/50 dark:border-gray-700/50">
+//           View all notifications
+//         </button>
+//       </div>
+//     </section>
+//   );
+// };
 
-NotificationsSection.displayName = "NotificationsSection";
+// NotificationsSection.displayName = "NotificationsSection";
 
 // const QuickLinks = () => {
 //   const quickLinks = [
@@ -554,10 +550,10 @@ export default function MemberLeftPanel({ className = "" }: PanelProps) {
       <LogoHeader />
 
       <div className="flex-1 overflow-y-auto p-4 space-y-6 relative z-10">
-        <ProgressSection />
+        {/* <ProgressSection /> */}
         <LearningResources />
         <MentorBooking />
-        <NotificationsSection />
+        {/* <NotificationsSection /> */}
       </div>
     </div>
   );

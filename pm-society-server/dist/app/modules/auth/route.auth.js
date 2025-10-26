@@ -11,5 +11,6 @@ const router = express_1.default.Router();
 router.post('/login', controller_auth_1.authController.loginUser);
 router.post('/logout', controller_auth_1.authController.logoutUser);
 router.get('/me', auth_1.authenticateJWT, controller_auth_1.authController.getMe);
+router.get('/user', auth_1.authenticateJWT, controller_auth_1.authController.getUser);
 router.post('/change-password', auth_1.authenticateJWT, controller_auth_1.authController.changePassword);
 exports.AuthRoutes = router;

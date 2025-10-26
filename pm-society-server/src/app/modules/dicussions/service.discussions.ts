@@ -2,17 +2,20 @@ import { Types } from "mongoose";
 import { IForumTopic, IReply } from "./interface.discussions";
 import { ForumTopic } from "./model.discussions";
 import { User } from "../users/model.users";
+import { StorageService } from "../../utils/minioClient";
 
 
-const createTopic = async (payload: IForumTopic, userEmail: string) => {
-  // Find user by email
+const createTopic = async (payload: IForumTopic, userEmail: string, file?: Express.Multer.File) => {
   const user = await User.findOne({ email: userEmail });
   if (!user) throw new Error("User not found");
-  
-  // Set author to user's ID
+
   payload.author = user._id;
-  
-  console.log(payload);
+
+  if (file) {
+    const { fileUrl } = await StorageService.uploadFile("forum-topic-images", file);
+    payload.imageUrl = fileUrl;
+  }
+
   return await ForumTopic.create(payload);
 };
 

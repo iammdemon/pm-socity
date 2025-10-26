@@ -12,6 +12,7 @@ import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 
 interface PostFeedProps {
   title?: string;
@@ -171,6 +172,7 @@ const PostFeed = ({
 
       {posts.map((post) => {
         const reacted = hasReacted(post);
+      
         const isReactingThisPost = reactingPostId === post.topicId;
 
         return (
@@ -211,6 +213,18 @@ const PostFeed = ({
                 <div className="mt-2 text-black dark:text-white text-sm sm:text-base break-words">
                   {post.content}
                 </div>
+                {/* Display image if available */}
+                {post.imageUrl && (
+                  <div className="mt-3 rounded-lg overflow-hidden max-w-md">
+                    <Image 
+                      src={post.imageUrl} 
+                      alt="Post image" 
+                      className="w-full h-auto object-cover"
+                      width={500}
+                      height={300}
+                    />
+                  </div>
+                )}
                 <div className="flex items-center gap-4 sm:gap-6 mt-3 sm:mt-4 text-gray-500 dark:text-gray-400">
                   <button
                     onClick={() => handleReact(post.topicId)}

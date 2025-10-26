@@ -1,6 +1,6 @@
 import express, { Application } from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
+
 import router from "./app/routes";
 import notFound from "./app/middlewares/notFound";
 
@@ -11,7 +11,7 @@ app.use(cors({
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 }));
-app.use(cookieParser());
+
 
 
 // Trust proxy FIRST - crucial for Coolify deployments

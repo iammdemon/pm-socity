@@ -36,6 +36,7 @@ const ForumTopicSchema = new mongoose_1.Schema({
     author: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
     topicId: { type: Number, unique: true },
     content: { type: String, required: true, trim: true },
+    imageUrl: { type: String },
     reactions: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "User" }],
     replies: [ReplySchema],
 }, {

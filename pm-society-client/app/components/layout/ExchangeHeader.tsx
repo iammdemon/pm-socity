@@ -8,7 +8,6 @@ import {
   BookOpen,
   Search,
   LucideIcon,
-  
   Sparkles,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -29,34 +28,82 @@ interface NavLinkProps {
 const NAVIGATION_ITEMS: NavigationItem[] = [
   { name: "The Exchange", href: "/dashboard", icon: Home },
   { name: "Society Circles", href: "/dashboard/circles", icon: Users },
- 
+
   { name: "SIA AI", href: "/dashboard/sia", icon: Sparkles },
   { name: "Upcoming Events", href: "/dashboard/events", icon: Calendar },
   { name: "Resources", href: "/dashboard/resources", icon: BookOpen },
 ];
 
-// Clean Search Bar with black/white styling
-const SearchBar = () => {
+export const SearchBar = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchQuery.trim()) {
-      router.push(
-        `/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`
-      );
+  const handleSearch = () => {
+    const query = searchQuery.trim();
+    if (query) {
+      router.push(`/dashboard/search?q=${encodeURIComponent(query)}`);
     }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") handleSearch();
+  };
+
   return (
-    <div className="relative max-w-2xl w-full mx-auto">
-      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
+    <div
+      className="
+        group relative flex items-center w-full max-w-3xl mx-auto
+        px-2 sm:px-4 md:px-0
+      "
+    >
+      {/* Input Field */}
       <Input
+        type="text"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Search members, posts, events, resources"
-        className="w-full rounded-full pl-10 bg-gray-100 dark:bg-gray-800 border-0 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-gray-500 dark:focus:ring-gray-400"
+        placeholder="Search members, posts, events, or resources..."
+        className="
+          w-full rounded-full pl-12 pr-20 py-3 sm:py-3.5
+          bg-gray-100 dark:bg-gray-800
+          text-gray-900 dark:text-gray-100
+          placeholder-gray-500 dark:placeholder-gray-400
+          border border-transparent
+          focus:border-gray-300 dark:focus:border-gray-700
+          focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-500
+          shadow-sm transition-all duration-200
+          text-sm sm:text-base
+        "
       />
+
+      {/* Search Icon on Left */}
+      <Search
+        className="
+          absolute left-4 top-1/2 -translate-y-1/2 
+          h-5 w-5 sm:h-5 sm:w-5 
+          text-gray-500 dark:text-gray-400
+          group-hover:text-gray-700 dark:group-hover:text-gray-300
+          transition-colors
+        "
+      />
+
+      {/* Button on Right */}
+      <button
+        onClick={handleSearch}
+        className="
+          absolute right-2 sm:right-3 top-1/2 -translate-y-1/2
+          bg-gray-900 dark:bg-gray-100
+          text-white dark:text-gray-900
+          px-3 sm:px-5 py-1.5 sm:py-2 rounded-full
+          font-medium text-xs sm:text-sm md:text-base
+          hover:bg-gray-700 dark:hover:bg-gray-200
+          active:scale-95
+          transition-all duration-200
+          focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-400
+        "
+      >
+        Search
+      </button>
     </div>
   );
 };

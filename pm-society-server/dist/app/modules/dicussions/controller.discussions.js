@@ -16,8 +16,7 @@ exports.ForumController = void 0;
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const service_discussions_1 = require("./service.discussions");
 const createTopic = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
-    const result = yield service_discussions_1.ForumService.createTopic(req.body, req.user.email);
+    const result = yield service_discussions_1.ForumService.createTopic(req.body, req.user.email, req.file);
     res.status(201).json({ message: "Topic created successfully", data: result });
 }));
 const getAllTopics = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

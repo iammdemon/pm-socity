@@ -36,6 +36,7 @@ export interface IForumTopic {
   author: IAuthor;
   topicId: string;
   content: string;
+  imageUrl?: string;
   reactions: IUser[] | string[];
   replies: IReply[];
   createdAt: string;

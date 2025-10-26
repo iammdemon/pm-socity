@@ -12,14 +12,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ForumService = void 0;
 const model_discussions_1 = require("./model.discussions");
 const model_users_1 = require("../users/model.users");
-const createTopic = (payload, userEmail) => __awaiter(void 0, void 0, void 0, function* () {
-    // Find user by email
+const minioClient_1 = require("../../utils/minioClient");
+const createTopic = (payload, userEmail, file) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield model_users_1.User.findOne({ email: userEmail });
     if (!user)
         throw new Error("User not found");
-    // Set author to user's ID
     payload.author = user._id;
-    console.log(payload);
+    if (file) {
+        const { fileUrl } = yield minioClient_1.StorageService.uploadFile("forum-topic-images", file);
+        payload.imageUrl = fileUrl;
+    }
     return yield model_discussions_1.ForumTopic.create(payload);
 });
 const getAllTopics = () => __awaiter(void 0, void 0, void 0, function* () {

@@ -9,7 +9,7 @@ const AchievementSchema = new mongoose_1.Schema({
     date: { type: Date, default: Date.now },
     type: {
         type: String,
-        enum: ["certification", "award", "milestone", "recognition"],
+        enum: ["PMP", "CAPM", "ACP"],
     },
 }, {
     timestamps: true,

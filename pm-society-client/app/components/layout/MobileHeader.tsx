@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Search,
+  
   User,
   LogOut,
   Settings,
@@ -15,8 +15,9 @@ import { useState, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { ModeToggle } from "./ModeToggle";
+import { SearchBar } from "./ExchangeHeader";
 
 // Type definitions for better type safety
 interface User {
@@ -30,9 +31,9 @@ const MobileHeader = () => {
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
+  // const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -73,15 +74,15 @@ const MobileHeader = () => {
   if (!mounted) return null;
 
   // Handle search
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(
-        `/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`
-      );
-      setSearchQuery("");
-    }
-  };
+  // const handleSearch = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (searchQuery.trim()) {
+  //     router.push(
+  //       `/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`
+  //     );
+  //     setSearchQuery("");
+  //   }
+  // };
 
   // Handle logout
   const handleLogout = async () => {
@@ -132,18 +133,7 @@ const MobileHeader = () => {
             />
           </Link>
 
-          {/* Search */}
-          <form onSubmit={handleSearch} className="flex-1 mx-2 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-gray-200/50 dark:border-neutral-700/50 bg-white/60 dark:bg-neutral-800/60 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-500/50 transition-all duration-300"
-              aria-label="Search"
-            />
-          </form>
+          <SearchBar />
 
           {/* Right icons */}
           <div className="flex items-center space-x-1">

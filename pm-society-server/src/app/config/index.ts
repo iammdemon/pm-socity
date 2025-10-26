@@ -22,8 +22,10 @@ export default {
   EMAIL_FROM: process.env.EMAIL_FROM,
   MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
   MAILCHIMP_AUDIENCE_ID: process.env.MAILCHIMP_AUDIENCE_ID,
-
-
-  
- 
+  MINIO_ENDPOINT: process.env.MINIO_ENDPOINT,
+  MINIO_PORT: process.env.MINIO_PORT,
+  MINIO_USE_SSL: process.env.MINIO_USE_SSL,
+  MINIO_ACCESS_KEY: process.env.MINIO_ACCESS_KEY,
+  MINIO_SECRET_KEY: process.env.MINIO_SECRET_KEY,
+  BUCKET_NAME: process.env.BUCKET_NAME,
 };

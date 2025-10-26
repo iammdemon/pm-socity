@@ -1,25 +1,25 @@
-
-'use client';
+"use client";
 
 import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { toast } from "sonner";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -29,8 +29,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
-import { 
+import { Skeleton } from "@/components/ui/skeleton";
+
+import {
   Calendar,
   MapPin,
   Plus,
@@ -39,89 +40,76 @@ import {
   Upload,
   X,
   Image as ImageIcon,
-  Loader2,
   Clock,
-  Users
+  Users,
+  Loader2,
 } from "lucide-react";
 
-import { 
-  useAddEventMutation, 
-  useDeleteEventMutation, 
-  useGetEventsQuery, 
-  useUpdateEventMutation 
+import {
+  useGetEventsQuery,
+  useAddEventMutation,
+  useUpdateEventMutation,
+  useDeleteEventMutation,
 } from "@/app/redux/services/eventApi";
-import Image from "next/image";
 
-// Form validation schema
+// ---------------------- Form Validation ----------------------
 const eventSchema = z.object({
-  title: z.string().min(1, "Title is required").max(100, "Title must be less than 100 characters"),
-  slug: z.string().min(1, "Slug is required").max(50, "Slug must be less than 50 characters"),
-  description: z.string().min(1, "Description is required").max(500, "Description must be less than 500 characters"),
-  image: z.string().url("Please provide a valid image URL"),
+  title: z.string().min(1, "Title is required"),
+  slug: z.string().min(1, "Slug is required"),
+  description: z.string().min(1, "Description is required"),
   date: z.string().min(1, "Date is required"),
-  location: z.string().min(1, "Location is required").max(100, "Location must be less than 100 characters"),
+  location: z.string().min(1, "Location is required"),
 });
 
 type FormData = z.infer<typeof eventSchema>;
-interface ErrorWithMessage {
-  data?: {
-    message?: string;
-  };
-}
-
-// Cloudinary upload configuration
-const CLOUDINARY_CLOUD_NAME = "dggotjc19"
-const CLOUDINARY_UPLOAD_PRESET = "raiyanrimon2"
 
 type Event = {
+  _id?: string;
   title: string;
   slug: string;
   description: string;
-  image: string;
   date: string;
   location: string;
-  // Add other fields if needed
+  image: string;
+  joinedUser?: string[];
+  joinedUserCount?: number;
 };
 
+// ---------------------- Component ----------------------
 export default function AdminEventsPage() {
   const { data: eventResponse, isLoading, refetch } = useGetEventsQuery();
- 
   const events: Event[] = eventResponse?.data || [];
 
   const [addEvent] = useAddEventMutation();
   const [updateEvent] = useUpdateEventMutation();
   const [deleteEvent] = useDeleteEventMutation();
-  
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editEventSlug, setEditEventSlug] = useState<string | null>(null);
   const [deleteEventSlug, setDeleteEventSlug] = useState<string | null>(null);
-  const [imageUploading, setImageUploading] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  
+  const [isUploading, setIsUploading] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { 
-    register, 
-    handleSubmit, 
-    reset, 
-    setValue, 
-    watch, 
-    formState: { errors, isSubmitting } 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(eventSchema),
     defaultValues: {
       title: "",
       slug: "",
       description: "",
-      image: "",
       date: "",
       location: "",
-    }
+    },
   });
 
-  const watchedImage = watch("image");
-
-  // Generate slug from title
+  // ---------------------- Slug Generation ----------------------
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
@@ -129,7 +117,6 @@ export default function AdminEventsPage() {
       .replace(/(^-|-$)/g, "");
   };
 
-  // Handle title change to auto-generate slug
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const title = e.target.value;
     if (!editEventSlug) {
@@ -138,231 +125,214 @@ export default function AdminEventsPage() {
     }
   };
 
-  // Cloudinary image upload
-  const uploadToCloudinary = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-    formData.append("cloud_name", CLOUDINARY_CLOUD_NAME);
-    formData.append("folder", "events");
-
-    const response = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Upload failed");
-    }
-
-    const data = await response.json();
-    return data.secure_url;
-  };
-
-  // Handle file upload
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please select an image file");
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image size must be less than 5MB");
-      return;
-    }
-
-    try {
-      setImageUploading(true);
-      const imageUrl = await uploadToCloudinary(file);
-      setValue("image", imageUrl);
-      setImagePreview(imageUrl);
-      toast.success("Image uploaded successfully");
-    } catch {
-      toast.error("Failed to upload image");
-    } finally {
-      setImageUploading(false);
-    }
-  };
-
-  // Handle save event
+  // ---------------------- Form Submission ----------------------
   const handleSave = async (data: FormData) => {
+    // Check if image is required for new events
+    if (!editEventSlug && !fileInputRef.current?.files?.[0] && !imagePreview) {
+      toast.error("Please select an image");
+      return;
+    }
+
     try {
+      setIsUploading(true);
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("slug", data.slug);
+      formData.append("description", data.description);
+      formData.append("date", data.date);
+      formData.append("location", data.location);
+
+      // attach file if selected
+      if (fileInputRef.current?.files?.[0]) {
+        formData.append("image", fileInputRef.current.files[0]);
+      }
+
       if (editEventSlug) {
-        await updateEvent({ slug: editEventSlug, data }).unwrap();
+        await updateEvent({
+          slug: editEventSlug,
+          data: formData as unknown as FormData,
+        }).unwrap();
         toast.success("Event updated successfully");
       } else {
-        await addEvent(data).unwrap();
+        await addEvent(formData as unknown as FormData).unwrap();
         toast.success("Event added successfully");
       }
+
       setIsDialogOpen(false);
       reset();
       setImagePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       refetch();
-    } catch (err: unknown) {
-      if (
-        typeof err === "object" &&
-        err !== null &&
-        "data" in err &&
-        typeof (err as ErrorWithMessage).data === "object" &&
-        (err as ErrorWithMessage).data !== null &&
-        "message" in ((err as ErrorWithMessage).data as object)
-      ) {
-        toast.error((err as ErrorWithMessage).data?.message || "Something went wrong");
-      } else {
-        toast.error("Something went wrong");
-      }
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  // Handle edit event
+  // ---------------------- Edit Event ----------------------
   const handleEdit = (event: Event) => {
     setEditEventSlug(event.slug);
-    reset(event);
+    reset({
+      title: event.title,
+      slug: event.slug,
+      description: event.description,
+      date: event.date,
+      location: event.location,
+    });
     setImagePreview(event.image);
     setIsDialogOpen(true);
   };
 
-  // Handle delete event
+  // ---------------------- Delete Event ----------------------
   const handleDelete = async (slug: string) => {
     try {
       await deleteEvent(slug).unwrap();
       toast.success("Event deleted successfully");
       refetch();
-    } catch (err: unknown) {
-      if (
-        typeof err === "object" &&
-        err !== null &&
-        "data" in err &&
-        typeof (err as ErrorWithMessage).data === "object" &&
-        (err as ErrorWithMessage).data !== null &&
-        "message" in ((err as ErrorWithMessage).data as object)
-      ) {
-        toast.error((err as ErrorWithMessage).data?.message || "Failed to delete event");
-      } else {
-        toast.error("Failed to delete event");
-      }
+    } catch  {
+      toast.error("Failed to delete event");
     } finally {
       setDeleteEventSlug(null);
     }
   };
 
-  // Format date for display (US timezone) - consistent with Event component
+  // ---------------------- Image Preview ----------------------
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    setImagePreview(url);
+  };
+
+  // ---------------------- Date Helpers ----------------------
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
-      timeZone: "America/New_York"
     });
   };
 
-  // Check if event is upcoming (US timezone) - consistent with Event component
   const isUpcoming = (dateString: string) => {
     const eventDate = new Date(dateString);
     const today = new Date();
-    // Set both dates to the same timezone for comparison
     eventDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
     return eventDate >= today;
   };
 
-  
-
+  // ---------------------- JSX ----------------------
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 md:p-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">Event Management</h1>
-              <p className="text-gray-600">Create and manage your events with ease</p>
-            </div>
-            <Button
-              onClick={() => {
-                setEditEventSlug(null);
-                reset();
-                setImagePreview(null);
-                setIsDialogOpen(true);
-              }}
-              className="bg-black text-white shadow-lg hover:bg-gray-800 transition-all duration-200"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add New Event
-            </Button>
+        <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+              Event Management
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">
+              Create and manage your events
+            </p>
           </div>
+          <Button
+            onClick={() => {
+              setEditEventSlug(null);
+              reset();
+              setImagePreview(null);
+              setIsDialogOpen(true);
+            }}
+            className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+          >
+            <Plus className="w-4 h-4 mr-2" /> Add New Event
+          </Button>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-white border border-gray-200 shadow-lg">
+          <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-sm">
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gray-100 rounded-lg">
-                  <Calendar className="w-6 h-6 text-gray-700" />
-                </div>
+              <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Events</p>
-                  <p className="text-2xl font-bold text-gray-900">{events.length}</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Total Events
+                  </p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1">
+                    {events.length}
+                  </p>
+                </div>
+                <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-full">
+                  <Calendar className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
-          
-          <Card className="bg-white border border-gray-200 shadow-lg">
+
+          <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-sm">
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gray-100 rounded-lg">
-                  <Clock className="w-6 h-6 text-gray-700" />
-                </div>
+              <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Upcoming</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {events.filter(event => isUpcoming(event.date)).length}
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Upcoming
                   </p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1">
+                    {events.filter((e) => isUpcoming(e.date)).length}
+                  </p>
+                </div>
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+                  <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
-          
-          <Card className="bg-white border border-gray-200 shadow-lg">
+
+          <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-sm">
             <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gray-100 rounded-lg">
-                  <Users className="w-6 h-6 text-gray-700" />
-                </div>
+              <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Past Events</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {events.filter(event => !isUpcoming(event.date)).length}
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    Past Events
                   </p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1">
+                    {events.filter((e) => !isUpcoming(e.date)).length}
+                  </p>
+                </div>
+                <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-full">
+                  <Users className="w-6 h-6 text-gray-600 dark:text-gray-400" />
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Events List */}
-        <Card className="bg-white border border-gray-200 shadow-lg">
-          <CardHeader className="border-b border-gray-200">
-            <CardTitle className="text-xl font-semibold text-gray-900">
+        {/* Event List */}
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               Events List
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="p-0">
             {isLoading ? (
-              <div className="space-y-4">
+              <div className="p-6 space-y-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+                  <div
+                    key={i}
+                    className="flex items-center gap-4 p-4 border-b border-gray-100 dark:border-gray-800"
+                  >
                     <Skeleton className="w-16 h-16 rounded-lg" />
                     <div className="flex-1 space-y-2">
                       <Skeleton className="h-5 w-1/3" />
@@ -377,10 +347,16 @@ export default function AdminEventsPage() {
                 ))}
               </div>
             ) : events.length === 0 ? (
-              <div className="text-center py-12">
-                <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No events yet</h3>
-                <p className="text-gray-600 mb-4">Get started by creating your first event</p>
+              <div className="p-12 text-center">
+                <div className="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                  <Calendar className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                  No events yet
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Get started by creating your first event
+                </p>
                 <Button
                   onClick={() => {
                     setEditEventSlug(null);
@@ -388,74 +364,81 @@ export default function AdminEventsPage() {
                     setImagePreview(null);
                     setIsDialogOpen(true);
                   }}
-                  className="bg-black text-white shadow-lg hover:bg-gray-800 transition-all duration-200"
+                  className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Event
+                  <Plus className="w-4 h-4 mr-2" /> Create Event
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
-                {events.map((event: Event) => (
+              <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                {events.map((event) => (
                   <div
                     key={event.slug}
-                    className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200"
+                    className="p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                   >
-                    <div className="relative">
-                      {event.image ? (
-                        <Image
-                          src={event.image}
-                          alt={event.title}
-                          width={64}
-                          height={64}
-                          className="w-16 h-16 object-cover rounded-lg"
-                        />
-                      ) : (
-                        <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                          <ImageIcon className="w-6 h-6 text-gray-400" />
-                        </div>
-                      )}
-                      {isUpcoming(event.date) && (
-                        <Badge className="absolute -top-2 -right-2 bg-gray-800 text-white text-xs">
-                          Upcoming
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-1">{event.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">{event.description}</p>
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          <span>{event.location}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>{formatDate(event.date)}</span>
+                    <div className="flex items-start gap-4">
+                      <div className="w-16 h-16 relative flex-shrink-0">
+                        {event.image ? (
+                          <Image
+                            src={event.image}
+                            alt={event.title}
+                            width={64}
+                            height={64}
+                            className="rounded-lg object-cover"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+                            <ImageIcon className="w-6 h-6 text-gray-400" />
+                          </div>
+                        )}
+                        {isUpcoming(event.date) && (
+                          <Badge className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs">
+                            Upcoming
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                          {event.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-1">
+                          {event.description}
+                        </p>
+                        <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            <span>{event.location}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            <span>{formatDate(event.date)}</span>
+                          </div>
+                          {event.joinedUserCount !== undefined && (
+                            <div className="flex items-center gap-1">
+                              <Users className="w-4 h-4" />
+                              <span>{event.joinedUserCount} registered</span>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEdit(event)}
-                        className="hover:bg-gray-100 hover:text-gray-900 border-gray-300"
-                      >
-                        <Edit3 className="w-4 h-4 mr-1" />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setDeleteEventSlug(event.slug)}
-                        className="hover:bg-gray-100 hover:text-gray-900 border-gray-300"
-                      >
-                        <Trash2 className="w-4 h-4 mr-1" />
-                        Delete
-                      </Button>
+                      <div className="flex gap-2 ml-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(event)}
+                          className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                        >
+                          <Edit3 className="w-4 h-4 mr-1" /> Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setDeleteEventSlug(event.slug)}
+                          className="border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        >
+                          <Trash2 className="w-4 h-4 mr-1" /> Delete
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -467,193 +450,227 @@ export default function AdminEventsPage() {
 
       {/* Add/Edit Event Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="bg-white border border-gray-200 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-gray-900">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+          <DialogHeader className="pb-4">
+            <DialogTitle className="text-xl font-semibold text-gray-900 dark:text-white">
               {editEventSlug ? "Edit Event" : "Create New Event"}
             </DialogTitle>
           </DialogHeader>
-          
-          <form onSubmit={handleSubmit(handleSave)} className="space-y-6">
-            {/* Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title" className="text-sm font-medium text-gray-700">
-                Event Title *
-              </Label>
-              <Input
-                id="title"
-                placeholder="Enter event title"
-                className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
-                {...register("title")}
-                onChange={handleTitleChange}
-              />
-              {errors.title && (
-                <p className="text-sm text-red-600">{errors.title.message}</p>
-              )}
+
+          <form onSubmit={handleSubmit(handleSave)} className="space-y-6 p-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="title"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Title *
+                </Label>
+                <Input
+                  id="title"
+                  {...register("title")}
+                  onChange={handleTitleChange}
+                  className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  placeholder="Enter event title"
+                />
+                {errors.title && (
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {errors.title.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label
+                  htmlFor="slug"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Slug *
+                </Label>
+                <Input
+                  id="slug"
+                  {...register("slug")}
+                  disabled={!!editEventSlug}
+                  className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white disabled:opacity-50"
+                  placeholder="event-url-slug"
+                />
+                {errors.slug && (
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {errors.slug.message}
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* Slug */}
             <div className="space-y-2">
-              <Label htmlFor="slug" className="text-sm font-medium text-gray-700">
-                URL Slug *
-              </Label>
-              <Input
-                id="slug"
-                placeholder="event-url-slug"
-                className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
-                {...register("slug")}
-                disabled={!!editEventSlug}
-              />
-              {errors.slug && (
-                <p className="text-sm text-red-600">{errors.slug.message}</p>
-              )}
-            </div>
-
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description" className="text-sm font-medium text-gray-700">
+              <Label
+                htmlFor="description"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 Description *
               </Label>
               <Textarea
                 id="description"
-                placeholder="Enter event description"
-                rows={4}
-                className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                 {...register("description")}
+                rows={4}
+                className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white resize-none"
+                placeholder="Describe your event"
               />
               {errors.description && (
-                <p className="text-sm text-red-600">{errors.description.message}</p>
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  {errors.description.message}
+                </p>
               )}
             </div>
 
-            {/* Image Upload */}
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-gray-700">
-                Event Image *
+              <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Image *
               </Label>
-              <div className="space-y-4">
-                {/* Image Preview */}
-                {(imagePreview || watchedImage) && (
-                  <div className="relative">
+              <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6">
+                {imagePreview ? (
+                  <div className="relative w-full h-48 mb-4">
                     <Image
-                      width={64}
-                      height={64}
-                      src={imagePreview || watchedImage}
+                      src={imagePreview}
                       alt="Preview"
-                      className="w-full h-48 object-cover rounded-lg border border-gray-300"
+                      fill
+                      className="object-cover rounded-lg"
                     />
                     <Button
                       type="button"
-                      variant="outline"
-                      size="sm"
-                      className="absolute top-2 right-2 bg-white/80 hover:bg-white border-gray-300"
                       onClick={() => {
                         setImagePreview(null);
-                        setValue("image", "");
+                        if (fileInputRef.current)
+                          fileInputRef.current.value = "";
                       }}
+                      className="absolute top-2 right-2 p-1 bg-white dark:bg-gray-800 rounded-full shadow-md"
                     >
                       <X className="w-4 h-4" />
                     </Button>
                   </div>
+                ) : (
+                  <div className="text-center py-4">
+                    <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                      Upload an image for your event
+                    </p>
+                  </div>
                 )}
-                
-                {/* Upload Options */}
-                <div className="flex gap-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={imageUploading}
-                    className="flex-1 border-gray-300 hover:bg-gray-100"
-                  >
-                    {imageUploading ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Upload className="w-4 h-4 mr-2" />
-                    )}
-                    Upload Image
-                  </Button>
-                </div>
-                
+                <Button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  variant="outline"
+                  className="w-full border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  {imagePreview ? "Change Image" : "Upload Image"}
+                </Button>
                 <input
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
-                  onChange={handleFileUpload}
                   className="hidden"
+                  onChange={handleFileChange}
                 />
               </div>
-              {errors.image && (
-                <p className="text-sm text-red-600">{errors.image.message}</p>
+              {!imagePreview && !editEventSlug && (
+                <p className="text-sm text-red-600 dark:text-red-400">
+                  Image is required
+                </p>
               )}
             </div>
 
-            {/* Date and Location */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="date" className="text-sm font-medium text-gray-700">
-                  Event Date *
+                <Label
+                  htmlFor="date"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Date *
                 </Label>
                 <Input
                   id="date"
                   type="date"
-                  className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                   {...register("date")}
+                  className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                 />
                 {errors.date && (
-                  <p className="text-sm text-red-600">{errors.date.message}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {errors.date.message}
+                  </p>
                 )}
               </div>
-              
               <div className="space-y-2">
-                <Label htmlFor="location" className="text-sm font-medium text-gray-700">
+                <Label
+                  htmlFor="location"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   Location *
                 </Label>
                 <Input
                   id="location"
-                  placeholder="Enter event location"
-                  className="border-gray-300 focus:border-gray-500 focus:ring-gray-500"
                   {...register("location")}
+                  className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  placeholder="Event location"
                 />
                 {errors.location && (
-                  <p className="text-sm text-red-600">{errors.location.message}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {errors.location.message}
+                  </p>
                 )}
               </div>
             </div>
 
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              disabled={isSubmitting || imageUploading}
-              className="w-full bg-black text-white shadow-lg hover:bg-gray-800 transition-all duration-200"
-            >
-              {isSubmitting ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : null}
-              {editEventSlug ? "Update Event" : "Create Event"}
-            </Button>
+            <div className="flex gap-3 pt-4">
+              <Button
+                type="submit"
+                className="flex-1 bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                disabled={isSubmitting || isUploading}
+              >
+                {isSubmitting || isUploading ? (
+                  <>
+                    <Loader2 className="animate-spin w-4 h-4 mr-2" />
+                    {editEventSlug ? "Updating..." : "Creating..."}
+                  </>
+                ) : (
+                  <>{editEventSlug ? "Update Event" : "Create Event"}</>
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsDialogOpen(false)}
+                className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+              >
+                Cancel
+              </Button>
+            </div>
           </form>
         </DialogContent>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={!!deleteEventSlug} onOpenChange={() => setDeleteEventSlug(null)}>
-        <AlertDialogContent className="bg-white border border-gray-200 shadow-2xl">
+      <AlertDialog
+        open={!!deleteEventSlug}
+        onOpenChange={() => setDeleteEventSlug(null)}
+      >
+        <AlertDialogContent className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold text-gray-900">
+            <AlertDialogTitle className="text-gray-900 dark:text-white">
               Delete Event
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-600">
-              Are you sure you want to delete this event? This action cannot be undone.
+            <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
+              Are you sure you want to delete this event? This action cannot be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-gray-300 hover:bg-gray-50">
+            <AlertDialogCancel className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => deleteEventSlug && handleDelete(deleteEventSlug)}
-              className="bg-gray-800 hover:bg-black text-white"
+              onClick={() => handleDelete(deleteEventSlug!)}
+              className="bg-red-600 hover:bg-red-700 text-white"
             >
               Delete
             </AlertDialogAction>

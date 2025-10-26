@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   useGetResourcesQuery,
   useAddResourceMutation,
@@ -15,13 +15,23 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableCell, TableHead } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { FiEdit, FiTrash2, FiSearch, FiX, FiExternalLink, FiPlus, FiBook, FiTag } from "react-icons/fi";
+import { 
+  FiEdit, 
+  FiTrash2, 
+  FiSearch, 
+  FiX, 
+  FiExternalLink, 
+  FiPlus, 
+  FiBook, 
+  FiTag,
+  FiUpload,
+  FiFile,
+  FiDownload
+} from "react-icons/fi";
 
 export default function AdminResourcesPage() {
   const { data, isLoading, refetch } = useGetResourcesQuery();
   const resources: IResource[] = data?.data ?? [];
-
-  console.log('re', resources)
 
   const [addResource] = useAddResourceMutation();
   const [updateResource] = useUpdateResourceMutation();
@@ -30,33 +40,58 @@ export default function AdminResourcesPage() {
   const [editingResource, setEditingResource] = useState<IResource | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [resourceType, setResourceType] = useState<"link" | "file">("file");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<{
     title: string;
     description: string;
-    link: string;
+    fileUrl: string;
     tags: string;
   }>({
-    defaultValues: { title: "", description: "", link: "", tags: "" }
+    defaultValues: { title: "", description: "", fileUrl: "", tags: "" }
   });
 
-  const onSubmit = async (values: { title: string; description: string; link: string; tags: string }) => {
-    const payload: Partial<IResource> = {
-      title: values.title,
-      description: values.description,
-      link: values.link,
-      tags: values.tags.split(",").map(tag => tag.trim()).filter(Boolean)
-    };
+  const onSubmit = async (values: { title: string; description: string; fileUrl: string; tags: string }) => {
+    const formData = new FormData();
+    
+    // Add form fields
+    formData.append("title", values.title);
+    formData.append("description", values.description);
+    formData.append("tags", values.tags);
+    
+    // Add file or link based on resource type
+    if (resourceType === "file" && selectedFile) {
+      formData.append("resources", selectedFile);
+    } else {
+      formData.append("fileUrl", values.fileUrl);
+    }
+
     try {
       if (editingResource) {
+        // For editing, we need to handle differently since we're not updating files in this example
+        const payload: Partial<IResource> = {
+          title: values.title,
+          description: values.description,
+          tags: values.tags.split(",").map(tag => tag.trim()).filter(Boolean)
+        };
+        
+        if (resourceType === "link") {
+          payload.fileUrl = values.fileUrl;
+        }
+        
         await updateResource({ id: editingResource._id!, data: payload }).unwrap();
         toast.success("Resource updated successfully");
         setEditingResource(null);
       } else {
-        await addResource(payload).unwrap();
+        // For new resources, use FormData to handle file upload
+        await addResource(formData as unknown as IResource).unwrap();
         toast.success("Resource added successfully");
       }
+      
       reset();
+      setSelectedFile(null);
       setShowForm(false);
       refetch();
     } catch {
@@ -68,40 +103,102 @@ export default function AdminResourcesPage() {
     setEditingResource(resource);
     setValue("title", resource.title);
     setValue("description", resource.description);
-    setValue("link", resource.link);
-    setValue("tags", resource.tags.join(", "));
+    setValue("fileUrl", resource.fileUrl || "");
+    setValue("tags", resource.tags?.join(", ") || "");
+    
+    // Determine if it's a file or link based on the URL pattern
+    if (resource.fileUrl) {
+      // Check if it's a MinIO URL (uploaded file) or external link
+      if (resource.fileUrl.includes("resources/")) {
+        setResourceType("file");
+      } else {
+        setResourceType("link");
+      }
+    }
+    
     setShowForm(true);
   };
 
   const handleDelete = async (id: string) => {
-   
-      try {
-        await deleteResource(id).unwrap();
-        toast.success("Resource deleted successfully");
-        refetch();
-      } catch {
-        toast.error("Failed to delete resource");
-      }
-   
+    try {
+      await deleteResource(id).unwrap();
+      toast.success("Resource deleted successfully");
+      refetch();
+    } catch {
+      toast.error("Failed to delete resource");
+    }
   };
 
   const handleAddNew = () => {
     setEditingResource(null);
     reset();
+    setSelectedFile(null);
+    setResourceType("file");
     setShowForm(true);
   };
 
   const handleCancelForm = () => {
     setEditingResource(null);
     reset();
+    setSelectedFile(null);
     setShowForm(false);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const formatFileSize = (bytes?: number) => {
+    if (!bytes) return "Unknown size";
+    
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + " " + sizes[i];
+  };
+
+  const getFileIcon = (fileUrl?: string) => {
+    if (!fileUrl) return <FiFile className="w-4 h-4" />;
+    
+    const fileName = fileUrl.split('/').pop();
+    const extension = fileName?.split('.').pop()?.toLowerCase();
+    
+    switch (extension) {
+      case 'pdf':
+        return <FiFile className="w-4 h-4 text-red-500" />;
+      case 'doc':
+      case 'docx':
+        return <FiFile className="w-4 h-4 text-blue-500" />;
+      case 'xls':
+      case 'xlsx':
+        return <FiFile className="w-4 h-4 text-green-500" />;
+      case 'ppt':
+      case 'pptx':
+        return <FiFile className="w-4 h-4 text-orange-500" />;
+      case 'txt':
+        return <FiFile className="w-4 h-4 text-gray-500" />;
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+      case 'svg':
+        return <FiFile className="w-4 h-4 text-purple-500" />;
+      default:
+        return <FiFile className="w-4 h-4" />;
+    }
+  };
+
+  const isFileResource = (fileUrl?: string) => {
+    return fileUrl?.includes("resources/") || false;
   };
 
   // Filter resources based on search term
   const filteredResources = resources.filter(resource =>
     resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     resource.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    resource.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+    resource.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (resource.fileUrl && resource.fileUrl.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -115,7 +212,7 @@ export default function AdminResourcesPage() {
               <FiBook className="text-blue-600" />
               Resource Manager
             </h1>
-            <p className="text-gray-600">Manage your learning resources and documentation</p>
+            <p className="text-gray-600">Manage your learning resources, documentation, and files</p>
           </div>
           <Button
             onClick={handleAddNew}
@@ -132,7 +229,7 @@ export default function AdminResourcesPage() {
             <div className="relative">
               <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <Input
-                placeholder="Search resources by title, description, or tags..."
+                placeholder="Search resources by title, description, tags, or filename..."
                 className="pl-12 pr-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 text-lg py-4 rounded-lg transition-all duration-200"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -178,21 +275,105 @@ export default function AdminResourcesPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                      <FiExternalLink className="w-4 h-4" />
-                      Link or PDF URL *
-                    </label>
-                    <Input
-                      placeholder="https://example.com"
-                      className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 py-3 rounded-lg transition-all duration-200"
-                      {...register("link", { required: "Link is required" })}
-                    />
-                    {errors.link && <p className="text-red-500 text-sm flex items-center gap-1">
-                      <FiX className="w-3 h-3" />
-                      {errors.link.message}
-                    </p>}
+                    <label className="text-sm font-semibold text-gray-700">Resource Type *</label>
+                    <div className="flex gap-4">
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          value="link"
+                          checked={resourceType === "link"}
+                          onChange={() => setResourceType("link")}
+                          className="text-blue-600 focus:ring-blue-500"
+                        />
+                        <span>External Link</span>
+                      </label>
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          value="file"
+                          checked={resourceType === "file"}
+                          onChange={() => setResourceType("file")}
+                          className="text-blue-600 focus:ring-blue-500"
+                        />
+                        <span>File Upload</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
+
+                {resourceType === "link" ? (
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                      <FiExternalLink className="w-4 h-4" />
+                      Resource URL *
+                    </label>
+                    <Input
+                      placeholder="https://example.com/resource.pdf"
+                      className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 py-3 rounded-lg transition-all duration-200"
+                      {...register("fileUrl", { required: "URL is required" })}
+                    />
+                    {errors.fileUrl && <p className="text-red-500 text-sm flex items-center gap-1">
+                      <FiX className="w-3 h-3" />
+                      {errors.fileUrl.message}
+                    </p>}
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                      <FiUpload className="w-4 h-4" />
+                      Upload File *
+                    </label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.jpg,.jpeg,.png,.gif,.svg,.mp4,.mp3"
+                      />
+                      
+                      {selectedFile ? (
+                        <div className="flex items-center justify-center gap-2">
+                          {getFileIcon(selectedFile.name)}
+                          <div className="text-left">
+                            <p className="font-medium text-gray-900">{selectedFile.name}</p>
+                            <p className="text-sm text-gray-500">{formatFileSize(selectedFile.size)}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedFile(null);
+                              if (fileInputRef.current) fileInputRef.current.value = "";
+                            }}
+                            className="ml-2 text-red-500 hover:text-red-700"
+                          >
+                            <FiX className="w-5 h-5" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div>
+                          <FiUpload className="w-10 h-10 text-gray-400 mx-auto mb-2" />
+                          <p className="text-gray-600 mb-2">Click to upload or drag and drop</p>
+                          <p className="text-xs text-gray-500">PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, ZIP, RAR, JPG, PNG, GIF, SVG, MP4, MP3 (MAX. 50MB)</p>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="mt-4 border-gray-300 text-gray-700 hover:bg-gray-50"
+                            onClick={() => fileInputRef.current?.click()}
+                          >
+                            Select File
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                    {!selectedFile && (
+                      <p className="text-red-500 text-sm flex items-center gap-1">
+                        <FiX className="w-3 h-3" />
+                        File is required
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-gray-700">Description *</label>
@@ -226,7 +407,8 @@ export default function AdminResourcesPage() {
                 <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
                   <Button 
                     type="submit" 
-                    className="bg-black  text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="bg-black text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                    disabled={resourceType === "file" && !selectedFile}
                   >
                     {editingResource ? "Update Resource" : "Add Resource"}
                   </Button>
@@ -287,7 +469,7 @@ export default function AdminResourcesPage() {
                 ) : (
                   <Button
                     onClick={handleAddNew}
-                    className="bg-black  text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 mx-auto"
+                    className="bg-black text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 mx-auto"
                   >
                     <FiPlus className="w-5 h-5" />
                     Add Your First Resource
@@ -301,7 +483,7 @@ export default function AdminResourcesPage() {
                     <TableRow className="border-b border-gray-200 bg-gray-50">
                       <TableHead className="text-gray-900 font-bold py-4 px-6">Title</TableHead>
                       <TableHead className="text-gray-900 font-bold py-4 px-6">Description</TableHead>
-                      <TableHead className="text-gray-900 font-bold py-4 px-6">Link</TableHead>
+                      <TableHead className="text-gray-900 font-bold py-4 px-6">Resource</TableHead>
                       <TableHead className="text-gray-900 font-bold py-4 px-6">Tags</TableHead>
                       <TableHead className="text-gray-900 font-bold py-4 px-6">Actions</TableHead>
                     </TableRow>
@@ -320,16 +502,35 @@ export default function AdminResourcesPage() {
                           </div>
                         </TableCell>
                         <TableCell className="py-4 px-6">
-                          <a 
-                            href={resource.link} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            className="text-black  hover:underline flex items-center max-w-[200px] transition-colors duration-200"
-                            title={resource.link}
-                          >
-                            <FiExternalLink className="w-4 h-4 mr-2 flex-shrink-0" />
-                            <span className="truncate">Open Link</span>
-                          </a>
+                          {resource.fileUrl ? (
+                            <div className="flex items-center max-w-[200px]">
+                              {getFileIcon(resource.fileUrl)}
+                              <div className="truncate ml-2">
+                                <p className="truncate font-medium" title={resource.fileUrl.split('/').pop()}>
+                                  {resource.fileUrl.split('/').pop()}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {isFileResource(resource.fileUrl) ? "Uploaded File" : "External Link"}
+                                </p>
+                              </div>
+                              <a 
+                                href={resource.fileUrl} 
+                                target={isFileResource(resource.fileUrl) ? "_self" : "_blank"}
+                                rel="noopener noreferrer" 
+                                download={isFileResource(resource.fileUrl)}
+                                className="ml-2 text-blue-600 hover:text-blue-800"
+                                title={isFileResource(resource.fileUrl) ? "Download file" : "Open link"}
+                              >
+                                {isFileResource(resource.fileUrl) ? (
+                                  <FiDownload className="w-4 h-4" />
+                                ) : (
+                                  <FiExternalLink className="w-4 h-4" />
+                                )}
+                              </a>
+                            </div>
+                          ) : (
+                            <span className="text-gray-400">No resource available</span>
+                          )}
                         </TableCell>
                         <TableCell className="py-4 px-6">
                           <div className="flex flex-wrap gap-1 max-w-[200px]">
@@ -369,7 +570,6 @@ export default function AdminResourcesPage() {
           </CardContent>
         </Card>
       </div>
-      
     </div>
   );
 }

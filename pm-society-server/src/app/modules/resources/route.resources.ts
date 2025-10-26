@@ -1,15 +1,13 @@
-import express from 'express';
-import { ResourceController } from './controller.resources';
-
-
-
-
+import express from "express";
+import multer from "multer";
+import { ResourceController } from "./controller.resources";
 
 const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
-router.post('/', ResourceController.createAResource)
-router.get('/', ResourceController.getAllResources)
+router.post("/", upload.single("file"), ResourceController.createAResource);
+router.get("/", ResourceController.getAllResources);
+router.put("/:id", upload.single("file"), ResourceController.updateResource);
+router.delete("/:id", ResourceController.deleteResource);
 
-router.put('/:id',ResourceController.updateResource)
-router.delete('/:id', ResourceController.deleteResource)
-export const ResourceRoutes = router
+export const ResourceRoutes = router;

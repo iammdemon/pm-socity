@@ -15,6 +15,7 @@ export interface IForumTopic {
  author : Types.ObjectId
  topicId: number
  content: string
+ imageUrl?: string
  reactions: Types.ObjectId[]
  replies: IReply[]
  createdAt?: Date

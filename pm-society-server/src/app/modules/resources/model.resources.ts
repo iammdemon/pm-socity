@@ -4,7 +4,7 @@ import { IResource } from './interface.resources';
 const resourceSchema = new mongoose.Schema<IResource>({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  link: { type: String, required: true },
+  fileUrl: { type: String },
   tags: { type: [String], default: [] },
 }, { timestamps: true });
 

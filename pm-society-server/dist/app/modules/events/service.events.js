@@ -13,53 +13,65 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EventService = void 0;
-const model_users_1 = require("../users/model.users");
 const model_events_1 = __importDefault(require("./model.events"));
-const createAEventIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield model_events_1.default.create(payload);
-    return result;
+const model_users_1 = require("../users/model.users");
+const minioClient_1 = require("../../utils/minioClient");
+const BUCKET = "events";
+const createAEventIntoDB = (payload, file) => __awaiter(void 0, void 0, void 0, function* () {
+    let imageUrl;
+    if (file) {
+        const upload = yield minioClient_1.StorageService.uploadFile(BUCKET, file);
+        imageUrl = upload.fileUrl;
+    }
+    const event = yield model_events_1.default.create(Object.assign(Object.assign({}, payload), { image: imageUrl || payload.image }));
+    return event;
 });
 const getAllEvents = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield model_events_1.default.find().populate("joinedUser", "name email");
-    return result;
+    return model_events_1.default.find().populate("joinedUser", "name email").sort({ createdAt: -1 });
 });
 const getSingleEvent = (slug) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield model_events_1.default.findOne({ slug });
-    return result;
+    return model_events_1.default.findOne({ slug }).populate("joinedUser", "name email");
 });
-const updateEvent = (slug, updateData) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield model_events_1.default.findOneAndUpdate({ slug }, updateData, {
-        new: true,
-    });
-    return result;
+const updateEvent = (slug, updateData, file) => __awaiter(void 0, void 0, void 0, function* () {
+    const event = yield model_events_1.default.findOne({ slug });
+    if (!event)
+        throw new Error("Event not found");
+    if (file) {
+        // upload new image
+        const upload = yield minioClient_1.StorageService.uploadFile(BUCKET, file);
+        updateData.image = upload.fileUrl;
+        // delete old one
+        if (event.image) {
+            yield minioClient_1.StorageService.deleteFile(BUCKET, event.image);
+        }
+    }
+    const updated = yield model_events_1.default.findOneAndUpdate({ slug }, updateData, { new: true });
+    return updated;
 });
 const deleteEvent = (slug) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield model_events_1.default.findOneAndDelete({ slug });
-    return result;
+    const event = yield model_events_1.default.findOne({ slug });
+    if (!event)
+        throw new Error("Event not found");
+    if (event.image) {
+        yield minioClient_1.StorageService.deleteFile(BUCKET, event.image);
+    }
+    yield model_events_1.default.findOneAndDelete({ slug });
+    return event;
 });
 const registeredIntoEvent = (eventId, email) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    // 1️⃣ Check if user exists
     const user = yield model_users_1.User.findOne({ email });
-    if (!user) {
+    if (!user)
         throw new Error("User not found");
-    }
-    // 2️⃣ Check if event exists
     const event = yield model_events_1.default.findById(eventId);
-    if (!event) {
+    if (!event)
         throw new Error("Event not found");
-    }
-    // 3️⃣ Prevent duplicate registration
     const alreadyJoined = (_a = event.joinedUser) === null || _a === void 0 ? void 0 : _a.some((id) => id.toString() === user._id.toString());
-    if (alreadyJoined) {
+    if (alreadyJoined)
         throw new Error("User already registered for this event");
-    }
-    // 4️⃣ Add user to joinedUser array
     (_b = event.joinedUser) === null || _b === void 0 ? void 0 : _b.push(user._id);
     yield event.save();
-    // 5️⃣ Populate user info if needed
-    const updatedEvent = yield model_events_1.default.findById(eventId).populate("joinedUser", "name email");
-    return updatedEvent;
+    return yield model_events_1.default.findById(eventId).populate("joinedUser", "name email");
 });
 exports.EventService = {
     createAEventIntoDB,

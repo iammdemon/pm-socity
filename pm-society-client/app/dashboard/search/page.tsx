@@ -192,12 +192,12 @@ const SearchPage: React.FC = () => {
           {resource.description}
         </p>
         <a
-          href={resource.link}
+          href={resource.fileUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm text-primary hover:underline mt-2 block truncate"
         >
-          {resource.link}
+          {resource.fileUrl}
         </a>
         <div className="flex flex-wrap gap-1 mt-2">
           {resource.tags.map((tag, index) => (

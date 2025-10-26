@@ -8,7 +8,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const resourceSchema = new mongoose_1.default.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    link: { type: String, required: true },
+    fileUrl: { type: String },
     tags: { type: [String], default: [] },
 }, { timestamps: true });
 exports.Resource = mongoose_1.default.model('Resource', resourceSchema);

@@ -1,9 +1,11 @@
 import { Types } from "mongoose";
 import { ForumTopic } from "../dicussions/model.discussions";
 import IUser from "./interface.users";
-import { User } from "./model.users";
+import { User} from "./model.users";
 import { Goal } from "../goal/model.goal";
 import { Achievement } from "../achievement/model.achievement";
+import { client, StorageService } from "../../utils/minioClient";
+
 
 const createUserIntoDB = async (payload: IUser) => {
   return await User.create(payload);
@@ -106,6 +108,26 @@ const toggleLink = async (linkedUserId: Types.ObjectId, currentUserEmail: string
   return user;
 };
 
+const updateAvatar = async (email: string, avatarFile: Express.Multer.File) => {
+  
+    const user = await User.findOne({ email });
+    if (!user) throw new Error("User not found");
+
+    const bucket = "avatars";
+
+    // Upload new file
+    const { fileUrl } = await StorageService.uploadFile(bucket, avatarFile);
+
+    // Delete old avatar if exists
+    if (user.avatar) {
+      await StorageService.deleteFile(bucket, user.avatar);
+    }
+
+    user.avatar = fileUrl;
+    await user.save();
+
+    return user;
+  }
 
 
 
@@ -119,5 +141,6 @@ export const userService = {
   findByEmail,
   updateUser,
  toggleLink,
-  getUserByUserName
+  getUserByUserName,
+  updateAvatar
 };

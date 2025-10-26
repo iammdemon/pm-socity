@@ -14,6 +14,7 @@ const model_discussions_1 = require("../dicussions/model.discussions");
 const model_users_1 = require("./model.users");
 const model_goal_1 = require("../goal/model.goal");
 const model_achievement_1 = require("../achievement/model.achievement");
+const minioClient_1 = require("../../utils/minioClient");
 const createUserIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return yield model_users_1.User.create(payload);
 });
@@ -85,11 +86,27 @@ const toggleLink = (linkedUserId, currentUserEmail) => __awaiter(void 0, void 0,
     yield targetUser.save();
     return user;
 });
+const updateAvatar = (email, avatarFile) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield model_users_1.User.findOne({ email });
+    if (!user)
+        throw new Error("User not found");
+    const bucket = "avatars";
+    // Upload new file
+    const { fileUrl } = yield minioClient_1.StorageService.uploadFile(bucket, avatarFile);
+    // Delete old avatar if exists
+    if (user.avatar) {
+        yield minioClient_1.StorageService.deleteFile(bucket, user.avatar);
+    }
+    user.avatar = fileUrl;
+    yield user.save();
+    return user;
+});
 exports.userService = {
     createUserIntoDB,
     getAllUsers,
     findByEmail,
     updateUser,
     toggleLink,
-    getUserByUserName
+    getUserByUserName,
+    updateAvatar
 };

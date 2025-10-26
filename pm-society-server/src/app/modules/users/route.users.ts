@@ -3,8 +3,10 @@ import { PaymentController } from "./controller.payment";
 import { userController } from "./controller.users";
 import { authenticateJWT } from "../../middlewares/auth";
 import { resetAllPasswords } from "./utils.user";
+import multer from "multer";
 
 const router = express.Router();
+const Upload = multer()
 
 // Payment routes
 router.post("/checkout", PaymentController.startCheckout);
@@ -40,6 +42,6 @@ router.post("/reset-passwords", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
+router.put("/avatar", authenticateJWT, Upload.single("avatar"), userController.updateAvatar)
 
 export const UserRoutes = router;

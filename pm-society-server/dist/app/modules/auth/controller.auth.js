@@ -16,6 +16,8 @@ exports.authController = void 0;
 const service_auth_1 = require("./service.auth");
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const model_users_1 = require("../users/model.users");
+const model_goal_1 = require("../goal/model.goal");
+const model_achievement_1 = require("../achievement/model.achievement");
 const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { accessToken, userRole } = yield service_auth_1.authService.loginUser(req.body);
     // Instead of setting cookies, return the token in the response
@@ -30,13 +32,28 @@ const getMe = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, 
         res.status(401).json({ message: "Not authenticated" });
         return;
     }
-    const user = yield model_users_1.User.findOne({ email: req.user.email }).lean();
+    const user = yield model_users_1.User.findOne({ email: req.user.email });
     if (!user) {
         res.status(404).json({ message: "User not found" });
         return;
     }
     delete user.password;
     res.status(200).json({ message: "User profile fetched", data: user });
+}));
+const getUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.user) {
+        res.status(401).json({ message: "Not authenticated" });
+        return;
+    }
+    const user = yield model_users_1.User.findOne({ email: req.user.email });
+    if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+    }
+    delete user.password;
+    const goals = yield model_goal_1.Goal.find({ user: user._id }).sort({ createdAt: -1 });
+    const achievements = yield model_achievement_1.Achievement.find({ user: user._id }).sort({ createdAt: -1 });
+    res.status(200).json({ message: "User profile fetched", data: { user, goals, achievements } });
 }));
 const logoutUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Since we're using localStorage, the client will handle clearing the token
@@ -55,4 +72,5 @@ exports.authController = {
     getMe,
     logoutUser,
     changePassword,
+    getUser
 };

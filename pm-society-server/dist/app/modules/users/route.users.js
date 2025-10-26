@@ -18,7 +18,9 @@ const controller_payment_1 = require("./controller.payment");
 const controller_users_1 = require("./controller.users");
 const auth_1 = require("../../middlewares/auth");
 const utils_user_1 = require("./utils.user");
+const multer_1 = __importDefault(require("multer"));
 const router = express_1.default.Router();
+const Upload = (0, multer_1.default)();
 // Payment routes
 router.post("/checkout", controller_payment_1.PaymentController.startCheckout);
 router.post("/subscription-checkout", controller_payment_1.PaymentController.startSubscriptionCheckout);
@@ -43,4 +45,5 @@ router.post("/reset-passwords", (req, res) => __awaiter(void 0, void 0, void 0, 
         res.status(500).json({ message: err.message });
     }
 }));
+router.put("/avatar", auth_1.authenticateJWT, Upload.single("avatar"), controller_users_1.userController.updateAvatar);
 exports.UserRoutes = router;

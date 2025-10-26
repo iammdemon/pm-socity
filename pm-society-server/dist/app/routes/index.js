@@ -6,7 +6,6 @@ const route_discussions_1 = require("../modules/dicussions/route.discussions");
 const route_blog_1 = require("../modules/blogs/route.blog");
 const route_events_1 = require("../modules/events/route.events");
 const route_resources_1 = require("../modules/resources/route.resources");
-const route_chat_1 = require("../modules/chat/route.chat");
 const route_auth_1 = require("../modules/auth/route.auth");
 const route_contact_1 = require("../modules/contact/route.contact");
 const route_1 = require("../modules/mailchimp/route");
@@ -21,7 +20,6 @@ const moduleRoutes = [
     { path: "/blogs", route: route_blog_1.blogRoutes },
     { path: "/events", route: route_events_1.EventRoutes },
     { path: "/resources", route: route_resources_1.ResourceRoutes },
-    { path: "/chat", route: route_chat_1.chatRoutes },
     { path: "/contact", route: route_contact_1.ContactRoutes },
     { path: "/subscribe", route: route_1.mailchimpRoutes },
     { path: "/goals", route: route_goal_1.GoalRoutes },

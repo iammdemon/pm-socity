@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Search, ExternalLink, BookOpen, Grid, List } from 'lucide-react';
+import { Search, ExternalLink, BookOpen, Grid, List, Download, File } from 'lucide-react';
 import { IResource, useGetResourcesQuery } from '@/app/redux/services/resourceApi';
 
 export default function Library() {
@@ -23,7 +23,8 @@ export default function Library() {
   const filteredResources = resources
     .filter((resource: IResource) => {
       const matchesSearch = resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           resource.description.toLowerCase().includes(searchTerm.toLowerCase());
+                           resource.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           resource.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
       return matchesSearch;
     })
     .sort((a: IResource, b: IResource) => {
@@ -33,6 +34,43 @@ export default function Library() {
       return 0;
     });
 
+  // Helper function to determine if a resource is a file or external link
+  const isFileResource = (fileUrl?: string) => {
+    return fileUrl?.includes("resources/") || false;
+  };
+
+  // Helper function to get file icon based on file type
+  const getFileIcon = (fileUrl?: string) => {
+    if (!fileUrl) return <File className="w-4 h-4" />;
+    
+    const fileName = fileUrl.split('/').pop();
+    const extension = fileName?.split('.').pop()?.toLowerCase();
+    
+    switch (extension) {
+      case 'pdf':
+        return <File className="w-4 h-4 text-red-500" />;
+      case 'doc':
+      case 'docx':
+        return <File className="w-4 h-4 text-blue-500" />;
+      case 'xls':
+      case 'xlsx':
+        return <File className="w-4 h-4 text-green-500" />;
+      case 'ppt':
+      case 'pptx':
+        return <File className="w-4 h-4 text-orange-500" />;
+      case 'txt':
+        return <File className="w-4 h-4 text-gray-500" />;
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+      case 'svg':
+        return <File className="w-4 h-4 text-purple-500" />;
+      default:
+        return <File className="w-4 h-4" />;
+    }
+  };
+
   // Resource Card Component
   const ResourceCard = ({ resource }: { resource: IResource }) => (
     <Card className="group border border-gray-200 dark:border-gray-800 overflow-hidden bg-white dark:bg-black hover:shadow-lg transition-all duration-200">
@@ -40,19 +78,37 @@ export default function Library() {
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors">
-              <Link href={resource.link} target="_blank" className="hover:underline">
-                {resource.title}
-              </Link>
+              {resource.fileUrl ? (
+                isFileResource(resource.fileUrl) ? (
+                  <span className="flex items-center gap-2">
+                    {getFileIcon(resource.fileUrl)}
+                    {resource.title}
+                  </span>
+                ) : (
+                  <Link href={resource.fileUrl} target="_blank" className="hover:underline flex items-center gap-2">
+                    {getFileIcon(resource.fileUrl)}
+                    {resource.title}
+                  </Link>
+                )
+              ) : (
+                <span>{resource.title}</span>
+              )}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
               {resource.description}
             </p>
           </div>
-          <ExternalLink className="w-4 h-4 text-gray-400 dark:text-gray-500 ml-2 flex-shrink-0" />
+          {resource.fileUrl && (
+            isFileResource(resource.fileUrl) ? (
+              <Download className="w-4 h-4 text-gray-400 dark:text-gray-500 ml-2 flex-shrink-0" />
+            ) : (
+              <ExternalLink className="w-4 h-4 text-gray-400 dark:text-gray-500 ml-2 flex-shrink-0" />
+            )
+          )}
         </div>
         
         <div className="flex flex-wrap gap-2 mb-4">
-          {resource.tags.slice(0, 3).map((tag: string) => (
+          {resource.tags?.slice(0, 3).map((tag: string) => (
             <Badge
               key={tag}
               variant="outline"
@@ -61,18 +117,32 @@ export default function Library() {
               {tag}
             </Badge>
           ))}
-          {resource.tags.length > 3 && (
+          {resource.tags && resource.tags.length > 3 && (
             <Badge variant="outline" className="text-xs border-gray-300 dark:border-gray-700">
               +{resource.tags.length - 3}
             </Badge>
           )}
         </div>
         
-        <Link href={resource.link} target="_blank">
-          <Button variant="outline" className="w-full justify-center border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
-            View Resource
+        {resource.fileUrl ? (
+          isFileResource(resource.fileUrl) ? (
+            <Link href={resource.fileUrl} download>
+              <Button variant="outline" className="w-full justify-center border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
+                Download File
+              </Button>
+            </Link>
+          ) : (
+            <Link href={resource.fileUrl} target="_blank">
+              <Button variant="outline" className="w-full justify-center border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-colors">
+                View Resource
+              </Button>
+            </Link>
+          )
+        ) : (
+          <Button variant="outline" className="w-full justify-center border-gray-300 dark:border-gray-700" disabled>
+            No Resource Available
           </Button>
-        </Link>
+        )}
       </CardContent>
     </Card>
   );
@@ -83,16 +153,28 @@ export default function Library() {
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-2">
-              <Link href={resource.link} target="_blank" className="hover:underline">
-                {resource.title}
-              </Link>
+            <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
+              {resource.fileUrl ? (
+                isFileResource(resource.fileUrl) ? (
+                  <>
+                    {getFileIcon(resource.fileUrl)}
+                    {resource.title}
+                  </>
+                ) : (
+                  <Link href={resource.fileUrl} target="_blank" className="hover:underline flex items-center gap-2">
+                    {getFileIcon(resource.fileUrl)}
+                    {resource.title}
+                  </Link>
+                )
+              ) : (
+                <span>{resource.title}</span>
+              )}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
               {resource.description}
             </p>
             <div className="flex flex-wrap gap-2">
-              {resource.tags.map((tag: string) => (
+              {resource.tags?.map((tag: string) => (
                 <Badge
                   key={tag}
                   variant="outline"
@@ -103,11 +185,25 @@ export default function Library() {
               ))}
             </div>
           </div>
-          <Link href={resource.link} target="_blank">
-            <Button variant={"ghost"} size="sm" className="ml-4">
-              <ExternalLink className="w-4 h-4" />
+          {resource.fileUrl ? (
+            isFileResource(resource.fileUrl) ? (
+              <Link href={resource.fileUrl} download>
+                <Button variant="ghost" size="sm" className="ml-4">
+                  <Download className="w-4 h-4" />
+                </Button>
+              </Link>
+            ) : (
+              <Link href={resource.fileUrl} target="_blank">
+                <Button variant="ghost" size="sm" className="ml-4">
+                  <ExternalLink className="w-4 h-4" />
+                </Button>
+              </Link>
+            )
+          ) : (
+            <Button variant="ghost" size="sm" className="ml-4" disabled>
+              <File className="w-4 h-4" />
             </Button>
-          </Link>
+          )}
         </div>
       </CardContent>
     </Card>

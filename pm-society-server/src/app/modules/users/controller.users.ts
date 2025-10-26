@@ -13,8 +13,8 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   const role = "admin";
 
   if (!req.body.email) {
-     res.status(400).json({ message: "Email is required" });
-     return
+    res.status(400).json({ message: "Email is required" });
+    return;
   }
 
   const userName = await generateUsernameFromEmail(req.body.email);
@@ -106,6 +106,21 @@ const resetPasswords = catchAsync(async (req, res) => {
   res.status(200).json({ message: "Passwords reset successfully" });
 });
 
+const updateAvatar = catchAsync(async (req: AuthRequest, res: Response) => {
+  const email = req?.user?.email;
+  if (!req.file) {
+    res.status(400).json({ message: "No file uploaded" });
+    return;
+  }
+
+  const updatedUser = await userService.updateAvatar(email!, req.file!);
+
+  res.status(200).json({
+    message: "Avatar updated successfully",
+    data: updatedUser,
+  });
+});
+
 export const userController = {
   createUser,
   getAllUsers,
@@ -114,4 +129,5 @@ export const userController = {
   generateLink,
   getUserByUserName,
   resetPasswords,
+  updateAvatar,
 };

@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { authService } from "./service.auth";
 import catchAsync from "../../utils/catchAsync";
 import { User } from "../users/model.users";
+import { Goal } from "../goal/model.goal";
+import { Achievement } from "../achievement/model.achievement";
 
 interface AuthRequest extends Request {
   user?: { email: string; role: string };
@@ -23,7 +25,7 @@ const getMe = catchAsync(async (req: AuthRequest, res: Response) => {
     res.status(401).json({ message: "Not authenticated" });
     return;
   }
-  const user = await User.findOne({ email: req.user.email }).lean();
+  const user = await User.findOne({ email: req.user.email })
   if (!user) {
     res.status(404).json({ message: "User not found" });
     return;
@@ -33,6 +35,25 @@ const getMe = catchAsync(async (req: AuthRequest, res: Response) => {
 
   res.status(200).json({ message: "User profile fetched", data: user });
 });
+
+const getUser = catchAsync(async (req: AuthRequest, res: Response) => {
+  if (!req.user) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+  const user = await User.findOne({ email: req.user.email })
+  if (!user) {
+    res.status(404).json({ message: "User not found" });
+    return;
+  }
+
+  delete (user as any).password;
+
+  const goals = await Goal.find({ user: user._id }).sort({ createdAt: -1 });
+  const achievements = await Achievement.find({ user: user._id }).sort({ createdAt: -1 });
+
+  res.status(200).json({ message: "User profile fetched", data:{ user, goals, achievements} });
+})
 
 const logoutUser = catchAsync(async (req: Request, res: Response) => {
   // Since we're using localStorage, the client will handle clearing the token
@@ -55,4 +76,5 @@ export const authController = {
   getMe,
   logoutUser,
   changePassword,
+  getUser
 };

@@ -23,6 +23,15 @@ export const authApi = createApi({
       providesTags: [{ type: "User", id: "ME" }],
     }),
 
+    getUser: builder.query({
+      query: () => ({ url: "/auth/user", method: "GET" }),
+      providesTags: ["User"],
+    }),
+
+    updateAvatar: builder.mutation({
+      query: (body) => ({ url: "/users/avatar", method: "PUT", body }),
+    }),
+
     // 🔒 Change password
     changePassword: builder.mutation({
       query: (body) => ({ url: "/auth/change-password", method: "POST", body }),
@@ -30,18 +39,24 @@ export const authApi = createApi({
 
     // 🔒 Get user by username
     getUserByUserName: builder.query({
-      query: (userName: string) => ({ url: `/users/${userName}`, method: "GET" }),
+      query: (userName: string) => ({
+        url: `/users/${userName}`,
+        method: "GET",
+      }),
     }),
 
     // 🔒 Toggle linked user
     toggleLink: builder.mutation({
-      query: (linkedUserId: string) => ({ url: `/users/link/${linkedUserId}`, method: "PATCH" }),
+      query: (linkedUserId: string) => ({
+        url: `/users/link/${linkedUserId}`,
+        method: "PATCH",
+      }),
     }),
 
     // 🔒 Update profile
     updateProfile: builder.mutation({
       query: (body) => ({ url: "/users/profile", method: "PUT", body }),
-      invalidatesTags:[{type:"User", id:"ME"}]
+      invalidatesTags: [{ type: "User", id: "ME" }],
     }),
 
     // 🎯 Goals CRUD
@@ -54,7 +69,11 @@ export const authApi = createApi({
       invalidatesTags: ["Goal"],
     }),
     updateGoal: builder.mutation({
-      query: ({ id, ...body }) => ({ url: `/goals/${id}`, method: "PUT", body }),
+      query: ({ id, ...body }) => ({
+        url: `/goals/${id}`,
+        method: "PUT",
+        body,
+      }),
       invalidatesTags: ["Goal"],
     }),
     deleteGoal: builder.mutation({
@@ -72,7 +91,11 @@ export const authApi = createApi({
       invalidatesTags: ["Achievement"],
     }),
     updateAchievement: builder.mutation({
-      query: ({ id, ...body }) => ({ url: `/achievements/${id}`, method: "PUT", body }),
+      query: ({ id, ...body }) => ({
+        url: `/achievements/${id}`,
+        method: "PUT",
+        body,
+      }),
       invalidatesTags: ["Achievement"],
     }),
     deleteAchievement: builder.mutation({
@@ -82,12 +105,13 @@ export const authApi = createApi({
     search: builder.query({
       query: (query) => ({ url: `/search?q=${query}`, method: "GET" }),
       providesTags: ["User"],
-    })
+    }),
   }),
 });
 
 export const {
   useGetMeQuery,
+  useGetUserQuery,
   useChangePasswordMutation,
   useGetUserByUserNameQuery,
   useToggleLinkMutation,
@@ -102,5 +126,6 @@ export const {
   useCreateAchievementMutation,
   useUpdateAchievementMutation,
   useDeleteAchievementMutation,
-  useSearchQuery
+  useSearchQuery,
+  useUpdateAvatarMutation,
 } = authApi;

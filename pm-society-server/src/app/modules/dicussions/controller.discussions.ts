@@ -8,10 +8,10 @@ interface AuthRequest extends Request {
 }
 
 const createTopic = catchAsync(async (req: AuthRequest, res: Response) => {
-  console.log(req.body);
-  const result = await ForumService.createTopic(req.body, req.user!.email);
-  res.status(201).json({message:"Topic created successfully", data: result});
+  const result = await ForumService.createTopic(req.body, req.user!.email, req.file);
+  res.status(201).json({ message: "Topic created successfully", data: result });
 });
+
 
 const getAllTopics = catchAsync(async (req, res) => {
   const result = await ForumService.getAllTopics();

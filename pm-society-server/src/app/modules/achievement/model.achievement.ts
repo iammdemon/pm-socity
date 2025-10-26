@@ -9,7 +9,7 @@ const AchievementSchema: Schema<IAchievement> = new Schema(
     date: { type: Date, default: Date.now },
     type: {
       type: String,
-      enum: ["certification", "award", "milestone", "recognition"],
+      enum: ["PMP", "CAPM", "ACP"],
     },
   },
   {

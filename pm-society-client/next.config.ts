@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
         hostname: 'res.cloudinary.com',
         pathname: "/**" // Replace with your actual hostname
        
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '9000', 
+        pathname: "/**" // Replace with your actual hostname
       }
     ],
   },
