@@ -20,7 +20,6 @@ import {
   FiTrash2, 
   FiSearch, 
   FiX, 
-  FiExternalLink, 
   FiPlus, 
   FiBook, 
   FiTag,
@@ -41,19 +40,17 @@ export default function AdminResourcesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [resourceType, setResourceType] = useState<"link" | "file">("file");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<{
     title: string;
     description: string;
-    fileUrl: string;
     tags: string;
   }>({
-    defaultValues: { title: "", description: "", fileUrl: "", tags: "" }
+    defaultValues: { title: "", description: "", tags: "" }
   });
 
-  const onSubmit = async (values: { title: string; description: string; fileUrl: string; tags: string }) => {
+  const onSubmit = async (values: { title: string; description: string; tags: string }) => {
     const formData = new FormData();
     
     // Add form fields
@@ -61,11 +58,9 @@ export default function AdminResourcesPage() {
     formData.append("description", values.description);
     formData.append("tags", values.tags);
     
-    // Add file or link based on resource type
-    if (resourceType === "file" && selectedFile) {
+    // Add file
+    if (selectedFile) {
       formData.append("resources", selectedFile);
-    } else {
-      formData.append("fileUrl", values.fileUrl);
     }
 
     try {
@@ -76,10 +71,6 @@ export default function AdminResourcesPage() {
           description: values.description,
           tags: values.tags.split(",").map(tag => tag.trim()).filter(Boolean)
         };
-        
-        if (resourceType === "link") {
-          payload.fileUrl = values.fileUrl;
-        }
         
         await updateResource({ id: editingResource._id!, data: payload }).unwrap();
         toast.success("Resource updated successfully");
@@ -103,19 +94,7 @@ export default function AdminResourcesPage() {
     setEditingResource(resource);
     setValue("title", resource.title);
     setValue("description", resource.description);
-    setValue("fileUrl", resource.fileUrl || "");
     setValue("tags", resource.tags?.join(", ") || "");
-    
-    // Determine if it's a file or link based on the URL pattern
-    if (resource.fileUrl) {
-      // Check if it's a MinIO URL (uploaded file) or external link
-      if (resource.fileUrl.includes("resources/")) {
-        setResourceType("file");
-      } else {
-        setResourceType("link");
-      }
-    }
-    
     setShowForm(true);
   };
 
@@ -133,7 +112,6 @@ export default function AdminResourcesPage() {
     setEditingResource(null);
     reset();
     setSelectedFile(null);
-    setResourceType("file");
     setShowForm(true);
   };
 
@@ -166,24 +144,24 @@ export default function AdminResourcesPage() {
     
     switch (extension) {
       case 'pdf':
-        return <FiFile className="w-4 h-4 text-red-500" />;
+        return <FiFile className="w-4 h-4 text-red-500 dark:text-red-400" />;
       case 'doc':
       case 'docx':
-        return <FiFile className="w-4 h-4 text-blue-500" />;
+        return <FiFile className="w-4 h-4 text-blue-500 dark:text-blue-400" />;
       case 'xls':
       case 'xlsx':
-        return <FiFile className="w-4 h-4 text-green-500" />;
+        return <FiFile className="w-4 h-4 text-green-500 dark:text-green-400" />;
       case 'ppt':
       case 'pptx':
-        return <FiFile className="w-4 h-4 text-orange-500" />;
+        return <FiFile className="w-4 h-4 text-orange-500 dark:text-orange-400" />;
       case 'txt':
-        return <FiFile className="w-4 h-4 text-gray-500" />;
+        return <FiFile className="w-4 h-4 text-gray-500 dark:text-gray-400" />;
       case 'jpg':
       case 'jpeg':
       case 'png':
       case 'gif':
       case 'svg':
-        return <FiFile className="w-4 h-4 text-purple-500" />;
+        return <FiFile className="w-4 h-4 text-purple-500 dark:text-purple-400" />;
       default:
         return <FiFile className="w-4 h-4" />;
     }
@@ -202,21 +180,21 @@ export default function AdminResourcesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 p-4 sm:p-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 sm:p-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header with Action Button */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-gray-200 dark:border-gray-800">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-              <FiBook className="text-blue-600" />
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
+              <FiBook className="text-blue-600 dark:text-blue-400" />
               Resource Manager
             </h1>
-            <p className="text-gray-600">Manage your learning resources, documentation, and files</p>
+            <p className="text-gray-600 dark:text-gray-400">Manage your learning resources, documentation, and files</p>
           </div>
           <Button
             onClick={handleAddNew}
-            className="bg-black text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+            className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
           >
             <FiPlus className="w-5 h-5" />
             Add New Resource
@@ -224,20 +202,20 @@ export default function AdminResourcesPage() {
         </div>
 
         {/* Search Bar */}
-        <Card className="bg-white shadow-lg border-0 rounded-xl overflow-hidden">
+        <Card className="bg-white dark:bg-gray-900 shadow-lg border-0 rounded-xl overflow-hidden">
           <CardContent className="p-6">
             <div className="relative">
-              <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
               <Input
                 placeholder="Search resources by title, description, tags, or filename..."
-                className="pl-12 pr-12 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 text-lg py-4 rounded-lg transition-all duration-200"
+                className="pl-12 pr-12 border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 text-gray-900 dark:text-white text-lg py-4 rounded-lg transition-all duration-200 bg-white dark:bg-gray-800"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-colors"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-full transition-colors"
                 >
                   <FiX className="w-4 h-4" />
                 </button>
@@ -248,8 +226,8 @@ export default function AdminResourcesPage() {
 
         {/* Form - Only show when needed */}
         {showForm && (
-          <Card className="bg-white shadow-xl border-0 rounded-xl overflow-hidden animate-in slide-in-from-top-4 duration-300">
-            <CardHeader className="bg-black text-white p-2">
+          <Card className="bg-white dark:bg-gray-900 shadow-xl border-0 rounded-xl overflow-hidden animate-in slide-in-from-top-4 duration-300">
+            <CardHeader className="bg-black dark:bg-white text-white dark:text-black p-6">
               <CardTitle className="text-2xl font-bold flex items-center gap-2">
                 <FiPlus className="w-6 h-6" />
                 {editingResource ? "Edit Resource" : "Add New Resource"}
@@ -257,165 +235,119 @@ export default function AdminResourcesPage() {
             </CardHeader>
             <CardContent className="p-8">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                      <FiBook className="w-4 h-4" />
-                      Title *
-                    </label>
-                    <Input
-                      placeholder="Enter resource title"
-                      className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 py-3 rounded-lg transition-all duration-200"
-                      {...register("title", { required: "Title is required" })}
-                    />
-                    {errors.title && <p className="text-red-500 text-sm flex items-center gap-1">
-                      <FiX className="w-3 h-3" />
-                      {errors.title.message}
-                    </p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">Resource Type *</label>
-                    <div className="flex gap-4">
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          value="link"
-                          checked={resourceType === "link"}
-                          onChange={() => setResourceType("link")}
-                          className="text-blue-600 focus:ring-blue-500"
-                        />
-                        <span>External Link</span>
-                      </label>
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          value="file"
-                          checked={resourceType === "file"}
-                          onChange={() => setResourceType("file")}
-                          className="text-blue-600 focus:ring-blue-500"
-                        />
-                        <span>File Upload</span>
-                      </label>
-                    </div>
-                  </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <FiBook className="w-4 h-4" />
+                    Title *
+                  </label>
+                  <Input
+                    placeholder="Enter resource title"
+                    className="border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 text-gray-900 dark:text-white py-3 rounded-lg transition-all duration-200 bg-white dark:bg-gray-800"
+                    {...register("title", { required: "Title is required" })}
+                  />
+                  {errors.title && <p className="text-red-500 dark:text-red-400 text-sm flex items-center gap-1">
+                    <FiX className="w-3 h-3" />
+                    {errors.title.message}
+                  </p>}
                 </div>
 
-                {resourceType === "link" ? (
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                      <FiExternalLink className="w-4 h-4" />
-                      Resource URL *
-                    </label>
-                    <Input
-                      placeholder="https://example.com/resource.pdf"
-                      className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 py-3 rounded-lg transition-all duration-200"
-                      {...register("fileUrl", { required: "URL is required" })}
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                    <FiUpload className="w-4 h-4" />
+                    Upload File *
+                  </label>
+                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-colors">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.jpg,.jpeg,.png,.gif,.svg,.mp4,.mp3"
                     />
-                    {errors.fileUrl && <p className="text-red-500 text-sm flex items-center gap-1">
-                      <FiX className="w-3 h-3" />
-                      {errors.fileUrl.message}
-                    </p>}
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                      <FiUpload className="w-4 h-4" />
-                      Upload File *
-                    </label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        onChange={handleFileChange}
-                        className="hidden"
-                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.rar,.jpg,.jpeg,.png,.gif,.svg,.mp4,.mp3"
-                      />
-                      
-                      {selectedFile ? (
-                        <div className="flex items-center justify-center gap-2">
-                          {getFileIcon(selectedFile.name)}
-                          <div className="text-left">
-                            <p className="font-medium text-gray-900">{selectedFile.name}</p>
-                            <p className="text-sm text-gray-500">{formatFileSize(selectedFile.size)}</p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSelectedFile(null);
-                              if (fileInputRef.current) fileInputRef.current.value = "";
-                            }}
-                            className="ml-2 text-red-500 hover:text-red-700"
-                          >
-                            <FiX className="w-5 h-5" />
-                          </button>
+                    
+                    {selectedFile ? (
+                      <div className="flex items-center justify-center gap-2">
+                        {getFileIcon(selectedFile.name)}
+                        <div className="text-left">
+                          <p className="font-medium text-gray-900 dark:text-white">{selectedFile.name}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{formatFileSize(selectedFile.size)}</p>
                         </div>
-                      ) : (
-                        <div>
-                          <FiUpload className="w-10 h-10 text-gray-400 mx-auto mb-2" />
-                          <p className="text-gray-600 mb-2">Click to upload or drag and drop</p>
-                          <p className="text-xs text-gray-500">PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, ZIP, RAR, JPG, PNG, GIF, SVG, MP4, MP3 (MAX. 50MB)</p>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="mt-4 border-gray-300 text-gray-700 hover:bg-gray-50"
-                            onClick={() => fileInputRef.current?.click()}
-                          >
-                            Select File
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                    {!selectedFile && (
-                      <p className="text-red-500 text-sm flex items-center gap-1">
-                        <FiX className="w-3 h-3" />
-                        File is required
-                      </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedFile(null);
+                            if (fileInputRef.current) fileInputRef.current.value = "";
+                          }}
+                          className="ml-2 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                        >
+                          <FiX className="w-5 h-5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <FiUpload className="w-10 h-10 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
+                        <p className="text-gray-600 dark:text-gray-400 mb-2">Click to upload or drag and drop</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, ZIP, RAR, JPG, PNG, GIF, SVG, MP4, MP3 (MAX. 50MB)</p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="mt-4 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          Select File
+                        </Button>
+                      </div>
                     )}
                   </div>
-                )}
+                  {!selectedFile && (
+                    <p className="text-red-500 dark:text-red-400 text-sm flex items-center gap-1">
+                      <FiX className="w-3 h-3" />
+                      File is required
+                    </p>
+                  )}
+                </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-gray-700">Description *</label>
+                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Description *</label>
                   <Input
                     placeholder="Brief description of the resource"
-                    className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 py-3 rounded-lg transition-all duration-200"
+                    className="border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 text-gray-900 dark:text-white py-3 rounded-lg transition-all duration-200 bg-white dark:bg-gray-800"
                     {...register("description", { required: "Description is required" })}
                   />
-                  {errors.description && <p className="text-red-500 text-sm flex items-center gap-1">
+                  {errors.description && <p className="text-red-500 dark:text-red-400 text-sm flex items-center gap-1">
                     <FiX className="w-3 h-3" />
                     {errors.description.message}
                   </p>}
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
                     <FiTag className="w-4 h-4" />
                     Tags *
                   </label>
                   <Input
                     placeholder="react, javascript, tutorial (comma separated)"
-                    className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 text-gray-900 py-3 rounded-lg transition-all duration-200"
+                    className="border-gray-200 dark:border-gray-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 text-gray-900 dark:text-white py-3 rounded-lg transition-all duration-200 bg-white dark:bg-gray-800"
                     {...register("tags", { required: "Tags are required" })}
                   />
-                  {errors.tags && <p className="text-red-500 text-sm flex items-center gap-1">
+                  {errors.tags && <p className="text-red-500 dark:text-red-400 text-sm flex items-center gap-1">
                     <FiX className="w-3 h-3" />
                     {errors.tags.message}
                   </p>}
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <Button 
                     type="submit" 
-                    className="bg-black text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
-                    disabled={resourceType === "file" && !selectedFile}
+                    className="bg-black dark:bg-white text-white dark:text-black px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                    disabled={!selectedFile}
                   >
                     {editingResource ? "Update Resource" : "Add Resource"}
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
-                    className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 rounded-lg transition-all duration-200"
+                    className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 px-8 py-3 rounded-lg transition-all duration-200"
                     onClick={handleCancelForm}
                   >
                     Cancel
@@ -427,41 +359,41 @@ export default function AdminResourcesPage() {
         )}
 
         {/* Results Summary */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-gray-600">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-gray-600 dark:text-gray-400">
           <p className="text-sm font-medium">
             Showing {filteredResources.length} of {resources.length} resources
           </p>
           {searchTerm && (
             <p className="text-sm">
-              Search results for: <span className="font-semibold text-gray-900">{searchTerm}</span>
+              Search results for: <span className="font-semibold text-gray-900 dark:text-white">{searchTerm}</span>
             </p>
           )}
         </div>
 
         {/* Resources Table */}
-        <Card className="bg-white shadow-lg border-0 rounded-xl overflow-hidden">
-          <CardHeader className="bg-gray-50 border-b border-gray-200">
-            <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <FiBook className="w-6 h-6 text-black" />
+        <Card className="bg-white dark:bg-gray-900 shadow-lg border-0 rounded-xl overflow-hidden">
+          <CardHeader className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+            <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <FiBook className="w-6 h-6 text-black dark:text-white" />
               All Resources
             </CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {isLoading ? (
               <div className="p-12 text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-t-transparent"></div>
-                <p className="text-gray-600 mt-4 text-lg">Loading resources...</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 dark:border-blue-400 border-t-transparent"></div>
+                <p className="text-gray-600 dark:text-gray-400 mt-4 text-lg">Loading resources...</p>
               </div>
             ) : filteredResources.length === 0 ? (
               <div className="p-12 text-center">
-                <FiBook className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-600 text-lg mb-4">
+                <FiBook className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">
                   {searchTerm ? "No resources found matching your search" : "No resources available"}
                 </p>
                 {searchTerm ? (
                   <Button
                     variant="outline"
-                    className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg"
+                    className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg"
                     onClick={() => setSearchTerm("")}
                   >
                     Clear Search
@@ -469,7 +401,7 @@ export default function AdminResourcesPage() {
                 ) : (
                   <Button
                     onClick={handleAddNew}
-                    className="bg-black text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 mx-auto"
+                    className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 mx-auto"
                   >
                     <FiPlus className="w-5 h-5" />
                     Add Your First Resource
@@ -480,23 +412,23 @@ export default function AdminResourcesPage() {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-b border-gray-200 bg-gray-50">
-                      <TableHead className="text-gray-900 font-bold py-4 px-6">Title</TableHead>
-                      <TableHead className="text-gray-900 font-bold py-4 px-6">Description</TableHead>
-                      <TableHead className="text-gray-900 font-bold py-4 px-6">Resource</TableHead>
-                      <TableHead className="text-gray-900 font-bold py-4 px-6">Tags</TableHead>
-                      <TableHead className="text-gray-900 font-bold py-4 px-6">Actions</TableHead>
+                    <TableRow className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                      <TableHead className="text-gray-900 dark:text-white font-bold py-4 px-6">Title</TableHead>
+                      <TableHead className="text-gray-900 dark:text-white font-bold py-4 px-6">Description</TableHead>
+                      <TableHead className="text-gray-900 dark:text-white font-bold py-4 px-6">Resource</TableHead>
+                      <TableHead className="text-gray-900 dark:text-white font-bold py-4 px-6">Tags</TableHead>
+                      <TableHead className="text-gray-900 dark:text-white font-bold py-4 px-6">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredResources.map((resource, index) => (
-                      <TableRow key={resource._id} className={`border-b border-gray-100 hover:bg-blue-50 transition-colors duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                        <TableCell className="text-gray-900 font-medium py-4 px-6 max-w-[200px]">
+                      <TableRow key={resource._id} className={`border-b border-gray-100 dark:border-gray-800 hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-200 ${index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800/50'}`}>
+                        <TableCell className="text-gray-900 dark:text-white font-medium py-4 px-6 max-w-[200px]">
                           <div className="truncate font-semibold" title={resource.title}>
                             {resource.title}
                           </div>
                         </TableCell>
-                        <TableCell className="text-gray-600 py-4 px-6 max-w-[250px]">
+                        <TableCell className="text-gray-600 dark:text-gray-400 py-4 px-6 max-w-[250px]">
                           <div className="truncate" title={resource.description}>
                             {resource.description}
                           </div>
@@ -506,10 +438,10 @@ export default function AdminResourcesPage() {
                             <div className="flex items-center max-w-[200px]">
                               {getFileIcon(resource.fileUrl)}
                               <div className="truncate ml-2">
-                                <p className="truncate font-medium" title={resource.fileUrl.split('/').pop()}>
+                                <p className="truncate font-medium text-gray-900 dark:text-white" title={resource.fileUrl.split('/').pop()}>
                                   {resource.fileUrl.split('/').pop()}
                                 </p>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
                                   {isFileResource(resource.fileUrl) ? "Uploaded File" : "External Link"}
                                 </p>
                               </div>
@@ -518,24 +450,24 @@ export default function AdminResourcesPage() {
                                 target={isFileResource(resource.fileUrl) ? "_self" : "_blank"}
                                 rel="noopener noreferrer" 
                                 download={isFileResource(resource.fileUrl)}
-                                className="ml-2 text-blue-600 hover:text-blue-800"
+                                className="ml-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
                                 title={isFileResource(resource.fileUrl) ? "Download file" : "Open link"}
                               >
                                 {isFileResource(resource.fileUrl) ? (
                                   <FiDownload className="w-4 h-4" />
                                 ) : (
-                                  <FiExternalLink className="w-4 h-4" />
+                                  <FiFile className="w-4 h-4" />
                                 )}
                               </a>
                             </div>
                           ) : (
-                            <span className="text-gray-400">No resource available</span>
+                            <span className="text-gray-400 dark:text-gray-500">No resource available</span>
                           )}
                         </TableCell>
                         <TableCell className="py-4 px-6">
                           <div className="flex flex-wrap gap-1 max-w-[200px]">
                             {resource.tags?.map((tag, idx) => (
-                              <Badge key={idx} variant="outline" className="border-blue-200 text-black bg-blue-50 px-3 py-1 rounded-full text-xs font-medium">
+                              <Badge key={idx} variant="outline" className="border-blue-200 dark:border-blue-800 text-black dark:text-white bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full text-xs font-medium">
                                 {tag}
                               </Badge>
                             ))}
@@ -546,7 +478,7 @@ export default function AdminResourcesPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg transition-all duration-200"
+                              className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all duration-200"
                               onClick={() => handleEdit(resource)}
                             >
                               <FiEdit className="w-4 h-4 mr-1" /> Edit
@@ -554,7 +486,7 @@ export default function AdminResourcesPage() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="border-red-300 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+                              className="border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
                               onClick={() => handleDelete(resource._id!)}
                             >
                               <FiTrash2 className="w-4 h-4 mr-1" /> Delete
