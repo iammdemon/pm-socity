@@ -97,10 +97,16 @@ const SearchPage: React.FC = () => {
           </Avatar>
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-1">
-              <p className="font-semibold text-foreground truncate">
-                {user.name}
-              </p>
-              <p className="text-muted-foreground">@{user.userName}</p>
+              <Link
+                href={`/dashboard/profile/${user.userName}`}
+                className="hover:underline"
+              >
+          
+                <p className="font-semibold text-foreground truncate">
+                  {user.name}
+                </p>
+                <p className="text-muted-foreground">@{user.userName}</p>
+              </Link>
             </div>
             {user.bio && (
               <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
@@ -135,12 +141,15 @@ const SearchPage: React.FC = () => {
           </Avatar>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1 flex-wrap">
-              <Link href={`/dashboard/profile/${post.author?.userName}`} className="space-x-0.5">
+              <Link
+                href={`/dashboard/profile/${post.author?.userName}`}
+                className="space-x-0.5"
+              >
                 <span className="font-bold text-black dark:text-white text-sm sm:text-base">
                   {post.author?.name || "Anonymous User"}
                 </span>
                 <span className="text-gray-500 dark:text-gray-400 text-sm">
-                   @{post.author?.userName}
+                  @{post.author?.userName}
                 </span>
               </Link>
               <span className="text-gray-500 dark:text-gray-400 text-sm">
@@ -161,9 +170,7 @@ const SearchPage: React.FC = () => {
                 }`}
                 disabled={isReactingThisPost}
               >
-                <Heart
-                  className={`w-4 h-4 ${reacted ? "fill-current" : ""}`}
-                />
+                <Heart className={`w-4 h-4 ${reacted ? "fill-current" : ""}`} />
                 <span className="text-xs sm:text-sm">
                   {post.reactionCount || 0}
                 </span>

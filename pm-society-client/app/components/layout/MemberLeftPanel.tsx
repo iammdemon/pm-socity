@@ -355,26 +355,7 @@ const MentorBooking = () => {
             </div>
             <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
           </Link>
-          <Link
-            href="#"
-            target="_blank"
-            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-600/20 dark:to-pink-600/20 hover:shadow-md transition-all duration-300 group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
-                <Users className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Erin
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Schedule a resume consultation
-                </p>
-              </div>
-            </div>
-            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
-          </Link>
+       
         </div>
       </div>
     </section>

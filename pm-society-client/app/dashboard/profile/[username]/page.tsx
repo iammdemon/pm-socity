@@ -16,9 +16,8 @@ import {
   Trophy,
   CheckCircle,
   Award,
-  Star,
-  Medal,
  
+  Medal,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,6 @@ import {
 import { useToggleReactionOnTopicMutation } from "@/app/redux/services/forumApi";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-
 
 // Type definitions to match API response
 interface IUser {
@@ -118,7 +116,7 @@ interface IAchievement {
   title: string;
   description: string;
   date: string;
-  type: "certification" | "award" | "milestone" | "recognition";
+  type: "PMP" | "CAPM" | "ACP" ;
   createdAt: string;
   updatedAt: string;
 }
@@ -401,14 +399,13 @@ export default function ProfilePage() {
   const Achievement = ({ achievement }: { achievement: IAchievement }) => {
     const getIcon = () => {
       switch (achievement.type) {
-        case "certification":
+        case "PMP":
           return <Award className="w-5 h-5 text-amber-500" />;
-        case "award":
+        case "CAPM":
           return <Trophy className="w-5 h-5 text-yellow-500" />;
-        case "milestone":
+        case "ACP":
           return <Target className="w-5 h-5 text-blue-500" />;
-        case "recognition":
-          return <Star className="w-5 h-5 text-purple-500" />;
+        
         default:
           return <Medal className="w-5 h-5 text-gray-500" />;
       }
@@ -416,14 +413,13 @@ export default function ProfilePage() {
 
     const getBadgeStyle = () => {
       switch (achievement.type) {
-        case "certification":
+        case "PMP":
           return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200 dark:border-amber-800";
-        case "award":
+        case "CAPM":
           return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800";
-        case "milestone":
+        case "ACP":
           return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800";
-        case "recognition":
-          return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 border-purple-200 dark:border-purple-800";
+       
         default:
           return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 border-gray-200 dark:border-gray-800";
       }
@@ -431,14 +427,13 @@ export default function ProfilePage() {
 
     const getCardStyle = () => {
       switch (achievement.type) {
-        case "certification":
+        case "PMP":
           return "border-amber-200 dark:border-amber-800 bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/20 dark:to-black";
-        case "award":
+        case "CAPM":
           return "border-yellow-200 dark:border-yellow-800 bg-gradient-to-br from-yellow-50 to-white dark:from-yellow-950/20 dark:to-black";
-        case "milestone":
+        case "ACP":
           return "border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50 to-white dark:from-blue-950/20 dark:to-black";
-        case "recognition":
-          return "border-purple-200 dark:border-purple-800 bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/20 dark:to-black";
+        
         default:
           return "border-gray-200 dark:border-gray-800 bg-white dark:bg-black";
       }
@@ -538,7 +533,8 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  <div className="flex gap-4 text-sm mt-3">
+                  {/* Stats Section - Responsive Layout */}
+                  <div className="flex flex-wrap gap-3 sm:gap-4 text-sm mt-3">
                     <span className="text-black dark:text-white">
                       <span className="font-bold">
                         {userData.profile?.linkedUsersCount}
@@ -573,13 +569,19 @@ export default function ProfilePage() {
                         {userData.profile?.packageType}
                       </Badge>
                     )}
-                    <Badge variant="outline" className="flex items-center gap-1">
+                    <Badge
+                      variant="outline"
+                      className="flex items-center gap-1"
+                    >
                       <Users className="w-3 h-3 text-blue-500" />
                       <span className="hidden sm:inline">
                         {" "}
                         {userData.profile?.role.toLocaleUpperCase()}
                       </span>
-                      <span className="sm:hidden"> {userData.profile?.role}</span>
+                      <span className="sm:hidden">
+                        {" "}
+                        {userData.profile?.role}
+                      </span>
                     </Badge>
                   </div>
                 </div>
@@ -643,29 +645,33 @@ export default function ProfilePage() {
 
         {/* Tabs */}
         <div className="border-b border-gray-200 dark:border-gray-800">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="bg-transparent h-12 w-full justify-start px-4 sm:px-6 lg:px-8">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
+            <TabsList className="bg-transparent h-12 w-full justify-start px-0.5 sm:px-6 lg:px-8">
               <TabsTrigger
                 value="posts"
-                className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-3 sm:px-6 h-12 text-sm whitespace-nowrap`}
+                className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-2 sm:px-6 h-12 text-xs sm:text-sm whitespace-nowrap`}
               >
                 Posts
               </TabsTrigger>
               <TabsTrigger
                 value="goals"
-                className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-3 sm:px-6 h-12 text-sm whitespace-nowrap`}
+                className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-2 sm:px-6 h-12 text-xs sm:text-sm whitespace-nowrap`}
               >
                 Goals
               </TabsTrigger>
               <TabsTrigger
                 value="achievements"
-                className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-3 sm:px-6 h-12 text-sm whitespace-nowrap`}
+                className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-2 sm:px-6 h-12 text-xs sm:text-sm whitespace-nowrap`}
               >
                 Achievements
               </TabsTrigger>
               <TabsTrigger
                 value="inner-circle"
-                className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-3 sm:px-6 h-12 text-sm whitespace-nowrap`}
+                className={`data-[state=active]:border-b-2 data-[state=active]:border-black dark:data-[state=active]:border-white data-[state=active]:text-white font-semibold data-[state=active]:bg-black dark:data-[state=active]:bg-white dark:data-[state=active]:text-black rounded-none px-2 sm:px-6 h-12 text-xs sm:text-sm whitespace-nowrap`}
               >
                 Inner Circle
               </TabsTrigger>
@@ -705,7 +711,10 @@ export default function ProfilePage() {
               </h2>
               {achievements.length > 0 ? (
                 achievements.map((achievement: IAchievement) => (
-                  <Achievement key={achievement._id} achievement={achievement} />
+                  <Achievement
+                    key={achievement._id}
+                    achievement={achievement}
+                  />
                 ))
               ) : (
                 <div className="text-center py-8">
@@ -739,8 +748,6 @@ export default function ProfilePage() {
           </Tabs>
         </div>
       </div>
-
-
     </div>
   );
 }

@@ -3,7 +3,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
-  Users,
   Calendar,
   BookOpen,
   Search,
@@ -27,7 +26,7 @@ interface NavLinkProps {
 
 const NAVIGATION_ITEMS: NavigationItem[] = [
   { name: "The Exchange", href: "/dashboard", icon: Home },
-  { name: "Society Circles", href: "/dashboard/circles", icon: Users },
+  // { name: "Society Circles", href: "/dashboard/circles", icon: Users },
 
   { name: "SIA AI", href: "/dashboard/sia", icon: Sparkles },
   { name: "Upcoming Events", href: "/dashboard/events", icon: Calendar },
@@ -78,32 +77,15 @@ export const SearchBar = () => {
 
       {/* Search Icon on Left */}
       <Search
+        onClick={handleSearch}
         className="
-          absolute left-4 top-1/2 -translate-y-1/2 
+          absolute right-4 top-1/2 -translate-y-1/2 
           h-5 w-5 sm:h-5 sm:w-5 
           text-gray-500 dark:text-gray-400
           group-hover:text-gray-700 dark:group-hover:text-gray-300
           transition-colors
         "
       />
-
-      {/* Button on Right */}
-      <button
-        onClick={handleSearch}
-        className="
-          absolute right-2 sm:right-3 top-1/2 -translate-y-1/2
-          bg-gray-900 dark:bg-gray-100
-          text-white dark:text-gray-900
-          px-3 sm:px-5 py-1.5 sm:py-2 rounded-full
-          font-medium text-xs sm:text-sm md:text-base
-          hover:bg-gray-700 dark:hover:bg-gray-200
-          active:scale-95
-          transition-all duration-200
-          focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-400
-        "
-      >
-        Search
-      </button>
     </div>
   );
 };

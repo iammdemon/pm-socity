@@ -3,10 +3,10 @@
 import { useGetUserQuery } from "@/app/redux/services/authApi";
 import Image from "next/image";
 import {
-  Check,
+  
   TrendingUp,
   Settings,
-  Camera,
+
   User,
   Key,
   LogOut,
@@ -173,21 +173,16 @@ export default function MemberRightPanel() {
                     .join("") || "U"}
                 </div>
               )}
-              <div className="absolute inset-0 bg-black/50 dark:bg-white/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
-                <Camera className="w-6 h-6 text-white dark:text-black" />
-              </div>
-              {userData?.verified && (
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center">
-                  <Check className="w-4 h-4 text-white dark:text-black" />
-                </div>
-              )}
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold dark:text-white text-black">
-                  {userData?.name || "User"}
-                </h2>
+              <div>
+           <Link
+              href={`/dashboard/profile/${userData?.userName}`}
+              className="text-lg font-semibold truncate hover:underline"
+            >
+              {userData?.name || "Unnamed User"}
+            </Link>
               </div>
 
               <p className="text-sm dark:text-white/80 text-black/80 truncate mt-1">

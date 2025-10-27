@@ -1,7 +1,5 @@
-
-
 import Link from "next/link";
-import { Home, Users, Calendar, BookOpen, Sparkles } from "lucide-react";
+import { Home, Calendar, BookOpen, Sparkles } from "lucide-react";
 
 const MobileNav = () => {
   return (
@@ -10,12 +8,7 @@ const MobileNav = () => {
         <Link href="/dashboard" className="flex flex-col items-center text-sm">
           <Home className="w-6 h-6" />
         </Link>
-        <Link
-          href="/dashboard/circles"
-          className="flex flex-col items-center text-sm"
-        >
-          <Users className="w-6 h-6" />
-        </Link>
+
         <Link
           href="/dashboard/sia"
           className="flex flex-col items-center text-sm"

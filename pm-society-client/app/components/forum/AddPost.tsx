@@ -131,12 +131,12 @@ const AddPost = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200">
-      <div className="p-4">
-        <div className="flex space-x-3">
+    <div className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200">
+      <div className="p-3 sm:p-4">
+        <div className="flex space-x-2 sm:space-x-3">
           {/* User avatar */}
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
               {user?.avatar ? (
                 <Image
                   src={user.avatar}
@@ -146,14 +146,14 @@ const AddPost = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 font-medium">
+                <div className="w-full h-full flex items-center justify-center text-gray-500 dark:text-gray-400 font-medium text-sm sm:text-base">
                   {user?.name?.charAt(0).toUpperCase() || "U"}
                 </div>
               )}
             </div>
           </div>
 
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <textarea
               ref={textareaRef}
               value={text}
@@ -162,16 +162,16 @@ const AddPost = () => {
               onBlur={() => setIsFocused(false)}
               onKeyDown={handleKeyDown}
               placeholder="Add your voice to The Exchange — shared wisdom elevates us all."
-              className="w-full resize-none border-none outline-none bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 text-base leading-6"
+              className="w-full resize-none border-none outline-none bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 text-sm sm:text-base leading-5 sm:leading-6"
               rows={2}
               disabled={!user || isLoading}
-              style={{ minHeight: "60px" }}
+              style={{ minHeight: "50px" }}
             />
 
             {/* Image preview */}
             {imagePreview && (
               <div className="mt-3 relative">
-                <div className="relative rounded-lg overflow-hidden max-w-md">
+                <div className="relative rounded-lg overflow-hidden w-full max-w-full sm:max-w-md">
                   <Image
                     src={imagePreview}
                     alt="Preview"
@@ -185,7 +185,7 @@ const AddPost = () => {
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
+                      className="h-4 w-4 sm:h-5 sm:w-5"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -203,7 +203,7 @@ const AddPost = () => {
             {/* Action buttons - only show when focused or has text */}
             {(isFocused || text.length > 0 || selectedImage) && (
               <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
                   {/* Image upload button */}
                   <div>
                     <input
@@ -237,14 +237,14 @@ const AddPost = () => {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={handleCancel}
-                      className="px-4 py-1.5 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                      className="px-3 sm:px-4 py-1.5 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handlePost}
                       disabled={text.trim() === "" || !user || isLoading}
-                      className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                      className={`px-3 sm:px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                         text.trim() === "" || !user || isLoading
                           ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                           : "bg-black dark:bg-white  text-white dark:text-gray-900"
