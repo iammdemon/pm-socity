@@ -1,11 +1,5 @@
 // import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import {
-
-  BookOpen,
-  Users,
-  Video,
-  ExternalLink,
-} from "lucide-react";
+import { BookOpen, Users, Video, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -256,7 +250,7 @@ const LearningResources = () => {
           </Link>
 
           <Link
-            href="https://calendly.com/toni-merrill-thepmsociety/50-minute-coaching-session"
+            href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_NWI4NDkyNDQtNjBkNy00MDE5LWFmNDAtYzA2ODBiMmI1OTJh%40thread.v2/0?context=%7b%22Tid%22%3a%22902f8b0f-d809-491e-a91b-0a1a5e5bc3b3%22%2c%22Oid%22%3a%22d084f414-ad45-4cbe-8e83-275402eff66b%22%7d"
             target="_blank"
             className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-600/20 dark:to-emerald-600/20 hover:shadow-md transition-all duration-300 group"
           >
@@ -290,7 +284,7 @@ const MentorBooking = () => {
     <section className="mb-6">
       <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
-       Society Success Sessions
+        Society Success Sessions
       </h2>
 
       <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-4 shadow-xl">
@@ -316,7 +310,7 @@ const MentorBooking = () => {
             <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
           </Link>
           <Link
-            href="https://calendly.com/toni-merrill-thepmsociety/30min"
+            href="https://calendly.com/toni-merrill-thepmsociety/50-minute-coaching-session"
             target="_blank"
             className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-600/20 dark:to-pink-600/20 hover:shadow-md transition-all duration-300 group"
           >
@@ -329,14 +323,14 @@ const MentorBooking = () => {
                   Toni Merrill
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                 Schedule a coaching session
+                  Schedule a coaching session
                 </p>
               </div>
             </div>
             <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
           </Link>
           <Link
-            href="#"
+            href="https://calendly.com/alana-captain-thepmsociety/30min"
             target="_blank"
             className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-600/20 dark:to-pink-600/20 hover:shadow-md transition-all duration-300 group"
           >
@@ -349,13 +343,12 @@ const MentorBooking = () => {
                   Alana Captain
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                 Schedule a resume consultation
+                  Schedule a resume consultation
                 </p>
               </div>
             </div>
             <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
           </Link>
-       
         </div>
       </div>
     </section>
@@ -363,6 +356,55 @@ const MentorBooking = () => {
 };
 
 MentorBooking.displayName = "MentorBooking";
+
+const SocietyWorkSpaces = () => {
+  return (
+    <section className="mb-6">
+      <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
+        Society Workspaces
+      </h2>
+      <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-4 shadow-xl">
+        <div className="space-y-3">
+          <Link
+            href="https://trello.com/b/lLyCl41O/project-team-a"
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-600/20 dark:to-pink-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                <Users className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  Team Workspace A
+                </p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
+          </Link>
+          <Link
+            href="https://trello.com/b/7oTCfpfM/project-team-b"
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-600/20 dark:to-pink-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                <Users className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                  Team Workspace B
+                </p>
+              </div>
+            </div>
+            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 // const NotificationsSection = () => {
 //   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -534,6 +576,7 @@ export default function MemberLeftPanel({ className = "" }: PanelProps) {
         {/* <ProgressSection /> */}
         <LearningResources />
         <MentorBooking />
+        <SocietyWorkSpaces />
         {/* <NotificationsSection /> */}
       </div>
     </div>

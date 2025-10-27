@@ -98,7 +98,7 @@ const NavLink: React.FC<NavLinkProps> = ({ item, isActive }) => (
       flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
       ${
         isActive
-          ? "bg-black text-white dark:bg-white dark:text-black"
+          ? "bg-green-500 text-white  dark:text-black"
           : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
       }
     `}
