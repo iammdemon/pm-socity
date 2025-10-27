@@ -1,31 +1,31 @@
 // Event component
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
-import { 
-  Calendar, 
-  MapPin, 
-  Search, 
+import {
+  Calendar,
+  MapPin,
+  Search,
   ExternalLink,
   Clock,
   Tag,
-  Users
-} from 'lucide-react';
-import { useGetEventsQuery } from '@/app/redux/services/eventApi';
+  Users,
+} from "lucide-react";
+import { useGetEventsQuery } from "@/app/redux/services/eventApi";
 
 export interface Event {
   title: string;
@@ -41,26 +41,28 @@ export interface Event {
   joinedUserCount?: number;
 }
 
-
-
 export default function Event() {
-  const { data: eventResponse, isLoading, error, refetch } = useGetEventsQuery();
+  const {
+    data: eventResponse,
+    isLoading,
+    error,
+    refetch,
+  } = useGetEventsQuery();
   const events = eventResponse?.data || [];
- 
 
-
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('date');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("date");
 
   // Filter and sort events
   const filteredEvents = events
     .filter((event: Event) => {
-      const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           event.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch =
+        event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        event.description.toLowerCase().includes(searchTerm.toLowerCase());
       return matchesSearch;
     })
     .sort((a: Event, b: Event) => {
-      if (sortBy === 'date') {
+      if (sortBy === "date") {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       }
       return a.title.localeCompare(b.title);
@@ -68,68 +70,106 @@ export default function Event() {
 
   // Check if event is upcoming (US timezone)
   const isUpcoming = (dateString: string) => {
-  // Convert event date and today to America/New_York timezone
-  const eventDate = new Date(new Date(dateString).toLocaleString("en-US", { timeZone: "America/New_York" }));
-  const today = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+    // Convert event date and today to America/New_York timezone
+    const eventDate = new Date(
+      new Date(dateString).toLocaleString("en-US", {
+        timeZone: "America/New_York",
+      })
+    );
+    const today = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
+    );
 
-  eventDate.setHours(0, 0, 0, 0);
-  today.setHours(0, 0, 0, 0);
+    eventDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
-  return eventDate >= today;
-};
-
+    return eventDate >= today;
+  };
 
   // Format date for display (US timezone) - consistent with AdminEventsPage
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "America/New_York",
-  });
-};
+  const formatDate = (dateString: string) => {
+    // Extract the date part only, ignoring timezone conversion
+    const date = new Date(dateString);
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth();
+    const day = date.getUTCDate();
 
+    const localDate = new Date(Date.UTC(year, month, day));
+
+    return localDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   // Get time until event
- const getTimeUntilEvent = (dateString: string) => {
-  const eventDate = new Date(new Date(dateString).toLocaleString("en-US", { timeZone: "America/New_York" }));
-  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const getTimeUntilEvent = (dateString: string) => {
+    const eventDate = new Date(
+      new Date(dateString).toLocaleString("en-US", {
+        timeZone: "America/New_York",
+      })
+    );
+    const now = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
+    );
 
-  const diffTime = eventDate.getTime() - now.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffTime = eventDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-  if (diffDays < 0) return 'Past Event';
-  if (diffDays === 0) return 'Today';
-  if (diffDays === 1) return 'Tomorrow';
-  if (diffDays < 7) return `${diffDays} days away`;
-  if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks away`;
-  return `${Math.ceil(diffDays / 30)} months away`;
-};
+    if (diffDays < 0) return "Past Event";
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Tomorrow";
+    if (diffDays < 7) return `${diffDays} days away`;
+    if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks away`;
+    return `${Math.ceil(diffDays / 30)} months away`;
+  };
 
-
-  const upcomingEvents = filteredEvents.filter((event: Event) => isUpcoming(event.date));
-  const pastEvents = filteredEvents.filter((event: Event) => !isUpcoming(event.date));
-  const featuredEvents = upcomingEvents.filter((event: Event) => event.featured);
+  const upcomingEvents = filteredEvents.filter((event: Event) =>
+    isUpcoming(event.date)
+  );
+  const pastEvents = filteredEvents.filter(
+    (event: Event) => !isUpcoming(event.date)
+  );
+  const featuredEvents = upcomingEvents.filter(
+    (event: Event) => event.featured
+  );
 
   // Event Card Component
-  const EventCard = ({ event, isPast = false }: { event: Event; isPast?: boolean }) => (
-    <Card className={`border border-gray-200 dark:border-gray-800 overflow-hidden bg-white dark:bg-black hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${isPast ? 'opacity-75' : ''}`}>
+  const EventCard = ({
+    event,
+    isPast = false,
+  }: {
+    event: Event;
+    isPast?: boolean;
+  }) => (
+    <Card
+      className={`border border-gray-200 dark:border-gray-800 overflow-hidden bg-white dark:bg-black hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${
+        isPast ? "opacity-75" : ""
+      }`}
+    >
       <div className="relative h-48 w-full overflow-hidden">
         <Image
           src={event.image}
           alt={event.title}
           fill
-          className={`object-cover transition-transform duration-500 ${isPast ? 'grayscale' : ''} hover:scale-105`}
+          className={`object-cover transition-transform duration-500 ${
+            isPast ? "grayscale" : ""
+          } hover:scale-105`}
         />
         {event.featured && (
           <div className="absolute top-4 left-4">
-            <Badge className="bg-black dark:bg-white text-white dark:text-black">Featured</Badge>
+            <Badge className="bg-black dark:bg-white text-white dark:text-black">
+              Featured
+            </Badge>
           </div>
         )}
         <div className="absolute top-4 right-4">
-          <Badge variant="outline" className="bg-white/90 dark:bg-black/90 text-black dark:text-white border-black dark:border-white backdrop-blur-sm">
-            {isPast ? 'Past Event' : getTimeUntilEvent(event.date)}
+          <Badge
+            variant="outline"
+            className="bg-white/90 dark:bg-black/90 text-black dark:text-white border-black dark:border-white backdrop-blur-sm"
+          >
+            {isPast ? "Past Event" : getTimeUntilEvent(event.date)}
           </Badge>
         </div>
       </div>
@@ -140,11 +180,16 @@ const formatDate = (dateString: string) => {
               {event.category}
             </Badge>
           )}
-          {event.tags && event.tags.slice(0, 2).map((tag, idx) => (
-            <Badge key={idx} variant="secondary" className="text-xs bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300">
-              {tag}
-            </Badge>
-          ))}
+          {event.tags &&
+            event.tags.slice(0, 2).map((tag, idx) => (
+              <Badge
+                key={idx}
+                variant="secondary"
+                className="text-xs bg-gray-100 dark:bg-gray-900 text-gray-700 dark:text-gray-300"
+              >
+                {tag}
+              </Badge>
+            ))}
         </div>
         <h3 className="text-xl font-bold mb-3 line-clamp-2">{event.title}</h3>
         <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 text-sm">
@@ -166,8 +211,15 @@ const formatDate = (dateString: string) => {
             </div>
           )}
         </div>
-        <Button asChild variant="outline" className="w-full border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-200">
-          <Link href={`/dashboard/events/${event.slug}`} className="flex items-center justify-center gap-2">
+        <Button
+          asChild
+          variant="outline"
+          className="w-full border-black dark:border-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black transition-all duration-200"
+        >
+          <Link
+            href={`/dashboard/events/${event.slug}`}
+            className="flex items-center justify-center gap-2"
+          >
             View Details <ExternalLink className="w-4 h-4" />
           </Link>
         </Button>
@@ -191,7 +243,10 @@ const formatDate = (dateString: string) => {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="border-black dark:border-white">
+              <Badge
+                variant="outline"
+                className="border-black dark:border-white"
+              >
                 {events.length} events
               </Badge>
             </div>
@@ -205,15 +260,21 @@ const formatDate = (dateString: string) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-900">
               <div className="text-2xl font-bold">{events.length}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Total Events</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Total Events
+              </div>
             </div>
             <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-900">
               <div className="text-2xl font-bold">{upcomingEvents.length}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Upcoming</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Upcoming
+              </div>
             </div>
             <div className="text-center p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-900">
               <div className="text-2xl font-bold">{pastEvents.length}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Past Events</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Past Events
+              </div>
             </div>
           </div>
         </div>
@@ -253,7 +314,10 @@ const formatDate = (dateString: string) => {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Card key={i} className="border border-gray-200 dark:border-gray-800">
+                <Card
+                  key={i}
+                  className="border border-gray-200 dark:border-gray-800"
+                >
                   <CardContent className="p-0">
                     <Skeleton className="h-48 w-full" />
                     <div className="p-6 space-y-3">
@@ -272,12 +336,14 @@ const formatDate = (dateString: string) => {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-900 rounded-full mb-4">
               <Calendar className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Unable to load events</h3>
+            <h3 className="text-lg font-semibold mb-2">
+              Unable to load events
+            </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Please try again later or contact support if the issue persists.
             </p>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="border-black dark:border-white"
               onClick={() => refetch()}
             >
@@ -302,7 +368,10 @@ const formatDate = (dateString: string) => {
                 <div className="flex items-center gap-2 mb-6">
                   <Tag className="w-5 h-5" />
                   <h2 className="text-xl font-semibold">Featured Events</h2>
-                  <Badge variant="outline" className="border-black dark:border-white">
+                  <Badge
+                    variant="outline"
+                    className="border-black dark:border-white"
+                  >
                     {featuredEvents.length}
                   </Badge>
                 </div>
@@ -320,21 +389,37 @@ const formatDate = (dateString: string) => {
                 <div className="flex items-center gap-2 mb-6">
                   <Clock className="w-5 h-5" />
                   <h2 className="text-xl font-semibold">
-                    {featuredEvents.length > 0 ? 'Other Upcoming Events' : 'Upcoming Events'}
+                    {featuredEvents.length > 0
+                      ? "Other Upcoming Events"
+                      : "Upcoming Events"}
                   </h2>
-                  <Badge variant="outline" className="border-black dark:border-white">
-                    {featuredEvents.length > 0 
-                      ? upcomingEvents.filter((event: Event) => !event.featured).length 
+                  <Badge
+                    variant="outline"
+                    className="border-black dark:border-white"
+                  >
+                    {featuredEvents.length > 0
+                      ? upcomingEvents.filter((event: Event) => !event.featured)
+                          .length
                       : upcomingEvents.length}
                   </Badge>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
-                  {featuredEvents.length > 0 
-                    ? upcomingEvents.filter((event: Event) => !event.featured).map((event: Event) => (
-                        <EventCard key={event.slug} event={event} isPast={false} />
-                      ))
+                  {featuredEvents.length > 0
+                    ? upcomingEvents
+                        .filter((event: Event) => !event.featured)
+                        .map((event: Event) => (
+                          <EventCard
+                            key={event.slug}
+                            event={event}
+                            isPast={false}
+                          />
+                        ))
                     : upcomingEvents.map((event: Event) => (
-                        <EventCard key={event.slug} event={event} isPast={false} />
+                        <EventCard
+                          key={event.slug}
+                          event={event}
+                          isPast={false}
+                        />
                       ))}
                 </div>
               </div>
@@ -346,7 +431,10 @@ const formatDate = (dateString: string) => {
                 <div className="flex items-center gap-2 mb-6">
                   <Calendar className="w-5 h-5" />
                   <h2 className="text-xl font-semibold">Past Events</h2>
-                  <Badge variant="outline" className="border-gray-400 dark:border-gray-600">
+                  <Badge
+                    variant="outline"
+                    className="border-gray-400 dark:border-gray-600"
+                  >
                     {pastEvents.length}
                   </Badge>
                 </div>

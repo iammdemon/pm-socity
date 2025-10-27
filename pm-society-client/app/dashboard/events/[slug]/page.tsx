@@ -53,7 +53,7 @@ export default function EventPage() {
         description: "You'll receive a confirmation email shortly.",
         duration: 5000,
       });
-    } catch  {
+    } catch {
       toast.error("Failed to register for event", {
         description: "Please try again later.",
       });
@@ -94,7 +94,8 @@ export default function EventPage() {
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-muted-foreground">
-              The event you&apos;re looking for doesn&apos;t exist or has been removed.
+              The event you&apos;re looking for doesn&apos;t exist or has been
+              removed.
             </p>
             <Button onClick={() => router.push("/events")} className="w-full">
               Back to Events
@@ -107,30 +108,35 @@ export default function EventPage() {
 
   // Fix: Properly check if user is registered
   // The joinedUser array might contain either string IDs or populated user objects
-  const isRegistered = event?.joinedUser?.some((user: IUser | string) => {
-    // If it's a string, compare directly
-    if (typeof user === 'string') {
-      return user === userId;
-    }
-    // If it's an object, compare the _id property
-    if (user && typeof user === 'object' && user._id) {
-      return user._id.toString() === userId;
-    }
-    return false;
-  }) || false;
+  const isRegistered =
+    event?.joinedUser?.some((user: IUser | string) => {
+      // If it's a string, compare directly
+      if (typeof user === "string") {
+        return user === userId;
+      }
+      // If it's an object, compare the _id property
+      if (user && typeof user === "object" && user._id) {
+        return user._id.toString() === userId;
+      }
+      return false;
+    }) || false;
 
- 
- // Format date in US timezone
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "America/New_York",
-  });
-};
+  // Format date in US timezone
+  const formatDate = (dateString: string) => {
+    // Extract the date part only, ignoring timezone conversion
+    const date = new Date(dateString);
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth();
+    const day = date.getUTCDate();
 
+    const localDate = new Date(Date.UTC(year, month, day));
+
+    return localDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -177,7 +183,10 @@ const formatDate = (dateString: string) => {
             </div>
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
-              <span>{event.joinedUserCount || event.joinedUser?.length || 0} registered</span>
+              <span>
+                {event.joinedUserCount || event.joinedUser?.length || 0}{" "}
+                registered
+              </span>
             </div>
           </div>
         </div>
@@ -193,9 +202,9 @@ const formatDate = (dateString: string) => {
                 <div>
                   <CardTitle className="text-2xl">About this event</CardTitle>
                   <p className="text-muted-foreground mt-1">
-                    {event.joinedUserCount || event.joinedUser?.length || 0} people{" "}
-                    {isRegistered ? "are registered" : "have registered"} for
-                    this event
+                    {event.joinedUserCount || event.joinedUser?.length || 0}{" "}
+                    people {isRegistered ? "are registered" : "have registered"}{" "}
+                    for this event
                   </p>
                 </div>
                 {isRegistered ? (
@@ -279,8 +288,6 @@ const formatDate = (dateString: string) => {
               </div>
             </CardContent>
           </Card>
-
-        
         </div>
       </div>
     </div>

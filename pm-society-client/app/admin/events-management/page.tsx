@@ -218,12 +218,18 @@ export default function AdminEventsPage() {
 
   // ---------------------- Date Helpers ----------------------
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString + "T00:00"); // Treat as local midnight
-    return date.toLocaleDateString("en-US", {
+    // Extract the date part only, ignoring timezone conversion
+    const date = new Date(dateString);
+    const year = date.getUTCFullYear();
+    const month = date.getUTCMonth();
+    const day = date.getUTCDate();
+
+    const localDate = new Date(Date.UTC(year, month, day));
+
+    return localDate.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
-      timeZone: "America/New_York", // Force Eastern Time
     });
   };
 

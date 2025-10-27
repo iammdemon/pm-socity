@@ -271,6 +271,26 @@ const LearningResources = () => {
               <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-green-500 transition-colors" />
             </div>
           </Link>
+          <Link
+            href="https://urldefense.proofpoint.com/v2/url?u=https-3A__partner.pmi.org_hub_C001052&d=DwMFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=1QBDdlUcgXKY8JPqGEOTZ0HRPkikscvhrdw-GWRYgeaUzNbmJ287aHGi2_Gg1yAW&m=tK5ZjB0zgb4KiQoGNXs3gpFgaaMjTzYUzsLqC-VlYlxZ25QQUSDCUP4VCsvZaVkp&s=kFW5Ewb38jqM_lpbgjlnU3W9Qu3hWFhq78s9VAH5Dss&e="
+            target="_blank"
+            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-600/20 dark:to-emerald-600/20 hover:shadow-md transition-all duration-300 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500">
+                <Video className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                 PMI Hub
+                </p>
+               
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-green-500 transition-colors" />
+            </div>
+          </Link>
         </div>
       </div>
     </section>

@@ -9,7 +9,7 @@ const TheExchangePage = () => {
     <div className="min-h-screen bg-white dark:bg-black">
       <div className=" px-4 sm:px-6 lg:px-8 py-6 ">
         {/* Content */}
-        <div className="">
+        <div className="space-y-4">
           <AddPost />
           <PostFeed />
         </div>
