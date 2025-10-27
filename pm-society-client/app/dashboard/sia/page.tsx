@@ -2,7 +2,15 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Send, Sparkles, Copy, RefreshCw, Bot, User, Check } from "lucide-react";
+import {
+  Send,
+  Sparkles,
+  Copy,
+  RefreshCw,
+  Bot,
+  User,
+  Check,
+} from "lucide-react";
 
 interface Message {
   id: string;
@@ -19,7 +27,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
- 
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -44,12 +52,11 @@ export default function ChatPage() {
       text: input.trim(),
       timestamp: new Date(),
     };
-    
+
     setMessages((prev) => [...prev, userMsg]);
     const userInput = input.trim();
     setInput("");
     setLoading(true);
-   
 
     try {
       const res = await fetch(WEBHOOK_URL, {
@@ -87,7 +94,6 @@ export default function ChatPage() {
       setMessages((prev) => [...prev, errorMsg]);
     } finally {
       setLoading(false);
-     
     }
   };
 
@@ -107,7 +113,7 @@ export default function ChatPage() {
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
         document.body.removeChild(textArea);
       } else {
         await navigator.clipboard.writeText(text);
@@ -134,8 +140,12 @@ export default function ChatPage() {
           <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-900 dark:bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
             <Sparkles className="w-10 h-10 sm:w-12 sm:h-12 text-white dark:text-black" />
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">Welcome to SIA</h2>
-          <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg">Please log in to continue</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
+            Welcome to SIA
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg">
+            Please log in to continue
+          </p>
         </div>
       </div>
     );
@@ -158,7 +168,8 @@ export default function ChatPage() {
                       Hello! I&apos;m SIA
                     </h2>
                     <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-6">
-                      Your intelligent assistant for The PM Society. How can I help you today?
+                      Your intelligent assistant for The PM Society. How can I
+                      help you today?
                     </p>
                   </div>
                 </div>
@@ -184,10 +195,22 @@ export default function ChatPage() {
               {messages.map((m) => (
                 <article
                   key={m.id}
-                  className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} px-1`}
+                  className={`flex ${
+                    m.sender === "user" ? "justify-end" : "justify-start"
+                  } px-1`}
                 >
-                  <div className={`flex items-end max-w-[85%] sm:max-w-[75%] ${m.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${m.sender === "user" ? "ml-2 bg-gray-900 dark:bg-white" : "mr-2 bg-gray-200 dark:bg-gray-800"}`}>
+                  <div
+                    className={`flex items-end max-w-[85%] sm:max-w-[75%] ${
+                      m.sender === "user" ? "flex-row-reverse" : "flex-row"
+                    }`}
+                  >
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        m.sender === "user"
+                          ? "ml-2 bg-gray-900 dark:bg-white"
+                          : "mr-2 bg-gray-200 dark:bg-gray-800"
+                      }`}
+                    >
                       {m.sender === "user" ? (
                         <User className="w-4 h-4 text-white dark:text-black" />
                       ) : (
@@ -206,7 +229,10 @@ export default function ChatPage() {
                       </p>
                       <div className="absolute bottom-1 right-1 flex items-center space-x-1">
                         <time className="text-[10px] opacity-60">
-                          {m.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          {m.timestamp.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </time>
                         <button
                           onClick={() => copyMessage(m.text, m.id)}
@@ -254,24 +280,37 @@ export default function ChatPage() {
       {/* Input */}
       <footer className="sticky bottom-0 bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="flex gap-2 items-end">
-            <div className="flex-1 relative">
+          {/* column on mobile, row on sm+ */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full">
+            {/* Textarea */}
+            <div className="flex-1 w-full">
               <textarea
                 ref={textareaRef}
-                className="w-full border border-gray-300 dark:border-gray-700 rounded-2xl px-4 py-3 resize-none outline-none bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:border-gray-500 dark:focus:border-gray-600 transition-all text-sm sm:text-base placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                className="w-full border border-gray-300 dark:border-gray-700 rounded-2xl px-4 py-3 resize-none outline-none bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:border-gray-500 dark:focus:border-gray-600 transition-all text-sm sm:text-base placeholder:text-gray-500 dark:placeholder:text-gray-400 leading-snug overflow-hidden min-h-[76px] sm:min-h-[44px]"
                 placeholder="Ask me anything..."
                 rows={1}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  if (textareaRef.current) {
+                    textareaRef.current.style.height = "auto"; // reset
+                    textareaRef.current.style.height = `${Math.min(
+                      textareaRef.current.scrollHeight,
+                      80
+                    )}px`; // expand up to 80px
+                  }
+                }}
                 onKeyDown={handleKeyDown}
                 disabled={loading}
-                style={{ maxHeight: "120px" }}
+                style={{ maxHeight: "80px" }}
               />
             </div>
+
+            {/* Send Button - full width on mobile, auto width on sm+ */}
             <button
               onClick={sendMessage}
               disabled={loading || !input.trim()}
-              className="bg-gray-900 dark:bg-white text-white dark:text-black p-3 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-800 dark:hover:bg-gray-100 transition-all flex-shrink-0"
+              className="bg-gray-900 dark:bg-white text-white dark:text-black p-3 sm:p-3.5 rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-800 dark:hover:bg-gray-100 transition-all flex items-center justify-center w-full sm:w-auto"
               aria-label="Send message"
             >
               {loading ? (
@@ -281,7 +320,8 @@ export default function ChatPage() {
               )}
             </button>
           </div>
-          <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center">
+
+          <div className="mt-2 hidden sm:block text-xs text-gray-500 dark:text-gray-400 text-center">
             Press Enter to send, Shift+Enter for new line
           </div>
         </div>
