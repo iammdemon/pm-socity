@@ -68,39 +68,45 @@ export default function Event() {
 
   // Check if event is upcoming (US timezone)
   const isUpcoming = (dateString: string) => {
-    const eventDate = new Date(dateString);
-    const today = new Date();
-    // Set both dates to the same timezone for comparison
-    eventDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-    return eventDate >= today;
-  };
+  // Convert event date and today to America/New_York timezone
+  const eventDate = new Date(new Date(dateString).toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const today = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+
+  eventDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+
+  return eventDate >= today;
+};
+
 
   // Format date for display (US timezone) - consistent with AdminEventsPage
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      timeZone: "America/New_York"
-    });
-  };
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "America/New_York",
+  });
+};
+
 
   // Get time until event
-  const getTimeUntilEvent = (dateString: string) => {
-    const eventDate = new Date(dateString);
-    const now = new Date();
-    const diffTime = eventDate.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays < 0) return 'Past Event';
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Tomorrow';
-    if (diffDays < 7) return `${diffDays} days away`;
-    if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks away`;
-    return `${Math.ceil(diffDays / 30)} months away`;
-  };
+ const getTimeUntilEvent = (dateString: string) => {
+  const eventDate = new Date(new Date(dateString).toLocaleString("en-US", { timeZone: "America/New_York" }));
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+
+  const diffTime = eventDate.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return 'Past Event';
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Tomorrow';
+  if (diffDays < 7) return `${diffDays} days away`;
+  if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks away`;
+  return `${Math.ceil(diffDays / 30)} months away`;
+};
+
 
   const upcomingEvents = filteredEvents.filter((event: Event) => isUpcoming(event.date));
   const pastEvents = filteredEvents.filter((event: Event) => !isUpcoming(event.date));

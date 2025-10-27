@@ -119,16 +119,18 @@ export default function EventPage() {
     return false;
   }) || false;
 
-  // Format date for display (US timezone)
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      timeZone: "America/New_York",
-    });
-  };
+ 
+ // Format date in US timezone
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "America/New_York",
+  });
+};
+
 
   return (
     <div className="min-h-screen bg-background">

@@ -190,7 +190,7 @@ export default function AdminEventsPage() {
       await deleteEvent(slug).unwrap();
       toast.success("Event deleted successfully");
       refetch();
-    } catch  {
+    } catch {
       toast.error("Failed to delete event");
     } finally {
       setDeleteEventSlug(null);
@@ -218,20 +218,31 @@ export default function AdminEventsPage() {
 
   // ---------------------- Date Helpers ----------------------
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const date = new Date(dateString + "T00:00"); // Treat as local midnight
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
+      timeZone: "America/New_York", // Force Eastern Time
     });
   };
 
   const isUpcoming = (dateString: string) => {
-    const eventDate = new Date(dateString);
+    const eventDate = new Date(dateString + "T00:00");
     const today = new Date();
-    eventDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-    return eventDate >= today;
+
+    // Convert both to American time midnight
+    const eventTime = new Date(
+      eventDate.toLocaleString("en-US", { timeZone: "America/New_York" })
+    );
+    const todayTime = new Date(
+      today.toLocaleString("en-US", { timeZone: "America/New_York" })
+    );
+
+    eventTime.setHours(0, 0, 0, 0);
+    todayTime.setHours(0, 0, 0, 0);
+
+    return eventTime >= todayTime;
   };
 
   // ---------------------- JSX ----------------------
