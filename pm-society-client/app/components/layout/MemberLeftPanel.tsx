@@ -250,7 +250,7 @@ const LearningResources = () => {
           </Link>
 
           <Link
-            href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_NWI4NDkyNDQtNjBkNy00MDE5LWFmNDAtYzA2ODBiMmI1OTJh%40thread.v2/0?context=%7b%22Tid%22%3a%22902f8b0f-d809-491e-a91b-0a1a5e5bc3b3%22%2c%22Oid%22%3a%22d084f414-ad45-4cbe-8e83-275402eff66b%22%7d"
+            href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZTlhZmFkNjUtZDk3Mi00YmEzLTg5YTctYTU1ZjE3YTY2Mzc2%40thread.v2/0?context=%7b%22Tid%22%3a%22902f8b0f-d809-491e-a91b-0a1a5e5bc3b3%22%2c%22Oid%22%3a%228838cffc-ef18-4684-a9ed-f4b289429dcb%22%7d"
             target="_blank"
             className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-600/20 dark:to-emerald-600/20 hover:shadow-md transition-all duration-300 group"
           >

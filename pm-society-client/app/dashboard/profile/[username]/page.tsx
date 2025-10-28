@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Calendar,
   Users,
@@ -16,8 +17,8 @@ import {
   Trophy,
   CheckCircle,
   Award,
- 
   Medal,
+  Trash,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,11 @@ import {
   useGetMeQuery,
   useToggleLinkMutation,
 } from "@/app/redux/services/authApi";
-import { useToggleReactionOnTopicMutation } from "@/app/redux/services/forumApi";
+import {
+  useToggleReactionOnTopicMutation,
+  useDeleteForumTopicMutation,
+  useEditForumTopicMutation,
+} from "@/app/redux/services/forumApi";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 
@@ -89,6 +94,7 @@ interface IPost {
   _id: string;
   author: string;
   content: string;
+  imageUrl?: string;
   reactions: IReaction[];
   replies: IReply[];
   createdAt: string;
@@ -116,7 +122,7 @@ interface IAchievement {
   title: string;
   description: string;
   date: string;
-  type: "PMP" | "CAPM" | "ACP" ;
+  type: "PMP" | "CAPM" | "ACP";
   createdAt: string;
   updatedAt: string;
 }
@@ -155,6 +161,8 @@ export default function ProfilePage() {
 
   // Use toggleLink mutation for both link/unlink
   const [toggleLink, { isLoading: isLinking }] = useToggleLinkMutation();
+  const [editTopic] = useEditForumTopicMutation();
+  const [deleteTopic] = useDeleteForumTopicMutation();
 
   // Check if viewing own profile
   const isOwnProfile = currentUserName === username;
@@ -182,6 +190,46 @@ export default function ProfilePage() {
       post.reactions?.some((reaction: IReaction) => reaction._id === userId) ||
       false
     );
+  };
+  const handleEditTopic = async (topicId: string, oldContent: string) => {
+    const newContent = prompt("Edit your topic:", oldContent);
+    if (!newContent || newContent === oldContent) return;
+
+    try {
+      await editTopic({ topicId, data: { content: newContent } }).unwrap();
+      toast.success("Topic updated successfully!");
+      await refetch();
+    } catch (err) {
+      console.error("Failed to edit topic:", err);
+      toast.error("Failed to update topic. Please try again.");
+    }
+  };
+
+  const handleDeleteTopic = async (topicId: string) => {
+    // Show confirmation dialog using sonner
+    toast("Are you sure you want to delete this topic?", {
+      position: "top-center", // This will center the toast at the top of the screen
+      action: {
+        label: "Delete",
+        onClick: async () => {
+          try {
+            await deleteTopic(topicId).unwrap();
+            toast.success("Topic deleted successfully!");
+            await refetch();
+          } catch (err) {
+            console.error("Failed to delete topic:", err);
+            toast.error("Failed to delete topic. Please try again.");
+          }
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {
+          // User cancelled, do nothing
+        },
+      },
+      duration: 10000, // Keep visible for 10 seconds or until user interacts
+    });
   };
 
   // Check if the profile is already linked to current user
@@ -260,11 +308,12 @@ export default function ProfilePage() {
   };
 
   const Post = ({ post }: { post: IPost }) => {
+    const [menuOpen, setMenuOpen] = useState(false);
     const reacted = hasReacted(post);
     const isReactingThisPost = reactingPostId === post.topicId;
 
     return (
-      <div className="border-b border-gray-200 dark:border-gray-800 p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+      <div className="border-b border-gray-200 dark:border-gray-800 p-3 sm:p-4 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors relative">
         <div className="flex gap-3">
           <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
             <AvatarImage
@@ -274,28 +323,85 @@ export default function ProfilePage() {
             <AvatarFallback>
               {userData?.profile?.name
                 .split(" ")
-                .map((n: string) => n[0])
+                .map((n) => n[0])
                 .join("")}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1 flex-wrap">
-              <span className="font-bold text-black dark:text-white text-sm sm:text-base">
-                {userData.profile?.name}
-              </span>
-              <span className="text-gray-500 dark:text-gray-400 text-sm">
-                @{userData.profile?.userName}
-              </span>
-              <span className="text-gray-500 dark:text-gray-400 text-sm">
-                ·
-              </span>
-              <span className="text-gray-500 dark:text-gray-400 text-sm">
-                {formatRelativeTime(post.createdAt)}
-              </span>
+            <div className="flex items-start justify-between gap-1">
+              <div className="flex items-center gap-1 flex-wrap">
+                <span className="font-bold text-black dark:text-white text-sm sm:text-base">
+                  {userData.profile?.name}
+                </span>
+                <span className="text-gray-500 dark:text-gray-400 text-sm">
+                  @{userData.profile?.userName}
+                </span>
+                <span className="text-gray-500 dark:text-gray-400 text-sm">
+                  ·
+                </span>
+                <span className="text-gray-500 dark:text-gray-400 text-sm">
+                  {formatRelativeTime(post.createdAt)}
+                </span>
+              </div>
+
+              {/* Three-dot menu */}
+              {isOwnProfile && (
+                <div className="relative">
+                  <button
+                    onClick={() => setMenuOpen((prev) => !prev)}
+                    className="p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-full"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path>
+                    </svg>
+                  </button>
+
+                  {menuOpen && (
+                    <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
+                      <button
+                        onClick={() => {
+                          handleEditTopic(post.topicId, post.content);
+                          setMenuOpen(false);
+                        }}
+                        className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg"
+                      >
+                        <Edit className="w-4 h-4" /> Edit
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleDeleteTopic(post.topicId);
+                          setMenuOpen(false);
+                        }}
+                        className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg"
+                      >
+                        <Trash className="w-4 h-4" /> Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-            <div className="mt-2 text-black dark:text-white text-sm sm:text-base break-words">
+
+            <div className="mt-2 text-black dark:text-white text-sm sm:text-base break-words whitespace-pre-wrap">
               {post.content}
             </div>
+            {post.imageUrl && (
+              <div className="mt-3 rounded-lg overflow-hidden max-w-md">
+                <Image
+                  src={post.imageUrl}
+                  alt="Post image"
+                  className="w-full h-auto object-cover"
+                  width={500}
+                  height={300}
+                />
+              </div>
+            )}
+
+            {/* Reactions */}
             <div className="flex items-center gap-4 sm:gap-6 mt-3 sm:mt-4 text-gray-500 dark:text-gray-400">
               <button
                 onClick={() => handleReact(post.topicId)}
@@ -304,10 +410,7 @@ export default function ProfilePage() {
                 }`}
                 disabled={isReactingThisPost}
               >
-                <Heart
-                  className={`w-4 h-4 ${reacted ? "fill-current" : ""} 
-                      `}
-                />
+                <Heart className={`w-4 h-4 ${reacted ? "fill-current" : ""}`} />
                 <span className="text-xs sm:text-sm">
                   {post.reactionCount || 0}
                 </span>
@@ -405,7 +508,7 @@ export default function ProfilePage() {
           return <Trophy className="w-5 h-5 text-yellow-500" />;
         case "ACP":
           return <Target className="w-5 h-5 text-blue-500" />;
-        
+
         default:
           return <Medal className="w-5 h-5 text-gray-500" />;
       }
@@ -419,7 +522,7 @@ export default function ProfilePage() {
           return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800";
         case "ACP":
           return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800";
-       
+
         default:
           return "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 border-gray-200 dark:border-gray-800";
       }
@@ -433,7 +536,7 @@ export default function ProfilePage() {
           return "border-yellow-200 dark:border-yellow-800 bg-gradient-to-br from-yellow-50 to-white dark:from-yellow-950/20 dark:to-black";
         case "ACP":
           return "border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50 to-white dark:from-blue-950/20 dark:to-black";
-        
+
         default:
           return "border-gray-200 dark:border-gray-800 bg-white dark:bg-black";
       }

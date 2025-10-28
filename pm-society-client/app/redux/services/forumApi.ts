@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
 import { getSession } from "next-auth/react";
 
 // Updated interfaces to match backend models
@@ -75,15 +74,19 @@ export const forumApi = createApi({
   }),
   tagTypes: ["ForumTopic", "Reply"],
   endpoints: (builder) => ({
-    // Topics
+    //  Get all topics
     getForumTopics: builder.query<ForumTopicsResponse, void>({
       query: () => "forums",
       providesTags: ["ForumTopic"],
     }),
+
+    //  Get single topic
     getForumTopicById: builder.query<SingleTopicResponse, string>({
       query: (topicId) => `forums/${topicId}`,
       providesTags: ["ForumTopic"],
     }),
+
+    // Create new topic
     createForumTopic: builder.mutation<ApiResponse, Partial<IForumTopic>>({
       query: (body) => ({
         url: "forums",
@@ -93,7 +96,29 @@ export const forumApi = createApi({
       invalidatesTags: ["ForumTopic"],
     }),
 
-    // Replies
+    // Edit existing topic
+    editForumTopic: builder.mutation<
+      ApiResponse,
+      { topicId: string; data: Partial<IForumTopic> }
+    >({
+      query: ({ topicId, data }) => ({
+        url: `forums/${topicId}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["ForumTopic"],
+    }),
+
+    //  Delete topic
+    deleteForumTopic: builder.mutation<{ message: string }, string>({
+      query: (topicId) => ({
+        url: `forums/${topicId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["ForumTopic"],
+    }),
+
+    //  Add reply
     addReplyToTopic: builder.mutation<
       ApiResponse,
       { topicId: string; content: Partial<IReply> }
@@ -106,7 +131,7 @@ export const forumApi = createApi({
       invalidatesTags: ["ForumTopic"],
     }),
 
-    // Reactions
+    //  Toggle reaction on topic
     toggleReactionOnTopic: builder.mutation<
       ApiResponse,
       { topicId: string; userId: string }
@@ -119,6 +144,7 @@ export const forumApi = createApi({
       invalidatesTags: ["ForumTopic"],
     }),
 
+    // Toggle reaction on reply
     toggleReactionOnReply: builder.mutation<
       ApiResponse,
       { topicId: string; replyId: string; userId: string }
@@ -137,6 +163,8 @@ export const {
   useGetForumTopicsQuery,
   useGetForumTopicByIdQuery,
   useCreateForumTopicMutation,
+  useEditForumTopicMutation, 
+  useDeleteForumTopicMutation,
   useAddReplyToTopicMutation,
   useToggleReactionOnTopicMutation,
   useToggleReactionOnReplyMutation,
