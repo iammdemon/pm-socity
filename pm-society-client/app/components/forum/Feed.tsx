@@ -172,7 +172,7 @@ const PostFeed = ({
 
       {posts.map((post) => {
         const reacted = hasReacted(post);
-      
+
         const isReactingThisPost = reactingPostId === post.topicId;
 
         return (
@@ -195,12 +195,15 @@ const PostFeed = ({
               </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1 flex-wrap">
-                  <Link href={`/dashboard/profile/${post.author?.userName}`} className="space-x-0.5">
+                  <Link
+                    href={`/dashboard/profile/${post.author?.userName}`}
+                    className="space-x-0.5"
+                  >
                     <span className="font-bold text-black dark:text-white text-sm sm:text-base">
                       {post.author?.name || "Anonymous User"}
                     </span>
                     <span className="text-gray-500 dark:text-gray-400 text-sm">
-                       @{post.author?.userName}
+                      @{post.author?.userName}
                     </span>
                   </Link>
                   <span className="text-gray-500 dark:text-gray-400 text-sm">
@@ -210,15 +213,16 @@ const PostFeed = ({
                     {formatRelativeTime(post.createdAt)}
                   </span>
                 </div>
-                <div className="mt-2 text-black dark:text-white text-sm sm:text-base break-words">
+                <div className="mt-2 text-black dark:text-white text-sm sm:text-base break-words whitespace-pre-wrap">
                   {post.content}
                 </div>
+
                 {/* Display image if available */}
                 {post.imageUrl && (
                   <div className="mt-3 rounded-lg overflow-hidden max-w-md">
-                    <Image 
-                      src={post.imageUrl} 
-                      alt="Post image" 
+                    <Image
+                      src={post.imageUrl}
+                      alt="Post image"
                       className="w-full h-auto object-cover"
                       width={500}
                       height={300}
