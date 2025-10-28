@@ -16,4 +16,7 @@ router.get("/:topicId", auth_1.authenticateJWT, controller_discussions_1.ForumCo
 router.post("/:topicId/reply", auth_1.authenticateJWT, controller_discussions_1.ForumController.addReply);
 router.patch("/:topicId/reaction", auth_1.authenticateJWT, controller_discussions_1.ForumController.toggleReactionOnTopic);
 router.patch("/:topicId/reply/:replyId/reaction", auth_1.authenticateJWT, controller_discussions_1.ForumController.toggleReactionOnReply);
+router.patch("/:topicId", auth_1.authenticateJWT, upload.single("image"), // optional image upload
+controller_discussions_1.ForumController.editTopic);
+router.delete("/:topicId", auth_1.authenticateJWT, controller_discussions_1.ForumController.deleteTopic);
 exports.ForumRoutes = router;

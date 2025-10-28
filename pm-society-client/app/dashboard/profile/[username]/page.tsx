@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState , useRef} from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,11 +19,15 @@ import {
   Award,
   Medal,
   Trash,
+  X,
+  Image as ImageIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import {
   useGetUserByUserNameQuery,
   useGetMeQuery,
@@ -33,6 +37,7 @@ import {
   useToggleReactionOnTopicMutation,
   useDeleteForumTopicMutation,
   useEditForumTopicMutation,
+  IForumTopic,
 } from "@/app/redux/services/forumApi";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -134,6 +139,151 @@ interface IProfileData {
   achievements: IAchievement[];
 }
 
+// Edit Post Modal Component
+const EditPostModal = ({ 
+  isOpen, 
+  onClose, 
+  post, 
+  onSave 
+}: { 
+  isOpen: boolean; 
+  onClose: () => void; 
+  post: IPost | null; 
+  onSave: (content: string, imageFile: File | null) => void;
+}) => {
+  const [content, setContent] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Reset form when post changes
+  React.useEffect(() => {
+    if (post) {
+      setContent(post.content);
+      setImagePreview(post.imageUrl || null);
+      setSelectedImage(null);
+    }
+  }, [post]);
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+
+      // Check if file is an image
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please select a valid image file");
+        return;
+      }
+
+      // Check file size (limit to 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("Image size should be less than 5MB");
+        return;
+      }
+
+      setSelectedImage(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleSave = () => {
+    if (content.trim() === "") {
+      toast.error("Post content cannot be empty");
+      return;
+    }
+
+    setIsLoading(true);
+    onSave(content, selectedImage);
+    setIsLoading(false);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Edit Post</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <Textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="What's on your mind?"
+            className="min-h-[120px] resize-none"
+          />
+          
+          {/* Image preview */}
+          {imagePreview && (
+            <div className="relative">
+              <div className="relative rounded-lg overflow-hidden w-full max-w-full">
+                <Image
+                  src={imagePreview}
+                  alt="Preview"
+                  width={500}
+                  height={300}
+                  className="w-full h-auto object-cover"
+                />
+                <button
+                  onClick={handleRemoveImage}
+                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+                className="hidden"
+                id="edit-image-upload"
+              />
+              <label
+                htmlFor="edit-image-upload"
+                className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer transition-colors duration-200"
+              >
+                <ImageIcon className="h-4 w-4 mr-1" />
+                Add Image
+              </label>
+            </div>
+            
+            <div className="flex space-x-2">
+              <Button variant="outline" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSave} 
+                disabled={isLoading || content.trim() === ""}
+              >
+                {isLoading ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 export default function ProfilePage() {
   const params = useParams();
   const router = useRouter();
@@ -142,6 +292,10 @@ export default function ProfilePage() {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const [reactingPostId, setReactingPostId] = useState<string | null>(null);
+  
+  // State for edit modal
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [postToEdit, setPostToEdit] = useState<IPost | null>(null);
 
   const { data: meData } = useGetMeQuery({});
   const currentUserId = meData?.data?._id;
@@ -191,34 +345,53 @@ export default function ProfilePage() {
       false
     );
   };
-  const handleEditTopic = async (topicId: string, oldContent: string) => {
-    const newContent = prompt("Edit your topic:", oldContent);
-    if (!newContent || newContent === oldContent) return;
+
+  const handleEditTopic = (post: IPost) => {
+    setPostToEdit(post);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = async (content: string, imageFile: File | null) => {
+    if (!postToEdit) return;
 
     try {
-      await editTopic({ topicId, data: { content: newContent } }).unwrap();
-      toast.success("Topic updated successfully!");
+      // Create FormData to handle both text and file
+      const formData = new FormData();
+      formData.append("content", content);
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      await editTopic({ 
+        topicId: postToEdit.topicId, 
+        data: formData as unknown as IForumTopic
+      }).unwrap();
+      
+      toast.success("Post updated successfully!");
+      setIsEditModalOpen(false);
+      setPostToEdit(null);
       await refetch();
     } catch (err) {
       console.error("Failed to edit topic:", err);
-      toast.error("Failed to update topic. Please try again.");
+      toast.error("Failed to update post. Please try again.");
     }
   };
 
   const handleDeleteTopic = async (topicId: string) => {
     // Show confirmation dialog using sonner
-    toast("Are you sure you want to delete this topic?", {
-      position: "top-center", // This will center the toast at the top of the screen
+    toast("Are you sure you want to delete this post?", {
+      position: "top-center",
       action: {
         label: "Delete",
         onClick: async () => {
           try {
             await deleteTopic(topicId).unwrap();
-            toast.success("Topic deleted successfully!");
+            toast.success("Post deleted successfully!");
             await refetch();
           } catch (err) {
             console.error("Failed to delete topic:", err);
-            toast.error("Failed to delete topic. Please try again.");
+            toast.error("Failed to delete post. Please try again.");
           }
         },
       },
@@ -228,7 +401,7 @@ export default function ProfilePage() {
           // User cancelled, do nothing
         },
       },
-      duration: 10000, // Keep visible for 10 seconds or until user interacts
+      duration: 10000,
     });
   };
 
@@ -364,7 +537,7 @@ export default function ProfilePage() {
                     <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10">
                       <button
                         onClick={() => {
-                          handleEditTopic(post.topicId, post.content);
+                          handleEditTopic(post);
                           setMenuOpen(false);
                         }}
                         className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg"
@@ -851,6 +1024,17 @@ export default function ProfilePage() {
           </Tabs>
         </div>
       </div>
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setPostToEdit(null);
+        }}
+        post={postToEdit}
+        onSave={handleSaveEdit}
+      />
     </div>
   );
 }

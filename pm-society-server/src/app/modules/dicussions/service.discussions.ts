@@ -93,9 +93,91 @@ const toggleReactionOnReply = async (
   return await topic.save();
 };
 
+const editTopic = async (
+  topicId: string,
+  updateData: Partial<IForumTopic>,
+  userEmail: string,
+  file?: Express.Multer.File
+) => {
+  // 1️⃣ Find the user
+  const user = await User.findOne({ email: userEmail });
+  if (!user) throw new Error("User not found");
+
+  // 2️⃣ Find the topic
+  const topic = await ForumTopic.findOne({ topicId });
+  if (!topic) throw new Error("Topic not found");
+
+  // 3️⃣ Check ownership (only author can edit)
+  if (!topic.author.equals(user._id)) {
+    throw new Error("Unauthorized: You can only edit your own topic");
+  }
+
+  // 4️⃣ Handle optional new image upload
+  if (file) {
+    // If topic already has an image, delete it from MinIO
+    if (topic.imageUrl) {
+      try {
+        await StorageService.deleteFile("forum-topic-images",topic.imageUrl);
+      } catch (err) {
+        console.warn("Failed to delete old image:", err);
+      }
+    }
+
+    // Upload new image
+    const { fileUrl } = await StorageService.uploadFile("forum-topic-images", file);
+    updateData.imageUrl = fileUrl;
+  }
+
+  // 5️⃣ Update editable fields only (avoid overwriting system data)
+  const editableFields = ["title", "content", "imageUrl"];
+  for (const key of Object.keys(updateData)) {
+    if (editableFields.includes(key)) {
+      (topic as any)[key] = (updateData as any)[key];
+    }
+  }
+
+  // 6️⃣ Save updated topic
+  const updatedTopic = await topic.save();
+
+  // 7️⃣ Populate author info before returning
+  return await updatedTopic.populate("author", "name userName avatar");
+};
+
+const deleteTopic = async (topicId: string, userEmail: string) => {
+  // 1️⃣ Find user
+  const user = await User.findOne({ email: userEmail });
+  if (!user) throw new Error("User not found");
+
+  // 2️⃣ Find topic
+  const topic = await ForumTopic.findOne({ topicId });
+  if (!topic) throw new Error("Topic not found");
+
+  // 3️⃣ Ownership check
+  if (!topic.author.equals(user._id)) {
+    throw new Error("Unauthorized: You can only delete your own topic");
+  }
+
+  // 4️⃣ Delete associated image if exists
+  if (topic.imageUrl) {
+    try {
+      await StorageService.deleteFile("forum-topic-images", topic.imageUrl);
+    } catch (err) {
+      console.warn("Failed to delete topic image:", err);
+    }
+  }
+
+  // 5️⃣ Delete the topic itself
+  await ForumTopic.deleteOne({ topicId });
+
+  return { message: "Topic deleted successfully" };
+};
+
+
 export const ForumService = {
   createTopic,
   getAllTopics,
+  editTopic,
+  deleteTopic,
   getTopicById,
   addReplyToTopic,
   toggleReactionOnTopic,

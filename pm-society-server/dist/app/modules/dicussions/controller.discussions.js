@@ -43,9 +43,27 @@ const toggleReactionOnReply = (0, catchAsync_1.default)((req, res) => __awaiter(
     const result = yield service_discussions_1.ForumService.toggleReactionOnReply(topicId, replyId, req.user.email);
     res.status(200).json({ message: "Reaction toggled successfully", data: result });
 }));
+const editTopic = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { topicId } = req.params;
+    const updatedTopic = yield service_discussions_1.ForumService.editTopic(topicId, req.body, req.user.email, req.file // optional file (new image)
+    );
+    res.status(200).json({
+        message: "Topic updated successfully",
+        data: updatedTopic,
+    });
+}));
+const deleteTopic = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { topicId } = req.params;
+    const result = yield service_discussions_1.ForumService.deleteTopic(topicId, req.user.email);
+    res.status(200).json({
+        message: result.message,
+    });
+}));
 exports.ForumController = {
     createTopic,
     getAllTopics,
+    editTopic,
+    deleteTopic,
     getTopicById,
     addReply,
     toggleReactionOnTopic,

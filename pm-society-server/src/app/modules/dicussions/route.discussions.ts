@@ -25,5 +25,12 @@ router.patch(
   authenticateJWT,
   ForumController.toggleReactionOnReply
 );
+router.patch(
+  "/:topicId",
+  authenticateJWT,
+  upload.single("image"), // optional image upload
+  ForumController.editTopic
+);
+router.delete("/:topicId", authenticateJWT, ForumController.deleteTopic);
 
 export const ForumRoutes = router;

@@ -42,9 +42,38 @@ const toggleReactionOnReply = catchAsync(async (req: AuthRequest, res: Response)
   res.status(200).json({message:"Reaction toggled successfully",data: result});
 });
 
+const editTopic = catchAsync(async (req: AuthRequest, res: Response) => {
+  const { topicId } = req.params;
+  
+  const updatedTopic = await ForumService.editTopic(
+    topicId,
+    req.body,
+    req.user!.email,
+    req.file // optional file (new image)
+  );
+
+  res.status(200).json({
+    message: "Topic updated successfully",
+    data: updatedTopic,
+  });
+});
+
+const deleteTopic = catchAsync(async (req: AuthRequest, res: Response) => {
+  const { topicId } = req.params;
+
+  const result = await ForumService.deleteTopic(topicId, req.user!.email);
+
+  res.status(200).json({
+    message: result.message,
+  });
+});
+
+
 export const ForumController = {
   createTopic,
   getAllTopics,
+  editTopic,
+  deleteTopic,
   getTopicById,
   addReply,
   toggleReactionOnTopic,

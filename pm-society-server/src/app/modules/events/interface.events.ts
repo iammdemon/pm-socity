@@ -5,7 +5,7 @@ export interface IEvent{
     slug: string
     description: string
     image: string
-    date: string
+    date: Date
     location: string
     joinedUser?: Types.ObjectId[]
 
