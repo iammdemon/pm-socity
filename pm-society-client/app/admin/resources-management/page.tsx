@@ -40,7 +40,7 @@ export default function AdminResourcesPage() {
   const { data, isLoading, refetch } = useGetResourcesQuery();
   const resources: IResource[] = data?.data ?? [];
 
-  console.log("Fetched resources:", resources);
+
 
   const [addResource] = useAddResourceMutation();
   const [updateResource] = useUpdateResourceMutation();

@@ -11,6 +11,7 @@ import { mailchimpRoutes } from "../modules/mailchimp/route";
 import { GoalRoutes } from "../modules/goal/route.goal";
 import { AchievementRoutes } from "../modules/achievement/route.achievement";
 import { searchRoutes } from "../modules/search/route.search";
+import { LearningResourcesRoutes } from "../modules/learning-resources/route.learning-resources";
 
 const router: Router = Router();
 
@@ -26,7 +27,11 @@ const moduleRoutes = [
   { path: "/subscribe", route: mailchimpRoutes },
   { path: "/goals", route: GoalRoutes },
   { path: "/achievements", route: AchievementRoutes },
-  {path:"/search", route: searchRoutes}
+  {path:"/search", route: searchRoutes},
+  {
+    path:"/learning-resources",
+    route: LearningResourcesRoutes
+  }
 ];
 
 moduleRoutes.forEach((route) => {

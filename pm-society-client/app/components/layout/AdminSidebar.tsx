@@ -11,19 +11,22 @@ import {
   X,
   User,
   Users,
-
   LayoutDashboardIcon,
   UploadCloud,
   CalendarDays,
   MessageCircleQuestion,
   Shield,
   Grid3x3,
+  LeafyGreenIcon,
+  Moon,
+  Sun,
 } from "lucide-react";
 import { CgPassword } from "react-icons/cg";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTheme } from "next-themes";
 
 // Types
 interface User {
@@ -47,6 +50,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
 
   const isLoading = status === "loading";
   const isAuthenticated = status === "authenticated";
@@ -117,6 +121,11 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
       href: "/admin/resources-management",
     },
     {
+      label:" Learning Suite Management",
+      icon: LeafyGreenIcon,
+      href: "/admin/learning-suite-management",
+    },
+    {
       icon: CgPassword,
       label: "Change Password",
       href: "/admin/change-password",
@@ -152,13 +161,13 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
       {/* Main Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 h-screen bg-white border-r border-gray-200 flex flex-col z-50 transition-all duration-300 w-64",
+          "fixed top-0 left-0 h-screen bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 flex flex-col z-50 transition-all duration-300 w-64",
           isMobileOpen ? "" : "hidden lg:flex",
           className
         )}
       >
         {/* Header */}
-        <SidebarHeader />
+        <SidebarHeader theme={theme} setTheme={setTheme} />
 
         {/* Navigation Menu */}
         <SidebarNavigation 
@@ -199,7 +208,7 @@ const MobileToggleButton = ({
 }) => (
   <button
     onClick={onToggle}
-    className="fixed top-4 left-4 z-50 lg:hidden bg-black text-white p-3 rounded-lg shadow-lg hover:bg-gray-900 transition-colors duration-200"
+    className="fixed top-4 left-4 z-50 lg:hidden bg-black dark:bg-white text-white dark:text-black p-3 rounded-lg shadow-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors duration-200"
     aria-label={isOpen ? "Close menu" : "Open menu"}
   >
     {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -207,15 +216,25 @@ const MobileToggleButton = ({
 );
 
 // Sidebar Header Component
-const SidebarHeader = () => (
-  <header className="p-4 border-b border-gray-100 flex items-center space-x-3">
-    <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-      <Shield className="text-white" size={16} />
+const SidebarHeader = ({ theme, setTheme }: { theme: string | undefined; setTheme: (theme: string) => void }) => (
+  <header className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+    <div className="flex items-center space-x-3">
+      <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center">
+        <Shield className="text-white dark:text-black" size={16} />
+      </div>
+      <div>
+        <h1 className="font-bold text-lg text-black dark:text-white">Admin Panel</h1>
+        <p className="text-xs text-gray-600 dark:text-gray-400">System Management</p>
+      </div>
     </div>
-    <div>
-      <h1 className="font-bold text-lg text-black">Admin Panel</h1>
-      <p className="text-xs text-gray-600">System Management</p>
-    </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="h-8 w-8 rounded-full"
+    >
+      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+    </Button>
   </header>
 );
 
@@ -240,8 +259,8 @@ const SidebarNavigation = ({
           className={cn(
             "group flex items-center px-3 py-2.5 rounded-lg transition-colors duration-200 space-x-3",
             isActive(item.href)
-              ? "bg-black text-white shadow-sm"
-              : "text-black hover:bg-black hover:text-white"
+              ? "bg-black dark:bg-white text-white dark:text-black shadow-sm"
+              : "text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
           )}
         >
           <Icon size={18} className="flex-shrink-0" />
@@ -262,17 +281,17 @@ const SidebarFooter = ({
   user: User | undefined;
   onLogout: () => Promise<void>;
 }) => (
-  <footer className="p-4 border-t border-gray-100">
+  <footer className="p-4 border-t border-gray-100 dark:border-gray-800">
     {/* User Info */}
-    <div className="flex items-center space-x-3 mb-3 p-2 bg-gray-50 rounded-lg">
-      <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-        <User className="text-white" size={14} />
+    <div className="flex items-center space-x-3 mb-3 p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
+      <div className="w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center">
+        <User className="text-white dark:text-black" size={14} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-black truncate">
+        <p className="text-sm font-medium text-black dark:text-white truncate">
           {user?.name || user?.email || "Admin"}
         </p>
-        <p className="text-xs text-gray-600 truncate">
+        <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
           System Administrator
         </p>
       </div>
@@ -282,7 +301,7 @@ const SidebarFooter = ({
     <Button
       onClick={onLogout}
       variant="outline"
-      className="w-full justify-center space-x-2 hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-colors duration-200"
+      className="w-full justify-center space-x-2 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-200 dark:hover:border-red-800 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
       size="sm"
     >
       <LogOut size={16} />
@@ -315,17 +334,20 @@ const AdminSidebarSkeleton = ({
     {/* Skeleton Sidebar */}
     <aside
       className={cn(
-        "fixed top-0 left-0 h-screen bg-white border-r border-gray-200 flex flex-col z-50 transition-all duration-300 w-64",
+        "fixed top-0 left-0 h-screen bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 flex flex-col z-50 transition-all duration-300 w-64",
         isMobileOpen ? "" : "hidden lg:flex"
       )}
     >
       {/* Header Skeleton */}
-      <div className="p-4 border-b border-gray-100 flex items-center space-x-3">
-        <Skeleton className="w-8 h-8 rounded-lg" />
-        <div className="flex-1">
-          <Skeleton className="h-5 w-24 mb-1" />
-          <Skeleton className="h-3 w-20" />
+      <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <Skeleton className="w-8 h-8 rounded-lg" />
+          <div className="flex-1">
+            <Skeleton className="h-5 w-24 mb-1" />
+            <Skeleton className="h-3 w-20" />
+          </div>
         </div>
+        <Skeleton className="w-8 h-8 rounded-full" />
       </div>
 
       {/* Menu Skeleton */}
@@ -339,8 +361,8 @@ const AdminSidebarSkeleton = ({
       </nav>
 
       {/* Footer Skeleton */}
-      <div className="p-4 border-t border-gray-100">
-        <div className="flex items-center space-x-3 mb-3 p-2 bg-gray-50 rounded-lg">
+      <div className="p-4 border-t border-gray-100 dark:border-gray-800">
+        <div className="flex items-center space-x-3 mb-3 p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
           <Skeleton className="w-8 h-8 rounded-full" />
           <div className="flex-1">
             <Skeleton className="h-4 w-20 mb-1" />

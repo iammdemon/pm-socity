@@ -1,7 +1,9 @@
 // import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { BookOpen, Users, Video, ExternalLink } from "lucide-react";
+
+import {  Users, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import LearningResource from "../shared/LearningResource";
 
 // ---------- Types ----------
 // interface ProgressModule {
@@ -218,86 +220,7 @@ LogoHeader.displayName = "LogoHeader";
 
 // ProgressSection.displayName = "ProgressSection";
 
-const LearningResources = () => {
-  return (
-    <section className="mb-6">
-      <h2 className="text-sm font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
-        The Learning Suite
-      </h2>
 
-      <div className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-4 shadow-xl">
-        <div className="space-y-3">
-          <Link
-            href="https://thepmsociety.pmtraining.com/partner-login"
-            target="_blank"
-            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-600/20 dark:to-purple-600/20 hover:shadow-md transition-all duration-300 group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500">
-                <BookOpen className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Training Pathway
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Practice Exams & On Demand Content
-                </p>
-              </div>
-            </div>
-            <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-blue-500 transition-colors" />
-          </Link>
-
-          <Link
-            href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZTlhZmFkNjUtZDk3Mi00YmEzLTg5YTctYTU1ZjE3YTY2Mzc2%40thread.v2/0?context=%7b%22Tid%22%3a%22902f8b0f-d809-491e-a91b-0a1a5e5bc3b3%22%2c%22Oid%22%3a%228838cffc-ef18-4684-a9ed-f4b289429dcb%22%7d"
-            target="_blank"
-            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-600/20 dark:to-emerald-600/20 hover:shadow-md transition-all duration-300 group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500">
-                <Video className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  Live Sessions
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Join instructor-led sessions
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-1">
-              <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-green-500 transition-colors" />
-            </div>
-          </Link>
-          <Link
-            href="https://urldefense.proofpoint.com/v2/url?u=https-3A__partner.pmi.org_hub_C001052&d=DwMFaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=1QBDdlUcgXKY8JPqGEOTZ0HRPkikscvhrdw-GWRYgeaUzNbmJ287aHGi2_Gg1yAW&m=tK5ZjB0zgb4KiQoGNXs3gpFgaaMjTzYUzsLqC-VlYlxZ25QQUSDCUP4VCsvZaVkp&s=kFW5Ewb38jqM_lpbgjlnU3W9Qu3hWFhq78s9VAH5Dss&e="
-            target="_blank"
-            className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-600/20 dark:to-emerald-600/20 hover:shadow-md transition-all duration-300 group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500">
-                <Video className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                 PMI Hub
-                </p>
-               
-              </div>
-            </div>
-            <div className="flex items-center gap-1">
-              <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-green-500 transition-colors" />
-            </div>
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-LearningResources.displayName = "LearningResources";
 
 const MentorBooking = () => {
   return (
@@ -594,7 +517,7 @@ export default function MemberLeftPanel({ className = "" }: PanelProps) {
 
       <div className="flex-1 overflow-y-auto p-4 space-y-6 relative z-10">
         {/* <ProgressSection /> */}
-        <LearningResources />
+        <LearningResource />
         <MentorBooking />
         <SocietyWorkSpaces />
         {/* <NotificationsSection /> */}

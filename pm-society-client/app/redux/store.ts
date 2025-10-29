@@ -7,6 +7,7 @@ import { forumApi } from "./services/forumApi";
 import { userApi } from "./services/userApi";
 import { contactApi } from "./services/contactApi";
 import { resourceApi } from "./services/resourceApi";
+import { learningResourcesApi } from "./services/learningResourcesApi";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     [forumApi.reducerPath]: forumApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [contactApi.reducerPath]: contactApi.reducer,
+    [learningResourcesApi.reducerPath]: learningResourcesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -26,7 +28,8 @@ export const store = configureStore({
       .concat(resourceApi.middleware)
       .concat(forumApi.middleware)
       .concat(userApi.middleware)
-      .concat(contactApi.middleware),
+      .concat(contactApi.middleware)
+      .concat(learningResourcesApi.middleware)
 });
 
 export type RootState = ReturnType<typeof store.getState>;
