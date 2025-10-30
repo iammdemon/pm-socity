@@ -15,18 +15,17 @@ import {
   UploadCloud,
   CalendarDays,
   MessageCircleQuestion,
-  Shield,
+
   Grid3x3,
   LeafyGreenIcon,
-  Moon,
-  Sun,
+
 } from "lucide-react";
 import { CgPassword } from "react-icons/cg";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTheme } from "next-themes";
+
 
 // Types
 interface User {
@@ -50,7 +49,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
+ 
 
   const isLoading = status === "loading";
   const isAuthenticated = status === "authenticated";
@@ -166,9 +165,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
           className
         )}
       >
-        {/* Header */}
-        <SidebarHeader theme={theme} setTheme={setTheme} />
-
+      
         {/* Navigation Menu */}
         <SidebarNavigation 
           menuItems={adminMenu}
@@ -215,28 +212,6 @@ const MobileToggleButton = ({
   </button>
 );
 
-// Sidebar Header Component
-const SidebarHeader = ({ theme, setTheme }: { theme: string | undefined; setTheme: (theme: string) => void }) => (
-  <header className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-    <div className="flex items-center space-x-3">
-      <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center">
-        <Shield className="text-white dark:text-black" size={16} />
-      </div>
-      <div>
-        <h1 className="font-bold text-lg text-black dark:text-white">Admin Panel</h1>
-        <p className="text-xs text-gray-600 dark:text-gray-400">System Management</p>
-      </div>
-    </div>
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="h-8 w-8 rounded-full"
-    >
-      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-    </Button>
-  </header>
-);
 
 // Sidebar Navigation Component
 const SidebarNavigation = ({
