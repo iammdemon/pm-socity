@@ -3,21 +3,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  
   User,
   LogOut,
   Settings,
   ChevronDown,
   GraduationCap,
+  Users,
+  ExternalLink,
 } from "lucide-react";
 
 import { useState, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { useRouter } from "next/navigation";
 import { ModeToggle } from "./ModeToggle";
 import { SearchBar } from "./ExchangeHeader";
+import LearningResource from "../shared/LearningResource";
 
 // Type definitions for better type safety
 interface User {
@@ -31,9 +32,7 @@ const MobileHeader = () => {
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  // const [searchQuery, setSearchQuery] = useState("");
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
-  // const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -73,17 +72,6 @@ const MobileHeader = () => {
   // Avoid SSR mismatch by not rendering until mounted
   if (!mounted) return null;
 
-  // Handle search
-  // const handleSearch = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (searchQuery.trim()) {
-  //     router.push(
-  //       `/dashboard/search?q=${encodeURIComponent(searchQuery.trim())}`
-  //     );
-  //     setSearchQuery("");
-  //   }
-  // };
-
   // Handle logout
   const handleLogout = async () => {
     try {
@@ -109,9 +97,98 @@ const MobileHeader = () => {
       .slice(0, 2);
   };
 
+  // Mentor Booking Component (simplified for dropdown)
+  const MentorBooking = () => {
+    return (
+      <div className="py-2">
+        <h3 className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+          Society Success Sessions
+        </h3>
+        <div className="space-y-1">
+          <Link
+            href="https://calendly.com/olivia-mcglothen-thepmsociety/30min"
+            target="_blank"
+            className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors duration-200"
+            onClick={() => setIsProfileMenuOpen(false)}
+          >
+            <Users className="w-4 h-4 mr-3 text-purple-500" />
+            <div className="flex-1">
+              <div className="font-medium">Olivia McGlothen</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Mentorship session</div>
+            </div>
+            <ExternalLink className="w-3 h-3 text-gray-400" />
+          </Link>
+          <Link
+            href="https://calendly.com/toni-merrill-thepmsociety/50-minute-coaching-session"
+            target="_blank"
+            className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors duration-200"
+            onClick={() => setIsProfileMenuOpen(false)}
+          >
+            <Users className="w-4 h-4 mr-3 text-purple-500" />
+            <div className="flex-1">
+              <div className="font-medium">Toni Merrill</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Coaching session</div>
+            </div>
+            <ExternalLink className="w-3 h-3 text-gray-400" />
+          </Link>
+          <Link
+            href="https://calendly.com/alana-captain-thepmsociety/30min"
+            target="_blank"
+            className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors duration-200"
+            onClick={() => setIsProfileMenuOpen(false)}
+          >
+            <Users className="w-4 h-4 mr-3 text-purple-500" />
+            <div className="flex-1">
+              <div className="font-medium">Alana Captain</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Resume consultation</div>
+            </div>
+            <ExternalLink className="w-3 h-3 text-gray-400" />
+          </Link>
+        </div>
+      </div>
+    );
+  };
+
+  // Society WorkSpaces Component (simplified for dropdown)
+  const SocietyWorkSpaces = () => {
+    return (
+      <div className="py-2">
+        <h3 className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+          Society Workspaces
+        </h3>
+        <div className="space-y-1">
+          <Link
+            href="https://trello.com/b/lLyCl41O/project-team-a"
+            target="_blank"
+            className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors duration-200"
+            onClick={() => setIsProfileMenuOpen(false)}
+          >
+            <Users className="w-4 h-4 mr-3 text-blue-500" />
+            <div className="flex-1">
+              <div className="font-medium">Team Workspace A</div>
+            </div>
+            <ExternalLink className="w-3 h-3 text-gray-400" />
+          </Link>
+          <Link
+            href="https://trello.com/b/7oTCfpfM/project-team-b"
+            target="_blank"
+            className="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors duration-200"
+            onClick={() => setIsProfileMenuOpen(false)}
+          >
+            <Users className="w-4 h-4 mr-3 text-blue-500" />
+            <div className="flex-1">
+              <div className="font-medium">Team Workspace B</div>
+            </div>
+            <ExternalLink className="w-3 h-3 text-gray-400" />
+          </Link>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
-      <header className="lg:hidden sticky  top-0 left-0 right-0 z-50 border-b bg-white/95 dark:bg-neutral-950/95  dark:border-neutral-800/50">
+      <header className="lg:hidden sticky top-0 left-0 right-0 z-50 border-b bg-white/95 dark:bg-neutral-950/95 dark:border-neutral-800/50">
         <div className="flex items-center justify-between max-w-7xl mx-auto p-1">
           {/* Logo */}
           <Link href="/dashboard" className="relative h-10 w-16">
@@ -164,7 +241,7 @@ const MobileHeader = () => {
               </button>
 
               {isProfileMenuOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-neutral-800 rounded-xl shadow-xl border border-gray-200 dark:border-neutral-700 overflow-hidden z-50">
+                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-neutral-800 rounded-xl shadow-xl border border-gray-200 dark:border-neutral-700 overflow-hidden z-50 max-h-[80vh] overflow-y-auto">
                   {/* Profile Header */}
                   <div className="px-4 py-4 border-b border-gray-200 dark:border-neutral-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
                     <div className="flex items-center space-x-3">
@@ -219,6 +296,29 @@ const MobileHeader = () => {
                     </Link>
 
                     <div className="border-t border-gray-200 dark:border-neutral-700 my-2"></div>
+                    
+                    {/* Learning Resources */}
+                    <div className="py-2">
+                      <h3 className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        Learning Resources
+                      </h3>
+                      <div className="px-4 py-2">
+                        <LearningResource />
+                      </div>
+                    </div>
+
+                    <div className="border-t border-gray-200 dark:border-neutral-700 my-2"></div>
+                    
+                    {/* Mentor Booking */}
+                    <MentorBooking />
+                    
+                    <div className="border-t border-gray-200 dark:border-neutral-700 my-2"></div>
+                    
+                    {/* Society WorkSpaces */}
+                    <SocietyWorkSpaces />
+                    
+                    <div className="border-t border-gray-200 dark:border-neutral-700 my-2"></div>
+                    
                     <Button
                       onClick={handleLogout}
                       variant="ghost"

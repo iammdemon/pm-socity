@@ -8,8 +8,6 @@ import AuthProvider from "./providers/AuthProvider";
 import ReduxProvider from "./providers/ReduxProvider";
 import { ThemeProviders } from "./providers/ThemeProvider";
 
-
-
 const gothamPro = localFont({
   src: [
     { path: "../public/fonts/GothamPro.ttf", weight: "400", style: "normal" },
@@ -29,9 +27,9 @@ const gothamPro = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "The PM Society (TPMS) - PMP Training & Mentorship",
+  title: "PMP & CAPM Certification Training in Houston – The PM Society (TPMS)",
   description:
-    "Empowering you to lead with confidence through PMP training and mentorship.",
+    "Advance your project management career with Houston’s leading PMP® and CAPM® certification training provider. The PM Society offers expert-led courses, mentorship, and coaching to help you lead with confidence.",
 };
 
 export default function RootLayout({

@@ -159,7 +159,7 @@ const WhyChoose: React.FC = () => {
             {/* YouTube iframe */}
             {hasStarted && (
               <iframe
-                src={`https://www.youtube.com/embed/T-aDrrwzucI?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
+                src={`https://www.youtube.com/embed/lW9UpM4T_po?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
                 allow="autoplay; encrypted-media; picture-in-picture"
                 className="w-full h-full rounded-xl"
                 frameBorder="0"

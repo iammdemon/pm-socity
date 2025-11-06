@@ -74,7 +74,7 @@ export default function VideoSection() {
           <VideoCard
             thumbnailUrl="/image/video.webp"
             title="The TPMS Difference"
-            videoUrl="https://www.youtube.com/embed/hmnoMYWbxLg?autoplay=1"
+            videoUrl="https://www.youtube.com/embed/DGFxGDtT2uc?autoplay=1"
           />
         </motion.div>
       </div>
@@ -217,7 +217,7 @@ function VideoCard({ thumbnailUrl, title, videoUrl }: VideoCardProps) {
                   transition={{ delay: 0.7, duration: 0.3, ease: [0.42, 0, 0.58, 1] as [number, number, number, number] }}
                 >
                   <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
-                  10:24 mins
+                  00:21 mins
                 </motion.div>
               </motion.div>
             </motion.div>

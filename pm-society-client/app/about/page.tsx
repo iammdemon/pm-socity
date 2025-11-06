@@ -188,7 +188,7 @@ export default function AboutPage() {
               fill
               quality={90}
               priority={false}
-              className="object-cover md:object-center object-[center_top]"
+              className="object-cover md:object-top object-[center_top]"
               sizes="(max-width: 768px) 100vw, 
                      (max-width: 1200px) 80vw, 
                      100vw"
@@ -327,7 +327,7 @@ export default function AboutPage() {
                   {/* YouTube iframe */}
                   {hasStarted && (
                     <iframe
-                      src={`https://www.youtube.com/embed/8WTlff0TT_w?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
+                      src={`https://www.youtube.com/embed/ON6FIWAIU_M?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=1`}
                       allow="autoplay; encrypted-media; picture-in-picture"
                       className="w-full h-full rounded-xl"
                       frameBorder="0"

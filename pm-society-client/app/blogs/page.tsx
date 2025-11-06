@@ -67,7 +67,7 @@ const BlogPage = () => {
         <section className="relative overflow-hidden min-h-[35vh] md:min-h-[90vh] max-h-[800px] py-12 md:py-16 flex items-center">
           <div
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: 'url(/image/blog.webp)' }}
+            style={{ backgroundImage: 'url(/image/coach-2.webp)' }}
           />
           <div className="absolute inset-0 bg-black/40 dark:bg-black/50 z-10" />
           <div className="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 text-center">

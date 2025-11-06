@@ -141,7 +141,7 @@ const OurApproach: React.FC = () => {
                 transition={{ delay }}
                 whileHover={{ y: -5 }}
               >
-                <div className="relative h-40 overflow-hidden">
+                <div className="relative h-56 overflow-hidden">
                   <Image
                     src={step.image}
                     alt={step.title}
