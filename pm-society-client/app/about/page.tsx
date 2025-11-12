@@ -178,7 +178,7 @@ export default function AboutPage() {
     <>
       <Header />
       <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-        {/* Hero Section with Office Background */}
+      
         <section className="relative min-h-[70vh] md:min-h-screen flex items-center py-24 md:pt-40 pb-12 md:pb-20 overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0">
@@ -195,7 +195,7 @@ export default function AboutPage() {
             />
 
             {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-black/60 dark:bg-black/80 z-10" />
+            <div className="absolute inset-0 bg-black/30 dark:bg-black/80 z-10" />
           </div>
 
           <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
@@ -301,7 +301,7 @@ export default function AboutPage() {
                     >
                       {/* Cover image */}
                       <Image
-                        src="/image/interview.webp"
+                        src="/image/learn.webp"
                         width={1920}
                         height={1080}
                         alt="Video Cover"

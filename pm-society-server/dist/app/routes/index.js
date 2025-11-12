@@ -13,6 +13,7 @@ const route_goal_1 = require("../modules/goal/route.goal");
 const route_achievement_1 = require("../modules/achievement/route.achievement");
 const route_search_1 = require("../modules/search/route.search");
 const route_learning_resources_1 = require("../modules/learning-resources/route.learning-resources");
+const route_cohort_1 = require("../modules/cohort/route.cohort");
 const router = (0, express_1.Router)();
 const moduleRoutes = [
     { path: "/users", route: route_users_1.UserRoutes },
@@ -28,8 +29,12 @@ const moduleRoutes = [
     { path: "/search", route: route_search_1.searchRoutes },
     {
         path: "/learning-resources",
-        route: route_learning_resources_1.LearningResourcesRoutes
-    }
+        route: route_learning_resources_1.LearningResourcesRoutes,
+    },
+    {
+        path: "/cohorts",
+        route: route_cohort_1.CohortRoutes,
+    },
 ];
 moduleRoutes.forEach((route) => {
     router.use(route.path, route.route);

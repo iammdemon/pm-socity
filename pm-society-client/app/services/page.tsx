@@ -32,12 +32,17 @@ export default function ServicesPage() {
       description:
         "Explore project management & build a foundation. Perfect for career changers & aspiring PMs.",
       features: [
-        "23-hour PMI-aligned CAPM® instruction",
-        "2 Executive Coaching Sessions",
-        "2 months access to PM learning materials",
-        "2 months access to Society+ portal",
+        "23- hour PMI-aligned CAPM® instruction",
+        "CAPM® application support",
+        "1 professionally crafted resume",
+        "2 PM mentorship sessions",
+        "2 individualized coaching sessions",
+        "90-day access to PM learning materials",
+        "90-day access to Society portal",
+        "LinkedIn Support"
+
       ],
-      price: "$999",
+      price: "$1499",
       cta: "Enroll Now",
       ctaLink: "enroll",
       featured: false,
@@ -46,23 +51,25 @@ export default function ServicesPage() {
       icon: <FiBookOpen className="h-8 w-8 sm:h-10 sm:w-10" />,
       title: "ELEVATE",
       description:
-        "Guide professionals through PMP certification, mentoring & leadership roles. For experienced PMs ready for growth.",
+        "Guide professionals through PMP® certification, mentoring & leadership roles. For experienced PMs ready for growth.",
       features: [
-        "35 hours of virtual instructor-led PMP® training",
-        "PMP application support",
-        "3 executive coaching sessions",
-        "2 months access to PM learning materials",
-        "2 mentorship sessions",
-        "2 months access to Society+ portal",
+        "35- hour PMI-aligned PMP® aligned instruction",
+        "CAPM® application support",
+        "1 professionally crafted resume",
+        "2 PM mentorship sessions",
+        "2 individualized coaching sessions",
+        "90-day access to PM learning materials",
+        "90-day access to Society portal",
+        "LinkedIn Support"
       ],
-      price: "$3,500",
+      price: "$3599",
       cta: "Enroll Now",
       ctaLink: "enroll",
       featured: true,
     },
     {
       icon: <FiTrendingUp className="h-8 w-8 sm:h-10 sm:w-10" />,
-      title: "ASCEND",
+      title: "ASCEND (Coming Soon)",
       description:
         "Bridge gap post-certification & build leadership. Ideal for certified PMs, team leads, future executives.",
       features: [
@@ -70,11 +77,12 @@ export default function ServicesPage() {
         "Advanced project management workshops",
         "5 executive coaching sessions",
         "5 project management mentorship sessions",
-        "2 months access to PM learning materials",
         "Mastermind group access (peer accountability + strategy)",
-        "6 months of Society+ portal access",
+        "90-day access to PM learning materials",
+        "90-day access to Society portal",
+        "LinkedIn Support"
       ],
-      price: "$4,500",
+      price: "$4599",
       cta: "Enroll Now",
       ctaLink: "enroll",
       featured: false,
@@ -126,35 +134,12 @@ export default function ServicesPage() {
         "Agile & Scrum Practice Deep Dives",
         "Open-Topic Sessions",
       ],
-      price: "3 sessions for $400",
+      price: "4 sessions for $300",
       cta: "Book Now",
       ctaLink: "enroll",
       featured: false,
     },
-    {
-  icon: <FiSettings className="h-8 w-8 sm:h-10 sm:w-10" />,
-  title: "ELEVATE (Pilot Cohort)",
-  description:
-    "Guide professionals through PMP certification, mentoring & leadership roles. For experienced PMs ready for growth.",
-  features: [
-    "35 hours of virtual instructor-led PMP® training",
-    "90 days of on-demand PM learning material access",
-    "PMP application support",
-    "1 project management mentorship session",
-    "3 executive coaching sessions",
-    "1 professionally crafted resume",
-  ],
-  price: "$3500",
-  discountPrice: "$558",
-  discountText: (
-    <>
-      Use discount code <strong>PILOT2025</strong> at checkout to unlock this special pricing.
-    </>
-  ),
-  cta: "Enroll Now",
-  ctaLink: "enroll",
-  featured: true,
-}
+
 
   ];
 

@@ -12,7 +12,7 @@ const bonVivant = localFont({
 const WhatWeOffer = () => {
   const offerings = [
     {
-      title: "Live Virtual PMP Course",
+      title: "Live Virtual PMP® Course",
       description:
         "Comprehensive certification preparation with expert instruction and built-in support.",
       features: [

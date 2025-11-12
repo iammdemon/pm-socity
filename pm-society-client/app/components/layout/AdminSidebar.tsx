@@ -25,6 +25,7 @@ import { CgPassword } from "react-icons/cg";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { FaPeopleGroup } from "react-icons/fa6";
 
 
 // Types
@@ -95,7 +96,12 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
       icon: Grid3x3, 
       label: "Go to Dashboard", 
       href: "/dashboard", 
-      
+    },
+    {
+      icon: FaPeopleGroup,
+      label: "Cohort Management",
+      href:"/admin/cohort-management"
+
     },
     {
       icon: MessageCircleQuestion,

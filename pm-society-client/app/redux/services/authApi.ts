@@ -15,7 +15,7 @@ const baseQuery = fetchBaseQuery({
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery,
-  tagTypes: ["Goal", "Achievement", "User"], // tags for cache invalidation
+  tagTypes: ["Goal", "Achievement", "User", "Cohort"], // tags for cache invalidation
   endpoints: (builder) => ({
     // 🔒 Authenticated route using token
     getMe: builder.query({
@@ -106,6 +106,16 @@ export const authApi = createApi({
       query: (query) => ({ url: `/search?q=${query}`, method: "GET" }),
       providesTags: ["User"],
     }),
+    // cohorts
+    createCohort: builder.mutation({
+      query: (body) => ({ url: "/cohorts", method: "POST", body }),
+      invalidatesTags: ["Cohort"],
+    }),
+
+    getCohort: builder.query({
+      query: () => ({ url: "/cohorts", method: "GET" }),
+      providesTags: ["Cohort"],
+    }),
   }),
 });
 
@@ -128,4 +138,7 @@ export const {
   useDeleteAchievementMutation,
   useSearchQuery,
   useUpdateAvatarMutation,
+  // cohort hooks
+  useCreateCohortMutation,
+  useGetCohortQuery
 } = authApi;

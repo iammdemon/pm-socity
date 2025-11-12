@@ -85,7 +85,7 @@ const WhyChoose: React.FC = () => {
               <h2
                 className={`mt-2 text-3xl font-bold text-black dark:text-white md:text-5xl ${bonVivant.className}`}
               >
-                Your Path to PMP Success
+                Your Path to PMP® Success
               </h2>
               <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
                 We empower you with the skills, confidence, and resources to
@@ -133,11 +133,11 @@ const WhyChoose: React.FC = () => {
               >
                 {/* Cover image */}
                 <Image
-                  src="/image/interview.webp"
+                  src="/image/oliviapmp.webp"
                   width={1920}
                   height={1080}
                   alt="Video Cover"
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover md:object-top-left"
                 />
 
                 {/* Dark overlay */}
