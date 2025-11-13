@@ -13,6 +13,7 @@ import { AchievementRoutes } from "../modules/achievement/route.achievement";
 import { searchRoutes } from "../modules/search/route.search";
 import { LearningResourcesRoutes } from "../modules/learning-resources/route.learning-resources";
 import { CohortRoutes } from "../modules/cohort/route.cohort";
+import { CohortPostRoutes } from "../modules/cohortPost/route.cohortPost";
 
 const router: Router = Router();
 
@@ -37,6 +38,10 @@ const moduleRoutes = [
     path: "/cohorts",
     route: CohortRoutes,
   },
+  {
+    path: "/cohort-posts",
+    route: CohortPostRoutes
+  }
 ];
 
 moduleRoutes.forEach((route) => {

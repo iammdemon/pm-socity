@@ -8,6 +8,7 @@ const baseQuery = fetchBaseQuery({
     if (session?.accessToken) {
       headers.set("authorization", `Bearer ${session.accessToken}`);
     }
+    headers.set("Content-Type", "application/json");
     return headers;
   },
 });
@@ -15,51 +16,42 @@ const baseQuery = fetchBaseQuery({
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery,
-  tagTypes: ["Goal", "Achievement", "User", "Cohort"], // tags for cache invalidation
+  tagTypes: ["Goal", "Achievement", "User", "Cohort"],
+
   endpoints: (builder) => ({
-    // 🔒 Authenticated route using token
+    // 👤 AUTH
     getMe: builder.query({
       query: () => ({ url: "/auth/me", method: "GET" }),
       providesTags: [{ type: "User", id: "ME" }],
     }),
-
     getUser: builder.query({
       query: () => ({ url: "/auth/user", method: "GET" }),
       providesTags: ["User"],
     }),
-
     updateAvatar: builder.mutation({
       query: (body) => ({ url: "/users/avatar", method: "PUT", body }),
     }),
-
-    // 🔒 Change password
     changePassword: builder.mutation({
       query: (body) => ({ url: "/auth/change-password", method: "POST", body }),
     }),
-
-    // 🔒 Get user by username
     getUserByUserName: builder.query({
       query: (userName: string) => ({
         url: `/users/${userName}`,
         method: "GET",
       }),
     }),
-
-    // 🔒 Toggle linked user
     toggleLink: builder.mutation({
       query: (linkedUserId: string) => ({
         url: `/users/link/${linkedUserId}`,
         method: "PATCH",
       }),
     }),
-
-    // 🔒 Update profile
     updateProfile: builder.mutation({
       query: (body) => ({ url: "/users/profile", method: "PUT", body }),
       invalidatesTags: [{ type: "User", id: "ME" }],
     }),
 
-    // 🎯 Goals CRUD
+    // 🎯 GOALS
     getGoals: builder.query({
       query: () => ({ url: "/goals", method: "GET" }),
       providesTags: ["Goal"],
@@ -81,7 +73,7 @@ export const authApi = createApi({
       invalidatesTags: ["Goal"],
     }),
 
-    // 🏆 Achievements CRUD
+    // 🏆 ACHIEVEMENTS
     getAchievements: builder.query({
       query: () => ({ url: "/achievements", method: "GET" }),
       providesTags: ["Achievement"],
@@ -102,43 +94,102 @@ export const authApi = createApi({
       query: (id) => ({ url: `/achievements/${id}`, method: "DELETE" }),
       invalidatesTags: ["Achievement"],
     }),
+
+    // 🔍 SEARCH
     search: builder.query({
       query: (query) => ({ url: `/search?q=${query}`, method: "GET" }),
       providesTags: ["User"],
     }),
-    // cohorts
+
+    // 🧠 COHORT CRUD
+    getCohorts: builder.query({
+      query: (params) => ({
+        url: "/cohorts",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["Cohort"],
+    }),
+
+    getCohortById: builder.query({
+      query: (id: string) => ({ url: `/cohorts/${id}`, method: "GET" }),
+      providesTags: ["Cohort"], 
+    }),
+
     createCohort: builder.mutation({
       query: (body) => ({ url: "/cohorts", method: "POST", body }),
       invalidatesTags: ["Cohort"],
     }),
 
-    getCohort: builder.query({
-      query: () => ({ url: "/cohorts", method: "GET" }),
-      providesTags: ["Cohort"],
+    updateCohort: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: `/cohorts/${id}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["Cohort"],
+    }),
+
+    deleteCohort: builder.mutation({
+      query: (id: string) => ({
+        url: `/cohorts/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cohort"],
+    }),
+
+    // 👥 Member management
+    addMemberToCohort: builder.mutation({
+      query: ({ cohortId, userId }) => ({
+        url: `/cohorts/${cohortId}/members`,
+        method: "POST",
+        body: { userId },
+      }),
+      invalidatesTags: ["Cohort"],
+    }),
+
+    removeMemberFromCohort: builder.mutation({
+      query: ({ cohortId, userId }) => ({
+        url: `/cohorts/${cohortId}/members/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Cohort"],
     }),
   }),
 });
 
+// 🧩 Export hooks
 export const {
+  // auth
   useGetMeQuery,
   useGetUserQuery,
   useChangePasswordMutation,
   useGetUserByUserNameQuery,
   useToggleLinkMutation,
   useUpdateProfileMutation,
-  // Goals hooks
+  useUpdateAvatarMutation,
+
+  // goals
   useGetGoalsQuery,
   useCreateGoalMutation,
   useUpdateGoalMutation,
   useDeleteGoalMutation,
-  // Achievements hooks
+
+  // achievements
   useGetAchievementsQuery,
   useCreateAchievementMutation,
   useUpdateAchievementMutation,
   useDeleteAchievementMutation,
+
+  // search
   useSearchQuery,
-  useUpdateAvatarMutation,
-  // cohort hooks
+
+  // cohorts
+  useGetCohortsQuery,
+  useGetCohortByIdQuery,
   useCreateCohortMutation,
-  useGetCohortQuery
+  useUpdateCohortMutation,
+  useDeleteCohortMutation,
+  useAddMemberToCohortMutation,
+  useRemoveMemberFromCohortMutation,
 } = authApi;

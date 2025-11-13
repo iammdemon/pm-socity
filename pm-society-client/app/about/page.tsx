@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   BiAward,
@@ -167,53 +167,44 @@ const stats = [
 ];
 
 export default function AboutPage() {
-  const [isVisible, setIsVisible] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
   return (
     <>
       <Header />
       <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-      
-        <section className="relative min-h-[70vh] md:min-h-screen flex items-center py-24 md:pt-40 pb-12 md:pb-20 overflow-hidden">
+        <section className="relative min-h-[70vh] md:min-h-screen flex items-end py-24 md:py-32 pb-12 md:pb-20 overflow-hidden">
           {/* Background Image */}
           <div className="absolute inset-0">
             <Image
               src="/image/about.webp"
-              alt="Modern office workspace"
+              alt="Professional team member"
               fill
               quality={90}
-              priority={false}
-              className="object-cover md:object-top object-[center_top]"
-              sizes="(max-width: 768px) 100vw, 
-                     (max-width: 1200px) 80vw, 
-                     100vw"
+              priority={true}
+              className="object-cover object-[center_35%] md:object-[center_17%]"
+              sizes="100vw"
             />
 
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-black/30 dark:bg-black/80 z-10" />
+            {/* Multi-layer gradient overlay - strong at bottom for text, lighter at top to show face */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent dark:from-black/98 dark:via-black/75 dark:to-black/30 z-10" />
+
+            {/* Subtle vignette effect to focus on center */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,transparent_40%,black/30_100%)] z-10" />
           </div>
 
-          <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-            <div
-              className={`max-w-5xl mx-auto text-center transition-all duration-1000 ${
-                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-              }`}
-            >
+          <div className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-5xl mx-auto text-center transition-all duration-1000 opacity-100 translate-y-0">
               {/* Tagline */}
-              <div className="inline-flex items-center px-4 py-2 backdrop-blur-md rounded-full mb-6 border border-white/20">
-                <span className="text-sm sm:text-base font-medium text-gray-200">
+              <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-md rounded-full mb-6 border border-white/30">
+                <span className="text-sm sm:text-base font-medium text-white">
                   Transforming Project Management Excellence
                 </span>
               </div>
 
               {/* Title */}
               <h1
-                className={`text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 drop-shadow-xl leading-tight ${bonVivant.className}`}
+                className={`text-3xl sm:text-5xl lg:text-7xl font-bold text-white mb-8 drop-shadow-2xl leading-tight ${bonVivant.className}`}
               >
                 About The PM Society
               </h1>
@@ -225,13 +216,13 @@ export default function AboutPage() {
                     key={index}
                     className="text-center group flex flex-col items-center max-w-xs mx-auto"
                   >
-                    <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md rounded-xl text-white mb-3 group-hover:scale-110 group-hover:bg-white/30 transition-transform duration-300 border border-white/20">
+                    <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-white/20 backdrop-blur-md rounded-xl text-white mb-3 group-hover:scale-110 group-hover:bg-white/30 transition-all duration-300 border border-white/30 shadow-lg">
                       {stat.icon}
                     </div>
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-white drop-shadow-lg">
                       {stat.number}
                     </div>
-                    <div className="text-sm sm:text-base text-slate-200">
+                    <div className="text-sm sm:text-base text-gray-100 drop-shadow-md">
                       {stat.label}
                     </div>
                   </div>

@@ -27,6 +27,7 @@ export default interface IUser {
   createdAt?: Date;
   bio?: string;
   avatar?: string;
+  cohort?:Types.ObjectId;
   linkedUsers?: Types.ObjectId[];
   updatedAt?: Date;
 }

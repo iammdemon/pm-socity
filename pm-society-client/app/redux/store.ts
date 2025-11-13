@@ -8,6 +8,7 @@ import { userApi } from "./services/userApi";
 import { contactApi } from "./services/contactApi";
 import { resourceApi } from "./services/resourceApi";
 import { learningResourcesApi } from "./services/learningResourcesApi";
+import { cohortPostApi } from "./services/cohortPost";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [contactApi.reducerPath]: contactApi.reducer,
     [learningResourcesApi.reducerPath]: learningResourcesApi.reducer,
+    [cohortPostApi.reducerPath]: cohortPostApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -30,6 +32,7 @@ export const store = configureStore({
       .concat(userApi.middleware)
       .concat(contactApi.middleware)
       .concat(learningResourcesApi.middleware)
+      .concat(cohortPostApi.middleware)
 });
 
 export type RootState = ReturnType<typeof store.getState>;

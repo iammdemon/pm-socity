@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import bcrypt from "bcrypt";
 import IUser, { UserModel } from "./interface.users";
 
@@ -29,6 +29,12 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       enum: ["monthly", "yearly", "one_time"],
     },
+    cohort: 
+      {
+        type: Types.ObjectId,
+        ref: "Cohort",
+      },
+    
     subscriptionId: String,
     subscriptionStatus: {
       type: String,

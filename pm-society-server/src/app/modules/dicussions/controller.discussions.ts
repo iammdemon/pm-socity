@@ -3,7 +3,7 @@ import { ForumService } from "./service.discussions";
 import { Request, Response } from "express";
 import { JwtPayload } from "jsonwebtoken";
 
-interface AuthRequest extends Request {
+export interface AuthRequest extends Request {
   user?: JwtPayload;
 }
 

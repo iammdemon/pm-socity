@@ -41,6 +41,10 @@ const UserSchema = new mongoose_1.Schema({
         type: String,
         enum: ["monthly", "yearly", "one_time"],
     },
+    cohort: {
+        type: mongoose_1.Types.ObjectId,
+        ref: "Cohort",
+    },
     subscriptionId: String,
     subscriptionStatus: {
         type: String,
