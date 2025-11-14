@@ -69,7 +69,7 @@ export default function ServicesPage() {
     },
     {
       icon: <FiTrendingUp className="h-8 w-8 sm:h-10 sm:w-10" />,
-      title: "ASCEND (Coming Soon)",
+      title: "ASCEND",
       description:
         "Bridge gap post-certification & build leadership. Ideal for certified PMs, team leads, future executives.",
       features: [
