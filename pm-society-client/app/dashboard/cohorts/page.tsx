@@ -422,13 +422,13 @@ const CohortPage = () => {
               
               {/* Image Preview */}
               {previewImage && (
-                <div className="mt-3 relative w-full max-h-64">
+                <div className="mt-3 relative w-full">
                   <Image 
                     src={previewImage} 
                     alt="Preview" 
                     className="w-full h-full object-cover rounded-lg"
-                    width={500}
-                    height={300}
+                    width={200}
+                    height={100}
                   />
                   <button 
                     onClick={() => {
@@ -598,13 +598,13 @@ const CohortPage = () => {
                           
                           {/* Edit Image Preview */}
                           {(editPreviewImage || post.imageUrl) && (
-                            <div className="relative w-full max-h-64">
+                            <div className="relative w-full ">
                               <Image 
                                 src={(editPreviewImage || post.imageUrl) as string} 
                                 alt="Preview" 
                                 className="w-full h-full object-cover rounded-lg"
-                                width={500}
-                                height={300}
+                                width={200}
+                                height={100}
                               />
                               <button 
                                 onClick={() => {
