@@ -8,6 +8,7 @@ import {
   Search,
   LucideIcon,
   Sparkles,
+  Users,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -26,7 +27,7 @@ interface NavLinkProps {
 
 const NAVIGATION_ITEMS: NavigationItem[] = [
   { name: "The Exchange", href: "/dashboard", icon: Home },
-  // { name: "Society Circles", href: "/dashboard/circles", icon: Users },
+  { name: "Cohorts", href: "/dashboard/cohorts", icon: Users },
 
   { name: "SIA AI", href: "/dashboard/sia", icon: Sparkles },
   { name: "Upcoming Events", href: "/dashboard/events", icon: Calendar },
