@@ -122,6 +122,26 @@ const removeMemberFromCohort = async (cohortId: string, userId: Types.ObjectId) 
   return cohort;
 };
 
+const myCohort = async (userEmail: string) => {
+  const user = await User.findOne({ email: userEmail }).select("cohort");
+
+  // If user not found, return null to signal caller
+  if (!user) return null;
+
+  // If user has no cohorts, return empty array
+  if (!user.cohort) return [];
+
+  // Ensure cohortIds is always an array (user.cohort may be a single ObjectId)
+  const cohortIds = Array.isArray(user.cohort) ? user.cohort : [user.cohort];
+
+  if (cohortIds.length === 0) return [];
+
+  // Return cohorts the user belongs to, populated with member info
+  return Cohort.find({ _id: { $in: cohortIds } })
+    .populate("members", "_id name email username")
+    .sort({ createdAt: -1 });
+};
+
 export const CohortService = {
   createCohortIntoDB,
   getCohortsFromDB,
@@ -130,4 +150,5 @@ export const CohortService = {
   deleteCohortFromDB,
   addMemberToCohort,
   removeMemberFromCohort,
+  myCohort,
 };

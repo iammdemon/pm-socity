@@ -1,4 +1,5 @@
 import catchAsync from "../../utils/catchAsync";
+import { AuthRequest } from "../cohortPost/controller.cohortPost";
 import { CohortService } from "./service.cohort";
 
 /**
@@ -60,10 +61,25 @@ const deleteCohort = catchAsync(async (req, res) => {
   });
 });
 
+const myCohort = catchAsync(async (req:AuthRequest, res)=>{
+    if (!req.user) {
+    res.status(401).json({ message: "Not authenticated" });
+    return;
+  }
+const cohort = await CohortService.myCohort(req?.user?.email!)
+
+res.status(200).json({
+  success: true,
+  message: "Cohort Found",
+  data: cohort
+})
+})
+
 export const CohortController = {
   createCohort,
   getCohorts,
   getSingleCohort,
   updateCohort,
   deleteCohort,
+  myCohort
 };

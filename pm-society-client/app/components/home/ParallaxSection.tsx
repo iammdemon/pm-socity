@@ -10,6 +10,8 @@ export default function ParallaxSection() {
           src="/image/elevate.webp"
           alt="Project Management Career - Professional team collaboration"
           className="w-full h-full object-cover md:object-[center_30%]"
+          width={1080}
+          height={1080}
         />
       </div>
 

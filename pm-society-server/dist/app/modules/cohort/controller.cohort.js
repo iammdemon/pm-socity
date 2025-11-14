@@ -69,10 +69,24 @@ const deleteCohort = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         message: "Cohort deleted successfully",
     });
 }));
+const myCohort = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    if (!req.user) {
+        res.status(401).json({ message: "Not authenticated" });
+        return;
+    }
+    const cohort = yield service_cohort_1.CohortService.myCohort((_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.email);
+    res.status(200).json({
+        success: true,
+        message: "Cohort Found",
+        data: cohort
+    });
+}));
 exports.CohortController = {
     createCohort,
     getCohorts,
     getSingleCohort,
     updateCohort,
     deleteCohort,
+    myCohort
 };

@@ -16,10 +16,14 @@ const createPost = async (
   const user = await User.findOne({ email: userEmail });
   if (!user) throw new Error("User not found");
 
+  if (!Types.ObjectId.isValid(payload.cohort)) {
+    throw new Error("Invalid cohort ID");
+  }
+
   // Verify user is a member of the cohort
   const cohort = await Cohort.findById(payload.cohort);
   if (!cohort) throw new Error("Cohort not found");
-  
+
   if (!cohort.members.includes(user._id) && user.role !== "admin") {
     throw new Error("Access denied: You are not a member of this cohort");
   }
@@ -32,7 +36,10 @@ const createPost = async (
 
   // Handle image upload
   if (file) {
-    const { fileUrl } = await StorageService.uploadFile("cohort-post-images", file);
+    const { fileUrl } = await StorageService.uploadFile(
+      "cohort-post-images",
+      file
+    );
     postPayload.imageUrl = fileUrl;
   }
 
@@ -49,10 +56,14 @@ const getPostsByCohort = async (
   const user = await User.findOne({ email: userEmail });
   if (!user) throw new Error("User not found");
 
+  if (!Types.ObjectId.isValid(cohortId)) {
+    throw new Error("Invalid cohort ID format");
+  }
+
   // Verify user is a member of the cohort or is admin
   const cohort = await Cohort.findById(cohortId);
   if (!cohort) throw new Error("Cohort not found");
-  
+
   if (!cohort.members.includes(user._id) && user.role !== "admin") {
     throw new Error("Access denied: You are not a member of this cohort");
   }
@@ -86,7 +97,7 @@ const getAllPostsForUser = async (userEmail: string) => {
 
   // For regular users, return posts from cohorts they are members of
   const userCohorts = await Cohort.find({ members: user._id });
-  const cohortIds = userCohorts.map(cohort => cohort._id);
+  const cohortIds = userCohorts.map((cohort) => cohort._id);
 
   return await CohortPost.find({ cohort: { $in: cohortIds } })
     .sort({ createdAt: -1 })
@@ -154,10 +165,7 @@ const addReplyToPost = async (
     .populate("replies.author", "name userName avatar");
 };
 
-const toggleReactionOnPost = async (
-  postId: string,
-  userEmail: string
-) => {
+const toggleReactionOnPost = async (postId: string, userEmail: string) => {
   // Find user
   const user = await User.findOne({ email: userEmail });
   if (!user) throw new Error("User not found");
@@ -247,7 +255,10 @@ const editPost = async (
     }
 
     // Upload new image
-    const { fileUrl } = await StorageService.uploadFile("cohort-post-images", file);
+    const { fileUrl } = await StorageService.uploadFile(
+      "cohort-post-images",
+      file
+    );
     updateData.imageUrl = fileUrl;
   }
 

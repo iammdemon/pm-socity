@@ -1,21 +1,31 @@
+// routes.cohort.ts
 import express from "express";
 import { CohortController } from "./controller.cohort";
+import { authenticateJWT } from "../../middlewares/auth";
 
 const router = express.Router();
 
-// POST /api/cohorts
-router.post("/", CohortController.createCohort);
+/**
+ * ROUTE ORDER MATTERS
+ * Static or custom routes -> then ":id"
+ */
 
-// GET /api/cohorts
-router.get("/", CohortController.getCohorts);
+// CREATE cohort
+router.post("/", authenticateJWT, CohortController.createCohort);
 
-// GET /api/cohorts/:id
-router.get("/:id", CohortController.getSingleCohort);
+// GET all
+router.get("/", authenticateJWT, CohortController.getCohorts);
 
-// PATCH /api/cohorts/:id
-router.patch("/:id", CohortController.updateCohort);
+// GET the cohort of current user
+router.get("/my", authenticateJWT, CohortController.myCohort);
 
-// DELETE /api/cohorts/:id
-router.delete("/:id", CohortController.deleteCohort);
+// GET single cohort (must be after /my)
+router.get("/:id", authenticateJWT, CohortController.getSingleCohort);
+
+// UPDATE
+router.patch("/:id", authenticateJWT, CohortController.updateCohort);
+
+// DELETE
+router.delete("/:id", authenticateJWT, CohortController.deleteCohort);
 
 export const CohortRoutes = router;

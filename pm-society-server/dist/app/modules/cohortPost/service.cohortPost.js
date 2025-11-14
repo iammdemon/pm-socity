@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CohortPostService = void 0;
+// service.cohortPost.ts
+const mongoose_1 = require("mongoose");
 const model_cohortPost_1 = require("./model.cohortPost");
 const model_users_1 = require("../users/model.users");
 // Assuming you have a Cohort model
@@ -20,6 +22,9 @@ const createPost = (payload, userEmail, file) => __awaiter(void 0, void 0, void 
     const user = yield model_users_1.User.findOne({ email: userEmail });
     if (!user)
         throw new Error("User not found");
+    if (!mongoose_1.Types.ObjectId.isValid(payload.cohort)) {
+        throw new Error("Invalid cohort ID");
+    }
     // Verify user is a member of the cohort
     const cohort = yield model_cohort_1.Cohort.findById(payload.cohort);
     if (!cohort)
@@ -41,6 +46,9 @@ const getPostsByCohort = (cohortId_1, userEmail_1, ...args_1) => __awaiter(void 
     const user = yield model_users_1.User.findOne({ email: userEmail });
     if (!user)
         throw new Error("User not found");
+    if (!mongoose_1.Types.ObjectId.isValid(cohortId)) {
+        throw new Error("Invalid cohort ID format");
+    }
     // Verify user is a member of the cohort or is admin
     const cohort = yield model_cohort_1.Cohort.findById(cohortId);
     if (!cohort)
@@ -74,7 +82,7 @@ const getAllPostsForUser = (userEmail) => __awaiter(void 0, void 0, void 0, func
     }
     // For regular users, return posts from cohorts they are members of
     const userCohorts = yield model_cohort_1.Cohort.find({ members: user._id });
-    const cohortIds = userCohorts.map(cohort => cohort._id);
+    const cohortIds = userCohorts.map((cohort) => cohort._id);
     return yield model_cohortPost_1.CohortPost.find({ cohort: { $in: cohortIds } })
         .sort({ createdAt: -1 })
         .populate("author", "name userName avatar")

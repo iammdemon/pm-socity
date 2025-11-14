@@ -93,6 +93,23 @@ const removeMemberFromCohort = (cohortId, userId) => __awaiter(void 0, void 0, v
     }
     return cohort;
 });
+const myCohort = (userEmail) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield model_users_1.User.findOne({ email: userEmail }).select("cohort");
+    // If user not found, return null to signal caller
+    if (!user)
+        return null;
+    // If user has no cohorts, return empty array
+    if (!user.cohort)
+        return [];
+    // Ensure cohortIds is always an array (user.cohort may be a single ObjectId)
+    const cohortIds = Array.isArray(user.cohort) ? user.cohort : [user.cohort];
+    if (cohortIds.length === 0)
+        return [];
+    // Return cohorts the user belongs to, populated with member info
+    return model_cohort_1.Cohort.find({ _id: { $in: cohortIds } })
+        .populate("members", "_id name email username")
+        .sort({ createdAt: -1 });
+});
 exports.CohortService = {
     createCohortIntoDB,
     getCohortsFromDB,
@@ -101,4 +118,5 @@ exports.CohortService = {
     deleteCohortFromDB,
     addMemberToCohort,
     removeMemberFromCohort,
+    myCohort,
 };

@@ -6,7 +6,7 @@ import { getSession } from "next-auth/react";
 export interface User {
   _id: string;
   name: string;
-  username: string;
+  userName: string;
   avatar?: string;
 }
 
@@ -88,10 +88,7 @@ export const cohortPostApi = createApi({
         return {
           url: "/cohort-posts",
           method: "POST",
-          body: formData,
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+          body: formData
         };
       },
       invalidatesTags: ["CohortPost"],
@@ -133,10 +130,7 @@ export const cohortPostApi = createApi({
         return {
           url: `/cohort-posts/${postId}`,
           method: "PATCH",
-          body: formData,
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+          body: formData
         };
       },
       invalidatesTags: ["CohortPost"],
