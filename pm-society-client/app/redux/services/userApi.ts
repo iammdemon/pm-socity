@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-
 export interface IUser {
   _id: string;
   name: string;
@@ -10,6 +9,7 @@ export interface IUser {
   course?: string;
   amount?: number;
   role?: "member" | "admin";
+  linkedinSupport: "active" | "inactive";
   packageType?:
     | "IGNITE"
     | "ELEVATE"
@@ -20,7 +20,7 @@ export interface IUser {
   subscriptionId?: string;
   subscriptionStatus?: "active" | "canceled" | "past_due" | "unpaid";
   subscriptionEndDate?: string; // string because JSON dates are strings
-  createdAt?: Date | string
+  createdAt?: Date | string;
 }
 
 interface UsersResponse {
@@ -35,10 +35,9 @@ interface SingleUserResponse {
 
 interface CompleteSubscriptionRequest {
   subscriptionId: string;
-  customerId: string;  // ✅ add this field
+  customerId: string; // ✅ add this field
   password: string;
 }
-
 
 export const userApi = createApi({
   reducerPath: "userApi",
@@ -138,7 +137,6 @@ export const userApi = createApi({
       }),
       invalidatesTags: ["Users"],
     }),
-    
   }),
 });
 
@@ -149,5 +147,5 @@ export const {
   useStartSubscriptionCheckoutMutation,
   useVerifyPaymentMutation,
   useCancelSubscriptionMutation,
-  useCompleteSubscriptionRegistrationMutation
+  useCompleteSubscriptionRegistrationMutation,
 } = userApi;
