@@ -29,6 +29,11 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       enum: ["monthly", "yearly", "one_time"],
     },
+    linkedinSupport:{
+      type:String,
+      enum: ["active","inactive"],
+      default: "inactive"
+    },
     cohort: 
       {
         type: Types.ObjectId,

@@ -41,6 +41,11 @@ const UserSchema = new mongoose_1.Schema({
         type: String,
         enum: ["monthly", "yearly", "one_time"],
     },
+    linkedinSupport: {
+        type: String,
+        enum: ["active", "inactive"],
+        default: "inactive"
+    },
     cohort: {
         type: mongoose_1.Types.ObjectId,
         ref: "Cohort",

@@ -27,6 +27,7 @@ export default interface IUser {
   createdAt?: Date;
   bio?: string;
   avatar?: string;
+  linkedinSupport: "active" | "inactive"
   cohort?:Types.ObjectId;
   linkedUsers?: Types.ObjectId[];
   updatedAt?: Date;

@@ -1,9 +1,10 @@
 // import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
-import {  Users, ExternalLink } from "lucide-react";
+import { Users, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import LearningResource from "../shared/LearningResource";
+import LinkedInSupportButton from "../shared/LinkedinSupportButton";
 
 // ---------- Types ----------
 // interface ProgressModule {
@@ -219,8 +220,6 @@ LogoHeader.displayName = "LogoHeader";
 // };
 
 // ProgressSection.displayName = "ProgressSection";
-
-
 
 const MentorBooking = () => {
   return (
@@ -518,6 +517,7 @@ export default function MemberLeftPanel({ className = "" }: PanelProps) {
       <div className="flex-1 overflow-y-auto p-4 space-y-6 relative z-10">
         {/* <ProgressSection /> */}
         <LearningResource />
+        <LinkedInSupportButton />
         <MentorBooking />
         <SocietyWorkSpaces />
         {/* <NotificationsSection /> */}

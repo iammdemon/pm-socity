@@ -35,8 +35,8 @@ exports.PACKAGE_PRICES = {
         amount: 40000, // $400
         type: "one_time",
     },
-    ELEVATE_PILOT: {
-        amount: 55800, // $558
+    LINKEDIN_SUPPORT: {
+        amount: 7500, // $75 in cents
         type: "one_time",
     },
 };

@@ -27,6 +27,8 @@ router.post("/subscription-checkout", controller_payment_1.PaymentController.sta
 router.post("/verify-subscription", controller_payment_1.PaymentController.completeSubscriptionRegistration);
 router.post("/verify-payment", controller_payment_1.PaymentController.verifyPayment);
 router.post("/cancel-subscription", controller_payment_1.PaymentController.cancelSubscription);
+router.post("/linkedin-payment", auth_1.authenticateJWT, controller_payment_1.PaymentController.startLinkedinSupportCheckout);
+router.post("/verify-linkedin-payment", auth_1.authenticateJWT, controller_payment_1.PaymentController.completeLinkedinSupportPurchase);
 // User management routes
 router.get("/", controller_users_1.userController.getAllUsers);
 router.post("/create-admin", controller_users_1.userController.createUser);

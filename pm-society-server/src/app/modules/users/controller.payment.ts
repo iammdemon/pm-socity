@@ -4,6 +4,7 @@ import { PaymentService, PACKAGE_PRICES } from "./service.payment";
 import catchAsync from "../../utils/catchAsync";
 import { sendWelcomeEmail } from "../../utils/sendWelcomeEmail";
 import { generateUsernameFromEmail } from "./utils.user";
+import { AuthRequest } from "../dicussions/controller.discussions";
 
 // your existing type guard
 function isOneTimePackage(
@@ -12,6 +13,68 @@ function isOneTimePackage(
   return pkg && pkg.type === "one_time";
 }
 
+const startLinkedinSupportCheckout = catchAsync(
+  async (req: AuthRequest, res) => {
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: "Authentication required" });
+      return;
+    }
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    const packageType = "LINKEDIN_SUPPORT";
+    const paymentIntent = await PaymentService.createPaymentIntent(packageType);
+    res.status(200).json({
+      clientSecret: paymentIntent.client_secret,
+      paymentIntentId: paymentIntent.id,
+      packageType,
+    });
+  }
+);
+
+const completeLinkedinSupportPurchase = catchAsync(
+  async (req: AuthRequest, res) => {
+    const { paymentIntentId } = req.body;
+    const userEmail = req.user?.email;
+    if (!userEmail) {
+      res.status(401).json({ error: "Authentication required" });
+      return;
+    }
+    if (!paymentIntentId) {
+      res.status(400).json({ error: "Payment intent ID is required" });
+      return;
+    }
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    const paymentIntent = await PaymentService.verifyPayment(paymentIntentId);
+    if (paymentIntent.status !== "succeeded") {
+      res.status(400).json({ error: "Payment not completed" });
+      return;
+    }
+
+    await User.findOneAndUpdate(
+      { email: userEmail },
+      {
+        linkedinSupport: "active",
+      }
+    );
+
+  console.log("payment completed")
+
+    res.json({
+      success: true,
+      message: "LinkedIn support purchase completed successfully",
+    });
+  }
+);
 
 const startCheckout = catchAsync(async (req: Request, res: Response) => {
   const { packageType, subscriptionType } = req.body;
@@ -32,8 +95,7 @@ const startCheckout = catchAsync(async (req: Request, res: Response) => {
 
   const paymentIntent = await PaymentService.createPaymentIntent(
     packageType,
-    subscriptionType,
- 
+    subscriptionType
   );
 
   res.status(200).json({
@@ -173,7 +235,6 @@ const completeSubscriptionRegistration = catchAsync(
 
     const userName = await generateUsernameFromEmail(customer.email);
 
-
     // Create user with subscription details
     const user = await User.create({
       email: customer.email,
@@ -231,7 +292,7 @@ const verifyPayment = catchAsync(async (req: Request, res: Response) => {
   }
 
   const { packageType, subscriptionType } = paymentIntent.metadata;
-  console.log("pkgh",packageType, subscriptionType)
+  console.log("pkgh", packageType, subscriptionType);
 
   if (subscriptionType !== "one_time") {
     console.error("❌ Verify failed: wrong subscriptionType", subscriptionType);
@@ -255,11 +316,7 @@ const verifyPayment = catchAsync(async (req: Request, res: Response) => {
     case "ASCEND":
       subscriptionEndDate = new Date();
       subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 6);
-      break;
-    case "ELEVATE_PILOT":
-      subscriptionEndDate = new Date();
-      subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 2);
-      break;
+      break; 
     default:
       break;
   }
@@ -288,10 +345,8 @@ const verifyPayment = catchAsync(async (req: Request, res: Response) => {
   //   userName: user.name,
   //   packageType: user.packageType!,
   //   email: user.email,
-   
-  // });
- 
 
+  // });
 
   res.json({
     message: "Registration complete",
@@ -331,5 +386,6 @@ export const PaymentController = {
   completeSubscriptionRegistration,
   verifyPayment,
   cancelSubscription,
- 
+  startLinkedinSupportCheckout,
+  completeLinkedinSupportPurchase
 };

@@ -107,7 +107,7 @@ export const PackageCard: React.FC<PackageCardProps> = ({
             <span className="text-sm text-gray-700">{feature}</span>
           </li>
         ))}
-        <p className="text-sm text-gray-900">Use discount code <strong>PILOT2025</strong> at checkout to unlock this special pricing.</p>
+        
       </ul>
     </div>
   );

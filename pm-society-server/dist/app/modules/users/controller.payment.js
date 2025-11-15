@@ -21,6 +21,57 @@ const utils_user_1 = require("./utils.user");
 function isOneTimePackage(pkg) {
     return pkg && pkg.type === "one_time";
 }
+const startLinkedinSupportCheckout = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const userEmail = (_a = req.user) === null || _a === void 0 ? void 0 : _a.email;
+    if (!userEmail) {
+        res.status(401).json({ error: "Authentication required" });
+        return;
+    }
+    const user = yield model_users_1.User.findOne({ email: userEmail });
+    if (!user) {
+        res.status(404).json({ error: "User not found" });
+        return;
+    }
+    const packageType = "LINKEDIN_SUPPORT";
+    const paymentIntent = yield service_payment_1.PaymentService.createPaymentIntent(packageType);
+    res.status(200).json({
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id,
+        packageType,
+    });
+}));
+const completeLinkedinSupportPurchase = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const { paymentIntentId } = req.body;
+    const userEmail = (_a = req.user) === null || _a === void 0 ? void 0 : _a.email;
+    if (!userEmail) {
+        res.status(401).json({ error: "Authentication required" });
+        return;
+    }
+    if (!paymentIntentId) {
+        res.status(400).json({ error: "Payment intent ID is required" });
+        return;
+    }
+    const user = yield model_users_1.User.findOne({ email: userEmail });
+    if (!user) {
+        res.status(404).json({ error: "User not found" });
+        return;
+    }
+    const paymentIntent = yield service_payment_1.PaymentService.verifyPayment(paymentIntentId);
+    if (paymentIntent.status !== "succeeded") {
+        res.status(400).json({ error: "Payment not completed" });
+        return;
+    }
+    yield model_users_1.User.findOneAndUpdate({ email: userEmail }, {
+        linkedinSupport: "active",
+    });
+    console.log("payment completed");
+    res.json({
+        success: true,
+        message: "LinkedIn support purchase completed successfully",
+    });
+}));
 const startCheckout = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { packageType, subscriptionType } = req.body;
     const pkg = service_payment_1.PACKAGE_PRICES[packageType];
@@ -213,10 +264,6 @@ const verifyPayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
             subscriptionEndDate = new Date();
             subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 6);
             break;
-        case "ELEVATE_PILOT":
-            subscriptionEndDate = new Date();
-            subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + 2);
-            break;
         default:
             break;
     }
@@ -271,4 +318,6 @@ exports.PaymentController = {
     completeSubscriptionRegistration,
     verifyPayment,
     cancelSubscription,
+    startLinkedinSupportCheckout,
+    completeLinkedinSupportPurchase
 };
