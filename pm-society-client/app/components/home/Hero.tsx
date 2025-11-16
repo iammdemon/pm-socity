@@ -12,7 +12,7 @@ const bonVivant = localFont({
 });
 
 const VIDEO_PATH = "/video/welcome.mp4";
-const POSTER_PATH = "/image/video.webp";
+const POSTER_PATH = "/image/olivia.webp";
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
